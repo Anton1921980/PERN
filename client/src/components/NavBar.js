@@ -15,7 +15,7 @@ const NavBar = observer(() =>
     return (
         <Navbar bg="dark" expand="lg">
             <Container>
-            <NavLink style={ { color: 'white', textDecoration: 'none' } } to={ SHOP_ROUTE }>Idevice</NavLink>
+            <NavLink style={ { color: 'white', textDecoration: 'none', fontSize:'40px' } } to={ SHOP_ROUTE }>Idevice</NavLink>
             { user.isAuth ?
                 <Nav
                     className="ml-auto"
