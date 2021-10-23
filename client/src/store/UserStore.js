@@ -4,7 +4,7 @@ export default class UserStore
 {
     constructor ()
     {
-        this._isAuth = false
+        this._isAuth = true
         this._user = {}
          //mobx следит за ппеременными и перерендерит при изменении
         makeAutoObservable( this )       

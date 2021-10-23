@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom'
 const NavBar = observer(() =>
 {
     const { user } = useContext( Context )
+    const history = useHistory()
     return (
         <Navbar bg="dark" expand="lg">
             <Container>
@@ -24,8 +25,8 @@ const NavBar = observer(() =>
                     {/* <Nav.Link href="#home">Home</Nav.Link>
                 <Nav.Link href="#action2">Link</Nav.Link>
                 <Nav.Link href="#" disabled>Link</Nav.Link> */}
-                    <Button variant={ 'outline-light' }>Админка</Button>
-                    <Button variant={ 'outline-light' }className="ml-2">Войти</Button>
+                    <Button variant={ 'outline-light' } onClick={()=>history.push(ADMIN_ROUTE)}>Админка</Button>
+                    <Button variant={ 'outline-light' }onClick={()=>history.push(LOGIN_ROUTE)} className="ml-2">Выйти</Button>
                 </Nav>
                 :
                 <Nav
