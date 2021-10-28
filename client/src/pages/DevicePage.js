@@ -4,7 +4,7 @@ import bigStar from '../assets/bigStar.png'
 import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { fetchBrands, fetchOneDevice, fetchTypes } from '../http/deviceAPI';
+import { fetchBrands, fetchOneDevice, fetchTypes,addtoBasket } from '../http/deviceAPI';
 
 
 const DevicePage = observer(() =>
@@ -33,6 +33,14 @@ const DevicePage = observer(() =>
     //     { id: 3, title: 'Процессор', description: '2 ghz' },
     //     { id: 4, title: 'Аккумулятор', description: '4000 mah' },
     // ]
+
+
+    //  Создаём функцию для записи 
+    const add = () => {
+        const formData = new FormData()
+        formData.append('deviceId', id)
+        addtoBasket(formData).then(response => alert(`Товар ` + device.name + ` был добавлен в вашу корзину!`))
+    }
     return (
         <Container>
             <Row className='mt-3'>
@@ -67,7 +75,7 @@ const DevicePage = observer(() =>
                         style={ { width: 300, height: 300, fontSize: 32, border: '5px solid grey' } }
                     >
                         <h3>{ device1.price } грн</h3>
-                        <Button variant={ 'outline-dark' }>В корзину</Button>
+                        <Button variant={"outline-dark"} onClick={add} >Добавить в корзину</Button>
                     </Card>
                 </Col>
             </Row>

@@ -1,15 +1,14 @@
 const Router = require( 'express' )
 const router = new Router()
-const deviceController = require( '../controllers/deviceController' )
-
-const checkRole = require('../middleware/checkRoleMiddleware')
 
 
+const basketController = require( '../controllers/basketController' )
 
-// router.post( '/', deviceController.create )
-router.get( '/basket', deviceController.getAll )
-router.get( '/:id', deviceController.getOne )
+// Добавил проверку на авторизацию для того, чтобы вытащить оттуда авторизованного юзера 
+const authMiddleware = require( '../middleware/authMiddleware' )
 
 
+router.get( '/', authMiddleware, basketController.getBasketUser )
+router.post( '/', authMiddleware, basketController.addtoBasket )
 
 module.exports = router

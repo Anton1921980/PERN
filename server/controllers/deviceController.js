@@ -1,7 +1,7 @@
 
 const uuid = require( 'uuid' )
 const path = require( 'path' )
-const { Device, DeviceInfo, Brand } = require( '../models/models' )
+const { Device, DeviceInfo, Basket, BasketDevice } = require( '../models/models' )
 const ApiError = require( '../error/ApiError' )
 
 class DeviceController
