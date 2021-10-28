@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Button, Form} from "react-bootstrap";
-import {createBrand, createType} from "../../http/deviceAPI";
+import {createBrand} from "../../http/deviceAPI";
+import { observer } from 'mobx-react-lite';
 
-const CreateBrand = ({show, onHide}) => {
+const CreateBrand = observer(({show, onHide}) => {
     const [value, setValue] = useState('')
 
     const addBrand = () => {
         createBrand({name: value}).then(data => {
+            console.log('data',data)
             setValue('')
             onHide()
         })
@@ -38,6 +40,6 @@ const CreateBrand = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default CreateBrand;

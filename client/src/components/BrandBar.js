@@ -7,7 +7,7 @@ const BrandBar = observer( () =>
 {
     const { device } = useContext( Context )
     return (
-        <div className='d-flex flex-direction-row'>
+        <div className='d-flex flex-direction-row flex-wrap'>
             { device.brands.map( brand =>
                 <Card 
                 key={ brand.id }

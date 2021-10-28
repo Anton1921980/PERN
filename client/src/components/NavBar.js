@@ -30,21 +30,16 @@ const NavBar = observer( () =>
                         className="ml-auto"
                         style={ { maxHeight: '100px', color: 'white' } }
                     >
-                        {/* <Nav.Link href="#home">Home</Nav.Link>
-                <Nav.Link href="#action2">Link</Nav.Link>
-                <Nav.Link href="#" disabled>Link</Nav.Link> */}
                         <Button
                             variant={ 'outline-light' }
                             onClick={ () => history.push( ADMIN_ROUTE ) }
-                        >
-                            Админка
+                        >Админка
                         </Button>
                         <Button
                             variant={ 'outline-light' }
                             onClick={ () => logOut() }
                             className="ml-2"
-                        >
-                            Выйти
+                        > Выйти
                         </Button>
                     </Nav>
                     :
@@ -55,12 +50,21 @@ const NavBar = observer( () =>
                         <Button
                             variant={ 'outline-light' }
                             onClick={ () => history.push( LOGIN_ROUTE ) }
-                        >
-                            Авторизация
+                        >Авторизация
                         </Button>
 
                     </Nav>
                 }
+                <Nav
+                    className="ml-auto"
+                    style={ { maxHeight: '100px', color: 'white' } }
+                >
+                    <Button
+                        variant={ 'outline-light' }
+                    // onClick={ () => history.push( LOGIN_ROUTE ) }
+                    >Корзина
+                    </Button>
+                </Nav>
             </Container>
         </Navbar>
     );

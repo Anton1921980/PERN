@@ -16,22 +16,22 @@ class DeviceController
             // console.log( "TCL: fileName", fileName )
 
             img.mv( path.resolve( __dirname, '..', 'static', fileName ) )
-            const device = await Device.create( { name, price, brandId, typeId, img: fileName } );
 
-            if ( info )
-            {
-                info = JSON.parse( info )
-                info.foEach( i => DeviceInfo.create( {
-                    title: i.title,
-                    description: i.description,
-                    deviceId: device.id
-                } )
-                )
-            }
+            console.log( 'info', info )
 
-
-
-            return res.json( device )
+            const device = await Device.create( { name, price, brandId, typeId, img: fileName } )
+            info = JSON.parse( info )
+            const deviceInfo = await info.forEach( i => DeviceInfo.create( {
+                title: i.title,
+                description: i.description,
+                deviceId: device.id//не успевает получать надо .then или await
+            } )
+            )
+            console.log( 'deviceInfo', deviceInfo )
+            return (
+                res.json( device ).then(
+                    res.json( deviceInfo ) )
+            )
 
         } catch ( e )
         {
@@ -43,7 +43,8 @@ class DeviceController
     {
         let { brandId, typeId, limit, page } = req.query;
         page = page || 1
-        limit = limit || 9
+        limit = limit || 1000
+
         let offset = page * limit - limit
         let devices;
         if ( !brandId && !typeId )
@@ -62,7 +63,10 @@ class DeviceController
         {
             devices = await Device.findAndCountAll( { where: { typeId, brandId }, limit, offset } )
         }
+
+
         return res.json( devices )
+
 
     }
     async getOne ( req, res )
@@ -74,7 +78,7 @@ class DeviceController
                 include: [ { model: DeviceInfo, as: 'info' } ]
             }
         )
-        return res.json(device)
+        return res.json( device )
     }
 }
 

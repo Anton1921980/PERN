@@ -1,32 +1,54 @@
-import React from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useContext } from 'react';
 import { Card, Col, Image } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import { Context } from '../index';
 import star from '../assets/star.png'
 import { DEVICE_ROUTE } from '../utils/consts';
 
 
 
 
-const DeviceItem = ( { device } ) =>
+const DeviceItem = observer( ( props ) =>
 {
+    //берем все бренды из стора и сравниваем бренд ид товара для получение названия бренда
+    const { device } = useContext( Context )
+    console.log( "TCL: device", device )
+
+    const device1 = props.device
+    console.log( "TCL: device1", device1 )
+
     const history = useHistory()
+    let brands = device.brands
+    console.log( "TCL: brands", brands )
     console.log( "TCL: history", history )
-    console.log("TCL: DEVICE_ROUTE", DEVICE_ROUTE)
+    console.log( "TCL: DEVICE_ROUTE", DEVICE_ROUTE )
+
     return (
-        <Col className='mt-3' md={ 3 } onClick={ () => history.push( DEVICE_ROUTE + '/' + device.id ) }>
-            <Card style={ { width: 150, cursor: 'pointer' } } border={ 'light' }>
-                <Image width={ 150 } height={ 150 } src={ process.env.REACT_APP_API_URL+device.img } />
-                <div className="text-black-50 mt-1 d-flex justify-content-between align-items-center">
-                    <div>Samsung...</div>
+        <Col className='mt-3' md={ 4 } onClick={ () => history.push( DEVICE_ROUTE + '/' + device1.id ) }>
+            <Card style={ { width: 250, cursor: 'pointer' } } border={ 'light' }>
+                <Image width={ 220 } height={ 220 } src={ process.env.REACT_APP_API_URL + device1.img } />
+                <div className="text-black-50 mt-1 d-flex justify-content-between align-items-center">                   
                     <div className='d-flex align-items-center'>
-                        <div>{ device.rating }</div>
+                        <div>{ device1.rating }</div>
                         <Image width={ 18 } height={ 18 } src={ star } />
                     </div>
                 </div>
-                <div>{ device.name }</div>
+                <div>{ device1.name }&nbsp;
+                    { device.brands.map( brand =>
+                        <span key={ brand.id }>
+                            { brand.id === device1.brandId ? brand.name : '' }
+                        </span>
+                    ) }&nbsp;
+                     { device.types.map( type =>
+                        <span key={ type.id }>
+                            { type.id === device1.typeId ? type.name : '' }
+                        </span>
+                    ) }
+                </div>
             </Card>
         </Col>
     );
-};
+} );
 
 export default DeviceItem;

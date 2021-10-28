@@ -20,10 +20,11 @@ const Shop = observer(() => {
             device.setDevices(data.rows)
             device.setTotalCount(data.count)
         })
+        console.log('device:',device)
     }, [])
 
     useEffect(() => {
-        fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, 2).then(data => {
+        fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit).then(data => {
             device.setDevices(data.rows)
             device.setTotalCount(data.count)
         })
@@ -37,8 +38,8 @@ const Shop = observer(() => {
                 </Col>
                 <Col md={9}>
                     <BrandBar/>
-                    <DeviceList/>
                     <Pages/>
+                    <DeviceList/>                    
                 </Col>
             </Row>
         </Container>

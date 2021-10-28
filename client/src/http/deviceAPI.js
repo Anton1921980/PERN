@@ -22,15 +22,24 @@ export const fetchBrands = async () => {
 }
 
 export const createDevice = async (device) => {
-    const {data} = await $authHost.post('api/device', device)
-    console.log(data)
+console.log("TCL: createDevice -> device", device)
+    
+    try {
+        const {data} = await $authHost.post('api/device', device)
+    console.log('data', data)
     return data
+    } 
+    catch (error) {
+        console.log(error)
+    }
+   
 }
 
-export const fetchDevices = async (typeId, brandId, page, limit= 5) => {
+export const fetchDevices = async (typeId, brandId, page, limit) => {
     const {data} = await $host.get('api/device', {params: {
             typeId, brandId, page, limit
         }})
+        console.log('data',data)
     return data
 }
 

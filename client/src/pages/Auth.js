@@ -28,7 +28,11 @@ const Auth = observer( () =>
             {
                 data = await registration( email, password );
             }
-            user.setUser( user )
+            // user.setUser( user )
+           
+           user.setUser( data )
+           console.log("TCL: user", user)
+
             user.setIsAuth( true )
             history.push( SHOP_ROUTE )
         } catch ( e )
