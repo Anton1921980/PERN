@@ -13,16 +13,16 @@ const DeviceItem = observer( ( props ) =>
 {
     //берем все бренды из стора и сравниваем бренд ид товара для получение названия бренда
     const { device } = useContext( Context )
-    console.log( "TCL: device", device )
+    // console.log( "TCL: device", device )
 
     const device1 = props.device
-    console.log( "TCL: device1", device1 )
+    // console.log( "TCL: device1", device1 )
 
     const history = useHistory()
     let brands = device.brands
-    console.log( "TCL: brands", brands )
-    console.log( "TCL: history", history )
-    console.log( "TCL: DEVICE_ROUTE", DEVICE_ROUTE )
+    // console.log( "TCL: brands", brands )
+    // console.log( "TCL: history", history )
+    // console.log( "TCL: DEVICE_ROUTE", DEVICE_ROUTE )
 
     return (
         <Col className='mt-3' md={ 4 } onClick={ () => history.push( DEVICE_ROUTE + '/' + device1.id ) }>
