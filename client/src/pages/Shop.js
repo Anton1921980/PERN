@@ -9,7 +9,7 @@ import { observer } from "mobx-react-lite";
 import { Context } from "../index";
 import { fetchBrands, fetchDevices, fetchTypes } from "../http/deviceAPI";
 import Pages from "../components/Pages";
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import querystring from "query-string";
 import { set } from 'mobx';
 
@@ -75,7 +75,7 @@ const Shop = observer( () =>
 
             fetchBrands().then( data => device.setBrands( data ) )
 
-            fetchDevices( null, null, 1, 3 ).then( data =>
+            fetchDevices( null, null, device.page, device.limit ).then( data =>
             {
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
@@ -101,7 +101,7 @@ const Shop = observer( () =>
             let query = `${ type }${ brand }&page=${ device.page }&limit=${ device.limit }`;
             console.log( "TCL: query", query )
 
-            let push = history.push( `/?${ query }` )
+            let push = history.push( `/shop/?${ query }` )
 
             fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit ).then( data =>
             {

@@ -5,15 +5,15 @@ import Nav from "react-bootstrap/Nav";
 import { NavLink } from "react-router-dom";
 // import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from "../utils/consts";
-import { Button, Row } from "react-bootstrap";
+import { Button} from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import Container from "react-bootstrap/Container";
-import { useHistory } from 'react-router-dom'
+import {  useHistory } from 'react-router-dom'
 
 const NavBar = observer( () =>
 {
     const { user } = useContext( Context )
-    const history = useHistory()
+    const history =  useHistory()
 
     const logOut = () =>
     {

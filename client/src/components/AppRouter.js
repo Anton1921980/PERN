@@ -2,16 +2,17 @@ import React, { useContext } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { Context } from '../index';
 import { authRoutes, publicRoutes } from '../routes';
-import { SHOP_ROUTE } from '../utils/consts';
+import {  MAIN_ROUTE } from '../utils/consts';
 import { observer } from "mobx-react-lite";
 
 const AppRouter = observer( () =>
 {
     const { user } = useContext( Context )
-    
+
     console.log( "TCL: user", user )
     // const isAuth = false;
     return (
+        
         <Switch>
             { user.isAuth && authRoutes.map( ( { path, Component } ) =>
                 <Route key={ path } path={ path } component={ Component } exact />
@@ -21,8 +22,10 @@ const AppRouter = observer( () =>
                 <Route key={ path } path={ path } component={ Component } exact />
 
             ) }
-            <Redirect to={ SHOP_ROUTE } />
+            <Redirect to={ MAIN_ROUTE } />
+            {/* <Redirect to={ SHOP_ROUTE } /> */}
         </Switch>
+      
     )
 } )
 

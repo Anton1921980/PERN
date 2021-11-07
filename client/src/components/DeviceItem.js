@@ -26,9 +26,12 @@ const DeviceItem = observer( ( props ) =>
 
     return (
         <Col className='mt-3' md={ 4 } onClick={ () => history.push( DEVICE_ROUTE + '/' + device1.id ) }>
-            <Card style={ { width: 250, cursor: 'pointer' } } border={ 'light' }>
-                <Image width={ 220 } height={ 220 } src={ process.env.REACT_APP_API_URL + device1.img } />
-                <div className="text-black-50 mt-1 d-flex justify-content-between align-items-center">                   
+            <Card style={ { width: 250, height: 400, cursor: 'pointer' } } border={ 'light' }>
+                <div style={ { width: 250, height: 250, overflow: 'hidden' } }>
+                    <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
+                        src={ process.env.REACT_APP_API_URL + device1.img } />
+                </div>
+                <div className="text-black-50 mt-1 d-flex justify-content-between align-items-center">
                     <div className='d-flex align-items-center'>
                         <div>{ device1.rating }</div>
                         <Image width={ 18 } height={ 18 } src={ star } />
@@ -40,14 +43,14 @@ const DeviceItem = observer( ( props ) =>
                             { brand.id === device1.brandId ? brand.name : '' }
                         </span>
                     ) }&nbsp;
-                     { device.types.map( type =>
+                    { device.types.map( type =>
                         <span key={ type.id }>
                             { type.id === device1.typeId ? type.name : '' }
                         </span>
                     ) }
                 </div>
             </Card>
-        </Col>
+        </Col >
     );
 } );
 

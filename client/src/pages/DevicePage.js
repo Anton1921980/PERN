@@ -4,20 +4,21 @@ import bigStar from '../assets/bigStar.png'
 import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { fetchBrands, fetchOneDevice, fetchTypes,addtoBasket } from '../http/deviceAPI';
+import { fetchBrands, fetchOneDevice, fetchTypes, addtoBasket } from '../http/deviceAPI';
 
 
-const DevicePage = observer(() =>
+const DevicePage = observer( () =>
 {
     const { device } = useContext( Context )
-    console.log("TCL: device", device)
-    useEffect(() => {
-        fetchTypes().then(data => device.setTypes(data))
-        fetchBrands().then(data => device.setBrands(data))
-        console.log('device:',device)
-    }, [])
+    console.log( "TCL: device", device )
+    useEffect( () =>
+    {
+        fetchTypes().then( data => device.setTypes( data ) )
+        fetchBrands().then( data => device.setBrands( data ) )
+        console.log( 'device:', device )
+    }, [] )
 
-    
+
     const [ device1, setdevice1 ] = useState( { info: [] } )
     const { id } = useParams()
 
@@ -35,49 +36,57 @@ const DevicePage = observer(() =>
     // ]
 
 
-    //  Создаём функцию для записи 
-    const add = () => {
+    //   функция для записи 
+    const add = () =>
+    {
         const formData = new FormData()
-        formData.append('deviceId', id)
-        addtoBasket(formData).then(response => alert(`Товар ` + device.name + ` был добавлен в вашу корзину!`))
+        formData.append( 'deviceId', id )
+        addtoBasket( formData ).then( response => alert( `Товар ` + device.name + ` был добавлен в вашу корзину!` ) )
     }
     return (
         <Container>
             <Row className='mt-3'>
-                <Col md={ 4 }>
-                    <Image width={ 300 } height={ 300 } src={ process.env.REACT_APP_API_URL + device1.img } />
+                <Col md={ 6 }>
+                    <div style={ { width: 500, height: 400, overflow: 'hidden' } }>
+                        <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } } src={ process.env.REACT_APP_API_URL + device1.img } />
+                    </div>
                 </Col>
-                <Col md={ 4 }>
+                <Col md={ 6 } >
                     <div className='d-flex flex-column'>
                         <h2>{ device1.name }&nbsp;
-                        { device.brands.map( brand =>
-                        <span key={ brand.id }>
-                            { brand.id === device1.brandId ? brand.name : '' }
-                        </span>
-                    ) }&nbsp;
-                     { device.types.map( type =>
-                        <span key={ type.id }>
-                            { type.id === device1.typeId ? type.name : '' }
-                        </span>
-                    ) }
+                            <div style={{color:'lightgrey'}}>
+                                { device.brands.map( brand =>
+                                    <span key={ brand.id }>
+                                        { brand.id === device1.brandId ? brand.name : '' }
+                                    </span>
+                                ) }&nbsp;
+                                { device.types.map( type =>
+                                    <span key={ type.id }>
+                                        { type.id === device1.typeId ? type.name : '' }
+                                    </span>
+                                ) }
+                            </div>
                         </h2>
-                        <div
-                            className="d-flex align-items-center justify-content-center"
-                            style={{background: `url(${bigStar}) no-repeat center center`, width:240, height: 240, backgroundSize: 'cover', fontSize:64}}
-                        >
-                            {device1.rating}
+                        <div className='d-flex flex-row'>
+
+                            <Card className='d-flex flex-row align-items-center justify-content-around'
+                                style={ { width: '100%', height: 120, fontSize: 32, border: '1px solid lightgrey' } }
+                            >
+                                <div
+                                    className="d-flex align-items-center justify-content-center"
+                                    style={ { background: `url(${ bigStar }) no-repeat center center`, width: 80, height: 80, backgroundSize: 'cover', fontSize: 24 } }
+                                >
+                                    { device1.rating }
+                                </div>
+                                <h3>{ device1.price } грн</h3>
+                                <Button variant={ "outline-dark" } onClick={ add } >Добавить в корзину</Button>
+                            </Card>
                         </div>
+
 
                     </div>
                 </Col>
-                <Col md={ 4 }>
-                    <Card className='d-flex flex-column align-items-center justify-content-around'
-                        style={ { width: 300, height: 300, fontSize: 32, border: '5px solid grey' } }
-                    >
-                        <h3>{ device1.price } грн</h3>
-                        <Button variant={"outline-dark"} onClick={add} >Добавить в корзину</Button>
-                    </Card>
-                </Col>
+
             </Row>
             <Row className='d-flex flex-column m-3'>
                 <h1 >Характеристики:</h1>
@@ -88,6 +97,6 @@ const DevicePage = observer(() =>
             </Row>
         </Container>
     )
-})
+} )
 
 export default DevicePage

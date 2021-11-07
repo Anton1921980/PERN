@@ -24,9 +24,10 @@ export default class DeviceStore
         this._baskets = []
         this._selectedType = {}
         this._selectedBrand = {}
+        this._selectedBasket = {}
         this._page = 1
         this._totalCount = 0
-        this._limit = 3
+        this._limit = 6
 
         //mobx следит за ппеременными и перерендерит при изменении
         makeAutoObservable( this )
@@ -58,6 +59,10 @@ export default class DeviceStore
     {
         this.setPage( 1 )
         this._selectedBrand = brands
+    }
+    setSelectedBasket ( basket )
+    {      
+        this._selectedBasket = basket
     }
     setPage ( page )
     {
@@ -93,6 +98,10 @@ export default class DeviceStore
     get selectedBrand ()
     {
         return this._selectedBrand
+    }
+    get selectedBasket ()
+    {
+        return this._selectedBasket
     }
     get totalCount ()
     {

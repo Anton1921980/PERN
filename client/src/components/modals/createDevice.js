@@ -48,7 +48,7 @@ const CreateDevice = observer( ( { show, onHide } ) =>
             formData.append( 'img', file )
             formData.append( 'brandId', device.selectedBrand.id )
             formData.append( 'typeId', device.selectedType.id )
-            formData.append( 'info', JSON.stringify( info ) )
+            formData.append( 'info', JSON.stringify( info ) )            
             createDevice( formData ).then( data => onHide() )
         } catch ( error )
         {
