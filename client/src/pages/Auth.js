@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Container, Form, Card, Button, Row } from "react-bootstrap";
+import { Container, Form, Card, Button} from "react-bootstrap";
 import { NavLink, useLocation, useHistory } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { login, registration } from "../http/userAPI";

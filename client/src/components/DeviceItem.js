@@ -26,29 +26,33 @@ const DeviceItem = observer( ( props ) =>
 
     return (
         <Col className='mt-3' md={ 4 } onClick={ () => history.push( DEVICE_ROUTE + '/' + device1.id ) }>
-            <Card style={ { width: 250, height: 400, cursor: 'pointer' } } border={ 'light' }>
+            <Card className='ml-3' style={ { width: 250, height: 400, cursor: 'pointer' } } border={ 'light' }>
                 <div style={ { width: 250, height: 250, overflow: 'hidden' } }>
                     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
                         src={ process.env.REACT_APP_API_URL + device1.img } />
                 </div>
-                <div className="text-black-50 mt-1 d-flex justify-content-between align-items-center">
+                <div className="text-black-50 mt-3 d-flex justify-content-between align-items-center">
                     <div className='d-flex align-items-center'>
-                        <div>{ device1.rating }</div>
+                        <div>
+                            { device.brands.map( brand =>
+                                <span key={ brand.id }>
+                                    { brand.id === device1.brandId ? brand.name : '' }
+                                </span>
+                            ) }&nbsp;
+                            { device.types.map( type =>
+                                <span key={ type.id }>
+                                    { type.id === device1.typeId ? type.name : '' }
+                                </span>
+
+                            ) }<span> { device1.price } грн</span>
+                            &nbsp;{ device1.rating }
+                        </div>
                         <Image width={ 18 } height={ 18 } src={ star } />
                     </div>
                 </div>
-                <div>{ device1.name }&nbsp;
-                    { device.brands.map( brand =>
-                        <span key={ brand.id }>
-                            { brand.id === device1.brandId ? brand.name : '' }
-                        </span>
-                    ) }&nbsp;
-                    { device.types.map( type =>
-                        <span key={ type.id }>
-                            { type.id === device1.typeId ? type.name : '' }
-                        </span>
-                    ) }
+                <div className='mt-1'>{ device1.name }
                 </div>
+
             </Card>
         </Col >
     );

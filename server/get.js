@@ -8,20 +8,22 @@ var fs = require( "fs" );
 console.log( "start" );
 
 let type;
-
-// type = 'phone';
-type = 'tv'
-// type = 'notebook'
-// type = 'tablet'
-
 let brand;
 
-brand = 'samsung';
+
+// type = 'phone';
+// type = 'tv'
+type = 'notebook'
+// type = 'tablet'
+
+
+
+// brand = 'samsung';
 // brand = 'apple'
 // brand = 'xiaomi'
 // brand = 'HP'
 // brand = 'apple'
-// brand='lenovo'
+brand = 'lenovo'
 // brand='motorola'
 
 let typeId;
@@ -42,16 +44,26 @@ if ( type === 'phone' )
 if ( brand === 'apple' )
 {
     brandId = 1
-} else if ( brand === 'samsung' )
+}
+else if ( brand === 'samsung' )
 {
     brandId = 2
-} else if ( brand === 'HP' )
+}
+else if ( brand === 'HP' )
 {
     brandId = 3
+}
+else if ( brand === 'lenovo' )
+{
+    brandId = 4
 }
 else if ( brand === 'motorola' )
 {
     brandId = 5
+}
+else if ( brand === 'xiaomi' )
+{
+    brandId = 6
 }
 
 let device = {}
@@ -65,8 +77,8 @@ const nightmare = Nightmare( {
 
 
 var pageUrls = [
-    'https://rozetka.com.ua/all-tv/c80037/gotovo-k-otpravke=1;producer=samsung;tehnologii-248588=wi-fi;21667=fullhd,hd_ready,8k/',
-    // 'https://rozetka.com.ua/mobile-phones/c80003/gotovo-k-otpravke=1;producer=apple;seller=rozetka/', //status=available наче цена не парсится и ошибка
+    'https://rozetka.com.ua/notebooks/c80004/gotovo-k-otpravke=1;price=7499-131999;processor=amd-ryzen-3,intel_core_i3,intel_core_i5;producer=lenovo/',
+    // 'https://rozetka.com.ua/mobile-phones/c80003/gotovo-k-otpravke=1;producer=apple;seller=rozetka/', //status=available или gotovo-k-otpravke=1 наче цена не парсится и ошибка
 
 ];
 
@@ -79,7 +91,7 @@ for ( let i = 0; pageUrls.length > i; i++ )
         .goto( pageUrl )
         .wait( 'body' )
         .wait( '.goods-tile__heading.ng-star-inserted' )
-        .evaluate( () => document.querySelector( 'body' ).innerHTML )        
+        .evaluate( () => document.querySelector( 'body' ).innerHTML )
         .then( response =>
         {
             console.log( getData0( response ) );
@@ -102,17 +114,15 @@ function getData0 ( html )
         var linkItem = $( val ).attr( "href" );
         links.push( linkItem );
     } );
+  
+
+    [ ...new Set( links ) ] //убираем повторы в массиве
+
     console.log( "TCL: links", links );
 
-
-
-    //     let link =  $( ".goods-tile__inner>a" ).append( "!" ).attr( "href" )
-
-    //     console.log("TCL: link", link)
+    //     let link =  $( ".goods-tile__inner>a" ).append( "!" ).attr( "href" ) 
     //     let links =[]
     //     links = link.split( "!" );//массив ссылок на товары
-
-    //   console.log( "TCL: links", links );
 
     getProducts( links )
 

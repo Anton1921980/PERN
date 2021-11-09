@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap';
-import bigStar from '../assets/bigStar.png'
-import { useParams } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import {  Container } from 'react-bootstrap';
+// import bigStar from '../assets/bigStar.png'
+// import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { fetchBrands, fetchOneDevice, fetchTypes,addtoBasket } from '../http/deviceAPI';
+import { fetchBrands, fetchTypes } from '../http/deviceAPI';
 
 
 const Main = observer(() =>

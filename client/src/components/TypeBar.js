@@ -8,7 +8,7 @@ const TypeBar = observer( ( props ) =>
 {
 
     const { device } = useContext( Context )
-    console.log( "TCL: device3", device )
+    // console.log( "TCL: device3", device )
 
     const [ chosen, setChosen ] = useState( false )
 

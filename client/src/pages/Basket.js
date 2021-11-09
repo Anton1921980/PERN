@@ -6,7 +6,7 @@ import { deleteFromBasket, getBasket } from '../http/deviceAPI';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
 import { observer } from 'mobx-react-lite';
 
-import close from '../assets/close.svg'
+// import close from '../assets/close.svg'
 
 const Basket = observer( () =>
 {
@@ -17,7 +17,7 @@ const Basket = observer( () =>
     useEffect( () =>
     {
         getBasket().then( data => device.setBaskets( data ) )
-    }, [] )
+    }, [device] )
 
     useEffect( () =>
     {
@@ -27,11 +27,11 @@ const Basket = observer( () =>
             deleteFromBasket( device.selectedBasket ).then( data =>
             {
                 device.setSelectedBasket( null )
-
-
             } )
         }
+
         getBasket().then( data => device.setBaskets( data ) )
+
     }, [ device.selectedBasket ] )
 
 
@@ -57,7 +57,7 @@ const Basket = observer( () =>
                 <Card className="d-flex w-100 p-2 justify-content-center mb-2" key={ product.id }>
                     <Row className="d-flex ">
                         <Col md={ 3 }>
-                            <img src={ process.env.REACT_APP_API_URL + product.device.img } height={ 60 } />
+                            <img src={ process.env.REACT_APP_API_URL + product.device.img } alt={'device'} height={ 60 } />
                         </Col>
                         <Col md={ 6 }>
                             <div className="d-flex h-100 flex-row justify-content-end align-items-center">
