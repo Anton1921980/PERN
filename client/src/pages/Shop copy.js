@@ -31,18 +31,18 @@ const Shop = observer( () =>
     let parsedBrands
     parsed.brands ? parsedBrands = +parsed.brands : parsedBrands = null
 
-    let shopUrl = undefined;//переход по урл /shop
-    let linked = undefined;//переход по урл querystring
 
-    path && ( path.length > 16 ) ? linked = 1 : linked = undefined
+    let linked = undefined;//переход по урл
+    // let initial = undefined;
+    path && ( path.length > 18 ) ? linked = 1 : linked = undefined
+    // linked === undefined ? initial = 1 : initial = undefined
 
-    !path ? shopUrl = 1 : shopUrl = undefined
-
-    const [ fetched, setFetched ] = useState( false )
+    // console.log( "TCL: initial", initial )
+    // console.log( "TCL: linked", linked )
+    // useEffect первая загрузка все товары или по query string в url
+    let string
 
     const [ chosen, setChosen ] = useState( false )
-
-
 
 
     //отрабатывает один раз при переходе по url или на /shop
@@ -50,7 +50,7 @@ const Shop = observer( () =>
     {
         if ( linked === 1 )//загрузка по строке
         {
-
+            string = 1
 
             fetchTypes().then( data =>
             {
@@ -61,7 +61,7 @@ const Shop = observer( () =>
             fetchBrands( parsedTypes ).then( data =>
             {
                 device.setBrands( data )
-                device.setSelectedBrand( { id: parsedBrands } )
+                device.setSelectedBrand( { id: +parsedBrands } )
             } )
 
             fetchDevices( parsedTypes, parsedBrands, parsed.page, parsed.limit, parsed.sort ).then( data =>
@@ -69,12 +69,12 @@ const Shop = observer( () =>
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
             } )
-setFetched(true)
+
             console.log( 'device по строке:', device )
         }
 
 
-        else if ( shopUrl === 1 ) //загрузка первичная /shop все товары 
+        else//загрузка первичная /shop все товары 
         {
             fetchTypes().then( data => device.setTypes( data ) )
 
@@ -99,39 +99,35 @@ setFetched(true)
         let brand = "";
         let sort = "";
 
-        // if ( !fetched )
-        // {
-      
-
+        if ( string !== 1 )
+        {
             device.selectedType.id ? type = `types=${ device.selectedType.id }` : type = ''
             device.selectedBrand.id ? brand = `&brands=${ device.selectedBrand.id }` : brand = ''
-            device.sort ? ( sort = `&sort=${ device.sort }` ): sort =''
-    
+            device.sort && ( sort = `&sort=${ device.sort }` )
+
             let query = `${ type }${ brand }&page=${ device.page }&limit=${ device.limit }${ sort }`;
-    
             console.log( "TCL: query", query )
-    
+
             history.push( `/shop/?${ query }` )
 
-        fetchBrands( device.selectedType.id ).then( data =>
-        {
-            device.setBrands( data )
+            fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, device.sort ).then( data =>
+            {
+                device.setDevices( data.rows )
+                device.setTotalCount( data.count )
+                // device.setSort( data.sort )
 
-            console.log( "fetch brands2" )
+                console.log( "TCL: device с фильтрами", device );
+            } )
+            fetchBrands( parsedTypes ).then( data =>
+            {
+                device.setBrands( data )
+                // device.setSelectedBrand( { id: +parsedBrands } )
 
-        } )
-        fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, device.sort ).then( data =>
-        {
-            device.setDevices( data.rows )
-            device.setTotalCount( data.count )
-            // device.setSort( data.sort )
+                console.log( "fetch brands2" )
 
-            console.log( "TCL: device с фильтрами", device );
-        } )
-
-
-        // }
-    }, [ device.selectedType, device.selectedBrand, device.sort, device.page ] )
+            } )
+        }
+    }, [ device.page, device.selectedType, device.selectedBrand, device.sort ] )
 
 
 
@@ -178,7 +174,7 @@ setFetched(true)
     //     } )
 
 
-    // }
+        // }
     // }, [ parsed.page, parsed.selectedType,parsed.selectedBrand, parsed.sort ] )
 
 
@@ -192,54 +188,29 @@ setFetched(true)
                     <BrandBar />
                     <div className='d-flex justify-content-between'>
                         <Pages />
-                        <div className='d-flex'>
-                            <Card
-                                className='p-1'
-                                style={ { cursor: 'pointer', height: '2.5rem' } }
-                                border={ 'DESC' === device.sort ? 'dark' : 'light' }
-                            >
-                                { chosen === false ?
+                        <Card
+                            className='p-1'
+                            style={ { cursor: 'pointer', height: '2.5rem' } }
+                            border={ 'DESC' === device.sort ? 'dark' : 'light' }
+                        >
+                            { chosen === false ?
+                                <div
+                                    onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
+                                >decrease-
+                                </div>
+                                :
+                                ( 'DESC' === device.sort ) ? (
                                     <div
+                                        onClick={ () => { setChosen( false ); device.setSort( '' ) } }
+                                    > по возрастанию
+                                    </div> )
+                                    :
+                                    ( <div
                                         onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
-                                    >-price
-                                    </div>
-                                    :
-                                    ( 'DESC' === device.sort ) ? (
-                                        <div
-                                            onClick={ () => { setChosen( false ); device.setSort( '' ) } }
-                                        >-price
-                                        </div> )
-                                        :
-                                        ( <div
-                                            onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
-                                        >-price
-                                        </div> )
-                                }
-                            </Card>
-                            <Card
-                                className='p-1'
-                                style={ { cursor: 'pointer', height: '2.5rem' } }
-                                border={ 'ASC' === device.sort ? 'dark' : 'light' }
-                            >
-                                { chosen === false ?
-                                    <div
-                                        onClick={ () => { setChosen( true ); device.setSort( 'ASC' ) } }
-                                    >+price
-                                    </div>
-                                    :
-                                    ( 'ASC' === device.sort ) ? (
-                                        <div
-                                            onClick={ () => { setChosen( false ); device.setSort( '' ) } }
-                                        >+price
-                                        </div> )
-                                        :
-                                        ( <div
-                                            onClick={ () => { setChosen( true ); device.setSort( 'ASC' ) } }
-                                        >+price
-                                        </div> )
-                                }
-                            </Card>
-                        </div>
+                                    >по возрастанию
+                                    </div> )
+                            }
+                        </Card>
                     </div>
                     <DeviceList />
                 </Col>

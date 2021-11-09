@@ -7,25 +7,21 @@ export default class DeviceStore
         this._types = [
             // { id: 1, name: 'Холодильники' },
             // { id: 2, name: 'Смартфоны' },
-
-
         ]
         this._brands = [
             // { id: 1, name: 'Samsung' },
             // { id: 2, name: 'Apple' },
-
-
         ]
         this._devices = [
             // { id: 1, name: 'Iphone 12pro', price: 158566, rating: 5, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
             // { id: 2, name: 'Iphone 12pro', price: 158566, rating: 2, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
-
         ]
         this._baskets = []
         this._selectedType = {}
         this._selectedBrand = {}
         this._selectedBasket = {}
         this._page = 1
+        this._sort = ''
         this._totalCount = 0
         this._limit = 6
 
@@ -61,12 +57,17 @@ export default class DeviceStore
         this._selectedBrand = brands
     }
     setSelectedBasket ( basket )
-    {      
+    {
         this._selectedBasket = basket
     }
     setPage ( page )
     {
         this._page = page
+    }
+    setSort ( sort )
+    {
+        // this.setPage( 1 )
+        this._sort = sort
     }
     setTotalCount ( count )
     {
@@ -110,6 +111,10 @@ export default class DeviceStore
     get page ()
     {
         return this._page
+    }
+    get sort ()
+    {
+        return this._sort
     }
     get limit ()
     {

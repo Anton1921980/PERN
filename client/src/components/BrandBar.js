@@ -17,18 +17,18 @@ const BrandBar = observer( () =>
                     border={ brand.id === device.selectedBrand.id ? 'dark' : 'light' }
                 >
                     { chosen === false ?
-                        <div className='p-3'
+                        <div className='p-2'
                             onClick={ () => { device.setSelectedBrand( brand ); setChosen( true ) } }
                         >{ brand.name }
                         </div>
                         :
                         ( brand.id === device.selectedBrand.id ) ? (
-                            <div className='p-3'
+                            <div className='p-2'
                                 onClick={ () => { device.setSelectedBrand( '' ); setChosen( false ) } }
                             > { brand.name }
                             </div> )
                             :
-                            ( <div className='p-3'
+                            ( <div className='p-2'
                                 onClick={ () => { device.setSelectedBrand( brand ); setChosen( true ) } }
                             > { brand.name }
                             </div> )

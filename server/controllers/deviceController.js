@@ -26,7 +26,7 @@ class DeviceController //для парсера
             return (
                 res.json( device ).json( deviceInfo )
                 // .then(//because res.json calls 2 times get not critical error: 'Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client'
-                    // res.json( deviceInfo ) )
+                // res.json( deviceInfo ) )
             )
 
         } catch ( e )
@@ -35,49 +35,61 @@ class DeviceController //для парсера
         }
     }
 
-        async getAll ( req, res )
+    async getAll ( req, res )
+    {
+        let { brandId, typeId, limit, page, sort } = req.query;
+
+        page = page || 1
+        limit = limit || 1000
+
+        console.log( 'TCL sort', sort )
+
+        if ( sort && ( sort !== '' ) )
         {
-            let { brandId, typeId, limit, page } = req.query;
-            page = page || 1
-            limit = limit || 1000
-    
-            let offset = page * limit - limit
-            let devices;
-            if ( !brandId && !typeId )
-            {
-                devices = await Device.findAndCountAll( { limit, offset } )
-            }
-            if ( brandId && !typeId )
-            {
-                devices = await Device.findAndCountAll( { where: { brandId }, limit, offset } )
-            }
-            if ( !brandId && typeId )
-            {
-                devices = await Device.findAndCountAll( { where: { typeId }, limit, offset } )
-            }
-            if ( brandId && typeId )
-            {
-                devices = await Device.findAndCountAll( { where: { typeId, brandId }, limit, offset } )
-            }
-    
-    
-            return res.json( devices )
-    
-    
+            sort = [ [ 'price', sort ] ]
         }
-        async getOne ( req, res )
+        else
         {
-            const { id } = req.params
-            const device = await Device.findOne(
-                {
-                    where: { id },
-                    include: [ { model: DeviceInfo, as: 'info' } ]
-                }
-            )
-            return res.json( device )
+            sort = [ [ 'id', 'ASC' ] ]
         }
+
+        let offset = page * limit - limit
+        let devices;
+        if ( !brandId && !typeId )
+        {
+            devices = await Device.findAndCountAll( { limit, offset, order: sort } )
+        }
+        if ( brandId && !typeId )
+        {
+            devices = await Device.findAndCountAll( { where: { brandId }, limit, offset, order: sort } )
+        }
+        if ( !brandId && typeId )
+        {
+            devices = await Device.findAndCountAll( { where: { typeId }, limit, offset, order: sort } )
+        }
+        if ( brandId && typeId )
+        {
+            devices = await Device.findAndCountAll( { where: { typeId, brandId }, limit, offset, order: sort } )
+        }
+
+
+        return res.json( devices )
+
+
     }
-    
+    async getOne ( req, res )
+    {
+        const { id } = req.params
+        const device = await Device.findOne(
+            {
+                where: { id },
+                include: [ { model: DeviceInfo, as: 'info' } ]
+            }
+        )
+        return res.json( device )
+    }
+}
+
 
 
 
