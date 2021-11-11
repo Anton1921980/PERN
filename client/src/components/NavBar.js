@@ -5,15 +5,20 @@ import Nav from "react-bootstrap/Nav";
 import { NavLink } from "react-router-dom";
 // import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from "../utils/consts";
-import { Button} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import Container from "react-bootstrap/Container";
-import {  useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+import login5 from '../assets/login5.png'
+import basket2 from '../assets/basket2.png'
+import logout5 from '../assets/logout5.png'
+import admin5 from '../assets/admin5.png'
+
 
 const NavBar = observer( () =>
 {
     const { user } = useContext( Context )
-    const history =  useHistory()
+    const history = useHistory()
 
     const logOut = () =>
     {
@@ -25,47 +30,50 @@ const NavBar = observer( () =>
     return (
         <Navbar bg="dark" expand="lg">
             <Container>
-                <NavLink style={ { color: 'white', textDecoration: 'none', fontSize: '40px' } } to={ SHOP_ROUTE }>Idevice</NavLink>
-                {/* <Row className='d-flex flex-row flex-no-wrap justify-content-between'> */}
-                    { user.isAuth ?
-                        <Nav
-                            
-                            style={ { maxHeight: '100px', color: 'white' } }
+                <NavLink style={ { color: 'white', textDecoration: 'none', fontSize: '40px' } } to={ '/' }>Idevice</NavLink>
+                 <div className='d-flex flex-row flex-no-wrap justify-content-between'>
+                { user.isAuth ?
+                    <Nav
+
+                        style={ { maxHeight: '100px', color: 'white' } }
+                    >
+                        <div
+                            style={ { background: `url(${ admin5 }) no-repeat center center`, width: 30, height: 30, backgroundSize: 'cover', color: 'white', cursor: 'pointer' } }
+                            variant={ 'outline-light' }
+                            onClick={ () => history.push( ADMIN_ROUTE ) }
                         >
-                            <Button
-                                variant={ 'outline-light' }
-                                onClick={ () => history.push( ADMIN_ROUTE ) }
-                            >Админка
-                            </Button>
-                            <Button
-                                variant={ 'outline-light' }
-                                onClick={ () => logOut() }
-                                className="ml-2"
-                            > Выйти
-                            </Button>
-                        </Nav>
-                        :
-                        <Nav
-                           
-                            style={ { maxHeight: '100px', color: 'white' } }
+                        </div>
+                        <div
+                            style={ { background: `url(${ logout5 }) no-repeat center center`, width: 30, height: 30, backgroundSize: 'cover', color: 'white', cursor: 'pointer',marginLeft: '10px' } }
+                            variant={ 'outline-light' }
+                            onClick={ () => logOut() }
+                            className="ml-2"
                         >
-                            <Button
-                                variant={ 'outline-light' }
-                                onClick={ () => history.push( LOGIN_ROUTE ) }
-                            >Авторизация
-                            </Button>
-                        </Nav>
-                    }
-                    <Nav>
-                        <Button
-                            variant={ "outline-light" }
-                            className="mr-2"
-                            onClick={ () => history.push( BASKET_ROUTE ) }
-                        >
-                            Корзина
-                        </Button>
+                        </div>
                     </Nav>
-                {/* </Row> */}
+                    :
+                    <Nav
+
+                        style={ { maxHeight: '100px', color: 'white' } }
+                    >
+                        <div
+                            style={ { background: `url(${ login5 }) no-repeat center center`, width: 30, height: 30, backgroundSize: 'cover', color: 'white', cursor: 'pointer' } }
+                            variant={ 'outline-light' }
+                            onClick={ () => history.push( LOGIN_ROUTE ) }
+                        >
+                        </div>
+                    </Nav>
+                }
+                <Nav>
+                    <div
+                        style={ { background: `url(${ basket2 }) no-repeat center center`, width: 30, height: 35, backgroundSize: 'cover', color: 'white', cursor: 'pointer' } }
+                        className="mr-2"
+                        onClick={ () => history.push( BASKET_ROUTE ) }
+                    >
+
+                    </div>
+                </Nav>
+                </div> 
             </Container>
         </Navbar>
     );

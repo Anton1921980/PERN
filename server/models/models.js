@@ -71,11 +71,11 @@ Device.hasMany( Rating )
 Rating.belongsTo( Device,{ constraints: false } )
 
 Device.hasMany( BasketDevice )
-BasketDevice.belongsTo( Device, { constraints: false })
+BasketDevice.belongsTo( Device)
 
 Device.hasMany( DeviceInfo, { as: 'info' } );
 DeviceInfo.belongsTo( Device )
-//DeviceInfo.belongsTo( Device, {foreignKey: 'id',  constraints: false, as:'device' } )//id deviceId  ?? может обновить прогу postgres
+//DeviceInfo.belongsTo( Device, {foreignKey: 'id',  constraints: false, as:'device' } )//id deviceId  ?? может обновить прогу postgres - помогло!!!
 
 Type.belongsToMany( Brand, { through: TypeBrand } )
 Brand.belongsToMany( Type, { through: TypeBrand } )

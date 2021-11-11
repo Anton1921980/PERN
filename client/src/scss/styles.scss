@@ -1,0 +1,44 @@
+.paginationItemStyle {
+	margin: 5px;
+    .page-link{
+       border-color:transparent;
+       background-color: transparent;
+        color: gray;
+    }
+    
+	.page-item {
+		border-color: transparent;
+        background-color: transparent;
+	}	
+		&.active .page-link{			
+				
+                color:black;	
+                // border-top-left-radius: 0px;               
+                // border-bottom-left-radius: 0px;
+                background-color: transparent;
+                border-color: transparent;
+                border-bottom: 1px solid black; 
+                           
+		}	
+        &:hover .page-link{
+            // background-color: grey;
+            // border-top-left-radius: 0px;               
+            // border-bottom-left-radius: 0px;
+            background-color: transparent;
+            border-color: transparent;
+            border-bottom:1px solid gray;
+        }
+       
+}
+.page-item:first-child .page-link {
+        border-top-left-radius: 0.01rem !important;
+        border-bottom-left-radius: 0.01rem !important;
+    }
+.page-item:last-child .page-link {
+    border-top-right-radius: 0.01rem !important;
+    border-bottom-right-radius: 0.01rem !important;
+}
+  .card{  
+border: 1px solid white;
+border-radius: 0.01rem;
+  }

@@ -8,39 +8,32 @@ const TypeBar = observer( ( props ) =>
 {
 
     const { device } = useContext( Context )
-    // console.log( "TCL: device3", device )
 
     const [ chosen, setChosen ] = useState( false )
 
-    // useEffect( () =>
-    // {
-    //     chosen === true ? setChosen( false ) : setChosen( true )
-    // }, [ chosen ] );
-
-    
-
     return (
-        <ListGroup>
+        <ListGroup variant='flush'>
             { device.types.map( type =>
                 <ListGroup.Item
                     style={ { cursor: 'pointer' } }
-                    active={ type.id === device.selectedType.id  }
+                    active={ type.id === device.selectedType.id }
+                    action variant="light"
                     key={ type.id }>
                     { chosen === false ?
-                        <div
-                            onClick={ () => { device.setSelectedType( type ); setChosen( true ) } }
-                        > { type.name }
+                        <div className='d-flex justify-content-between'
+                            onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand(''); setChosen( true ) } }
+                        > <span>{ type.name }</span><span>&gt;</span>
                         </div>
                         :
                         ( type.id === device.selectedType.id ) ? (
-                            <div
-                                onClick={ () => { device.setSelectedType( '' ); setChosen( false ) } }
-                            > { type.name }
+                            <div className='d-flex justify-content-between'
+                                onClick={ () => { device.setSelectedType( '' ); device.setSelectedBrand(''); setChosen( false ) } }
+                            > <span>{ type.name }</span><span>&gt;</span>
                             </div> )
                             :
-                            ( <div
-                                onClick={ () => { device.setSelectedType( type ); setChosen( true ) } }
-                            > { type.name }
+                            ( <div className='d-flex justify-content-between'
+                                onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand(''); setChosen( true ) } }
+                            > <span>{ type.name }</span><span>&gt;</span>
                             </div> )
                     }
 

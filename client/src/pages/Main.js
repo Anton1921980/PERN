@@ -1,42 +1,60 @@
 import React, { useContext, useEffect } from 'react';
-import {  Container } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
 // import bigStar from '../assets/bigStar.png'
 // import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
 import { fetchBrands, fetchTypes } from '../http/deviceAPI';
+import { SliderHomepage } from '../components/Slider/Slider';
+import TypeBar from '../components/TypeBar';
+import { useHistory } from 'react-router-dom';
 
-
-const Main = observer(() =>
+const Main = observer( () =>
 {
     const { device } = useContext( Context )
-    console.log("TCL: device", device)
-    useEffect(() => {
-        fetchTypes().then(data => device.setTypes(data))
-        fetchBrands().then(data => device.setBrands(data))
-        console.log('device:',device)
-    }, [])
+    const history = useHistory()
 
-   
+    console.log( "TCL: device", device )
 
-   
+    useEffect( () =>
+    {
+        fetchTypes().then( data => device.setTypes( data ) )
+        // fetchBrands().then( data => device.setBrands( data ) )
+        console.log( 'device:', device )
+    }, [] )
 
-    // const device1 = { id: 1, name: 'Iphone 12pro', price: 158566, rating: 5, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' }
-    // const description = [
-    //     { id: 1, title: 'Оперативная память', description: '5 gb' },
-    //     { id: 2, title: 'Камера', description: '48 mp' },
-    //     { id: 3, title: 'Процессор', description: '2 ghz' },
-    //     { id: 4, title: 'Аккумулятор', description: '4000 mah' },
-    // ]
+    useEffect( () =>
+    {
+        if ( +device.selectedType.id > 0 )
+        {
+            let query = `&types=${ device.selectedType.id }&page=${ device.page }&limit=${ device.limit }`;
+
+            console.log( "TCL: query", query )
+
+            history.push( `/shop/?${ query }` )
+        }
+    }, [ device.selectedType.id ] )
 
 
-    //  Создаём функцию для записи 
-   
     return (
-        <Container>
-           <div>MAIN PAGE</div>
+        <Container className='d-flex mt-3'>
+            {/* <h1>MAIN PAGE</h1> */ }
+            <Col md={ 3 }>
+                <TypeBar />
+            </Col>
+            <Col md={ 9 }>
+                <SliderHomepage
+                    dots={ true }
+                    center={ false }
+                    auto={ true }
+                    homePage={ true }
+                    show={ 1 }
+                    height={ 425 }
+                    width={ '80%' }
+                    arrows={ false } />
+            </Col>
         </Container>
     )
-})
+} )
 
 export default Main

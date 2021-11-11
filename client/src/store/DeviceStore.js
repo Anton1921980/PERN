@@ -17,7 +17,7 @@ export default class DeviceStore
             // { id: 2, name: 'Iphone 12pro', price: 158566, rating: 2, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
         ]
         this._baskets = []
-        this._selectedType = {}
+        this._selectedType = ''
         this._selectedBrand = {}
         this._selectedBasket = {}
         this._page = 1

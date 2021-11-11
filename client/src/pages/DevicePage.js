@@ -36,12 +36,16 @@ const DevicePage = observer( () =>
     // ]
 
 
+
+    //если в базе id товара не подряд в корзину не добавляет ошибка на сервере
+    //UnhandledPromiseRejectionWarning: SequelizeForeignKeyConstraintError: insert або update в таблиці "basket_devices" порушує обмеження зовнішнього ключа "basket_devices_deviceId_fkey"
+
     //   функция для записи 
-    const add = () =>
+    const add = async () =>
     {
         const formData = new FormData()
-        formData.append( 'deviceId', id )
-        addtoBasket( formData ).then( response => alert( `Товар ` + device.name + ` был добавлен в вашу корзину!` ) )
+        await formData.append( 'deviceId', id )
+        await addtoBasket( formData ).then( response => alert( `Товар ` + device1.name + ` был добавлен в вашу корзину!` ) )
     }
     return (
         <Container>
@@ -54,7 +58,7 @@ const DevicePage = observer( () =>
                 <Col md={ 6 } >
                     <div className='d-flex flex-column'>
                         <h2>{ device1.name }&nbsp;
-                            <div style={{color:'lightgrey'}}>
+                            <div style={ { color: 'lightgrey' } }>
                                 { device.brands.map( brand =>
                                     <span key={ brand.id }>
                                         { brand.id === device1.brandId ? brand.name : '' }
