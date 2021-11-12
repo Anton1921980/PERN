@@ -23,7 +23,7 @@ export default class DeviceStore
         this._page = 1
         this._sort = ''
         this._totalCount = 0
-        this._limit = 6
+        this._limit = 3
 
         //mobx следит за ппеременными и перерендерит при изменении
         makeAutoObservable( this )

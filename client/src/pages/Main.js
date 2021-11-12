@@ -49,8 +49,8 @@ const Main = observer( () =>
                     auto={ true }
                     homePage={ true }
                     show={ 1 }
-                    height={ 425 }
-                    width={ '80%' }
+                    height={ '100%' }
+                    width={ '100%' }
                     arrows={ false } />
             </Col>
         </Container>

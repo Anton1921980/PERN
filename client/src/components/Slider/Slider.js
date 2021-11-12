@@ -26,7 +26,7 @@ export const SliderHomepage = props =>
     arrows: true,
     infinite: true,
     draggable: true,
-    autoplay: props.auto,    
+    autoplay: props.auto,
     speed: 1000,
     nextArrow: <SampleNextArrow homePage={ props.homePage } right={ 24 } />,
     prevArrow: (
@@ -73,11 +73,11 @@ export const SliderHomepage = props =>
   const slides = [
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
       src={ process.env.REACT_APP_API_URL + 'ip12promax.jpg' } />,
-      <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
+    <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
       src={ process.env.REACT_APP_API_URL + 'iphoneairpods.jpg' } />,
-      <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
+    <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
       src={ process.env.REACT_APP_API_URL + 'iphone13.jpg' } />,
-   
+
   ]
 
   const itemsHomePage = slides.slice( 0, 3 );
@@ -92,26 +92,11 @@ export const SliderHomepage = props =>
           {
             return (
               <div key={ item }>
-                <CarouselImage height={ props.height } >{ item }
-                  <SliderPromo>
-                    {/* <SliderPromoText>{ item.description }</SliderPromoText> */ }
-                    <SliderPromoButton>
-                      <NavLink
-                        to={ '/shop' }>
-                        <div>SHOP NOW</div>
-                      </NavLink>
-                    </SliderPromoButton>
-                  </SliderPromo>
-                </CarouselImage>
-                <SliderPromoMobile>
-                  {/* <SliderPromoText>{ item.description }</SliderPromoText> */ }
-                  <SliderPromoButton>
-                    <NavLink
-                      to={ '/shop' }>
-                      <div>SHOP NOW</div>
-                    </NavLink>
-                  </SliderPromoButton>
-                </SliderPromoMobile>
+                <NavLink to={ '/shop' }>
+                  <CarouselImage height={ props.height } >
+                    { item }
+                  </CarouselImage>
+                </NavLink>
               </div>
             );
           } ) }

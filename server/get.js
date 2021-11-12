@@ -13,17 +13,17 @@ let brand;
 
 // type = 'phone';
 // type = 'tv'
-type = 'notebook'
-// type = 'tablet'
+// type = 'notebook'
+type = 'tablet'
 
 
 
-// brand = 'samsung';
-// brand = 'apple'
+// brand = 'samsung'
+brand = 'apple'
 // brand = 'xiaomi'
 // brand = 'HP'
 // brand = 'apple'
-brand = 'lenovo'
+// brand = 'lenovo'
 // brand='motorola'
 
 let typeId;
@@ -39,6 +39,11 @@ if ( type === 'phone' )
 {
     typeId = 3
 }
+else if ( type === 'tablet' )
+{
+    typeId = 4
+}
+
 
 
 if ( brand === 'apple' )
@@ -77,7 +82,7 @@ const nightmare = Nightmare( {
 
 
 var pageUrls = [
-    'https://rozetka.com.ua/notebooks/c80004/gotovo-k-otpravke=1;price=7499-131999;processor=amd-ryzen-3,intel_core_i3,intel_core_i5;producer=lenovo/',
+    'https://rozetka.com.ua/tablets/c130309/producer=apple;sell_status=available/',
     // 'https://rozetka.com.ua/mobile-phones/c80003/gotovo-k-otpravke=1;producer=apple;seller=rozetka/', //status=available или gotovo-k-otpravke=1 наче цена не парсится и ошибка
 
 ];

@@ -10,11 +10,12 @@ const BrandBar = observer( () =>
     const [ chosen, setChosen ] = useState( false )
 
     return (
-        <div className='d-flex flex-direction-row flex-wrap justify-content-'>
+        <div className='d-flex flex-direction-row flex-wrap '>
             { device.brands.map( brand =>
                 <Card
                     key={ brand.id }
                     style={ { cursor: 'pointer' } }
+                    // style={ brand.id === device.selectedBrand.id ? { cursor: 'pointer', borderBottom: '2px solid black' } : { cursor: 'pointer', borderBottom: '2px solid white' } }               
                     border={ brand.id === device.selectedBrand.id ? 'secondary' : 'light' }
                 >
                     { chosen === false ?
@@ -35,8 +36,9 @@ const BrandBar = observer( () =>
                             </div> )
                     }
                 </Card>
-            ) }
-        </div>
+            )
+            }
+        </div >
     );
 } );
 

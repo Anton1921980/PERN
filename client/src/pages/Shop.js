@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Card, Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col, Spinner } from "react-bootstrap";
 import TypeBar from "../components/TypeBar";
 import BrandBar from "../components/BrandBar";
 import DeviceList from "../components/DeviceList";
@@ -13,6 +13,9 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 const Shop = observer( () =>
 {
+    const [loading, setLoading] = useState(true)
+   
+
     const { device } = useContext( Context )
     const history = useHistory()
 
@@ -46,8 +49,6 @@ const Shop = observer( () =>
 
     !path ? shopUrl = 1 : shopUrl = undefined
 
-    const [ fetched, setFetched ] = useState( false )
-
     const [ chosen, setChosen ] = useState( false )
 
 
@@ -78,8 +79,8 @@ const Shop = observer( () =>
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
                 // device.setSort( parsedSort )
-            } )
-            setFetched( true )
+            } ).finally(() => setLoading(false))
+         
             console.log( 'device по строке:', device )
         }
 
@@ -94,7 +95,7 @@ const Shop = observer( () =>
             {
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
-            } )
+            } ).finally(() => setLoading(false))
             console.log( 'device без фильтров:', device )
         }
     }, [] )
@@ -105,11 +106,6 @@ const Shop = observer( () =>
 
     useEffect( () =>
     {
-
-
-        // if ( !fetched )
-        // {
-
 
        
 
@@ -141,7 +137,7 @@ const Shop = observer( () =>
 
 
             console.log( "TCL: device с фильтрами", device );
-        } )
+        } ).finally(() => setLoading(false))
 
 
         // }
@@ -152,7 +148,9 @@ const Shop = observer( () =>
     //сделать чтобы отображались только категории которые в этом бренде?
 
 
-
+    if (loading) {
+        return <Spinner animation={"border"} variant="secondary"/>
+    }
 
 
 
@@ -168,48 +166,48 @@ const Shop = observer( () =>
                         <Pages />
                         <div className='d-flex align-items-center ml-5'>
                             <Card
-                                className='p-1'
+                                className='p-1 flex-row'
                                 style={ { cursor: 'pointer', height: '2.5rem' } }
                                 border={ 'DESC' === device.sort ? 'dark' : 'light' }
                             >
                                 { chosen === false ?
                                     <div style={ { width: '100%', height: '100%' } }
                                         onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
-                                    >-price
+                                    >{['- ', <span>&#8372;</span>]}
                                     </div>
                                     :
                                     ( 'DESC' === device.sort ) ? (
                                         <div style={ { width: '100%', height: '100%' } }
                                             onClick={ () => { setChosen( false ); device.setSort( '' ) } }
-                                        >-price
+                                        >{['- ', <span>&#8372;</span>]}
                                         </div> )
                                         :
                                         ( <div style={ { width: '100%', height: '100%' } }
                                             onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
-                                        >-price
+                                        > {['- ', <span>&#8372;</span>]}
                                         </div> )
                                 }
                             </Card>
                             <Card
-                                className='p-1'
+                                className='p-1 flex-row'
                                 style={ { cursor: 'pointer', height: '2.5rem' } }
                                 border={ 'ASC' === device.sort ? 'dark' : 'light' }
                             >
                                 { chosen === false ?
                                     <div style={ { width: '100%', height: '100%' } }
                                         onClick={ () => { setChosen( true ); device.setSort( 'ASC' ) } }
-                                    >+price
+                                    >{['+ ', <span>&#8372;</span>]}
                                     </div>
                                     :
                                     ( 'ASC' === device.sort ) ? (
                                         <div style={ { width: '100%', height: '100%' } }
                                             onClick={ () => { setChosen( false ); device.setSort( '' ) } }
-                                        >+price
+                                        >{['+ ', <span>&#8372;</span>]}
                                         </div> )
                                         :
                                         ( <div style={ { width: '100%', height: '100%' } }
                                             onClick={ () => { setChosen( true ); device.setSort( 'ASC' ) } }
-                                        >+price
+                                        >{['+ ', <span>&#8372;</span>]}
                                         </div> )
                                 }
                             </Card>
