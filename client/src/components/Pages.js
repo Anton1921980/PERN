@@ -26,31 +26,38 @@ const Pages = observer( () =>
 
     return (
         // <div className='d-flex justify-content-between'>
-        <Pagination className="m-3" variant='flush'>
-            <Pagination.Prev
-                activeLabel={ false }
-                onClick={ () => device.setPage( device.page - 1 ) }
-            >
-                { portionNumber > 1 &&
-                    device.page < leftPortionPageNumber &&
-                    setPortionNumber( portionNumber - 1 ) }
-            </Pagination.Prev>
-            {/* 1st page */ }
-            { ( device.page > "2" ) && (
+        <Pagination className="m-3">
+            {/* пред */ }
+            { ( device.page != 1 ) && (
                 <Pagination.Item
                     className={ 'paginationItemStyle' }
-                    active={ device.page === 1 }
                     activeLabel={ false }
-                    onClick={ () => device.setPage( 1 ) }
+                    onClick={ () => device.setPage( device.page - 1 ) }
                 >
-                    { 1 }
-                </Pagination.Item> ) }
+                    { portionNumber > 1 &&
+                        device.page < leftPortionPageNumber &&
+                        setPortionNumber( portionNumber - 1 ) }
+                    { '<' }
+                </Pagination.Item>
+            ) }
+            {/* 1st page */ }
+
+            <Pagination.Item
+                className={ 'paginationItemStyle' }
+                active={ device.page === 1 }
+                activeLabel={ false }
+                onClick={ () => device.setPage( 1 ) }
+            >
+                { 1 }
+            </Pagination.Item>
             {/* три точки */ }
             { ( device.page > "3" ) && (
-                <Pagination.Ellipsis
+                <Pagination.Item
+                    className={ 'paginationItemStyle' }
                     activeLabel={ false }
                     onClick={ () => device.setPage( device.page - 2 ) }
-                />
+                >{ '..' }
+                </Pagination.Item>
             ) }
             {
                 pages.filter(
@@ -58,7 +65,7 @@ const Pages = observer( () =>
                         page + 1 >= leftPortionPageNumber &&
                         page - 1 <= rightPortionPageNumber
                 ).map( page =>
-                    <Pagination.Item
+                    ( page != 1 ) && ( page != pagesCount ) && <Pagination.Item
                         className={ 'paginationItemStyle' }
                         key={ page }
                         active={ device.page === page }
@@ -71,30 +78,36 @@ const Pages = observer( () =>
             }
             {/* {три точки} */ }
             { ( device.page < pagesCount - 2 ) && (
-                <Pagination.Ellipsis
-                    activeLabel={ false }
-                    onClick={ () => device.setPage( device.page + 2 ) }
-                />
-            ) }
-            {/* last page */ }
-            { ( device.page < pagesCount - 1 ) && (
                 <Pagination.Item
                     className={ 'paginationItemStyle' }
-                    active={ device.page === pagesCount }
                     activeLabel={ false }
-                    onClick={ () => device.setPage( pagesCount ) }
+                    onClick={ () => device.setPage( device.page + 2 ) }
+                >{ '..' }
+                </Pagination.Item>
+
+            ) }
+            {/* last page */ }
+            <Pagination.Item
+                className={ 'paginationItemStyle' }
+                active={ device.page === pagesCount }
+                activeLabel={ false }
+                onClick={ () => device.setPage( pagesCount ) }
+            >
+                { pagesCount }
+            </Pagination.Item>
+            {/* {след} */ }
+            { ( device.page != pagesCount ) && (
+                <Pagination.Item
+                    className={ 'paginationItemStyle' }
+                    activeLabel={ false }
+                    onClick={ () => device.setPage( device.page + 1 ) }
                 >
-                    { pagesCount }
+                    { portionCount > portionNumber &&
+                        device.page > rightPortionPageNumber &&
+                        setPortionNumber( portionNumber + 1 ) }
+                    { '>' }
                 </Pagination.Item>
             ) }
-            <Pagination.Next
-                activeLabel={ false }
-                onClick={ () => device.setPage( device.page + 1 ) }
-            >
-                { portionCount > portionNumber &&
-                    device.page > rightPortionPageNumber &&
-                    setPortionNumber( portionNumber + 1 ) }
-            </Pagination.Next>
         </Pagination>
 
 
