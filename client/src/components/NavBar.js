@@ -69,7 +69,7 @@ const NavBar = observer( () =>
                     <div>
                         <Nav>
                             <div
-                                style={ { background: `url(${ basket5 }) no-repeat center center`, width: 30, height: 35, backgroundSize: 'cover', color: 'white', cursor: 'pointer', position: 'relative', bottom: '4px' } }
+                                style={ { background: `url(${ basket5 }) no-repeat center center`, width: 30, height: 35, backgroundSize: 'cover', color: 'white', cursor: 'pointer', position: 'relative', bottom: '4.5px' } }
                                 className="mr-2"
                                 onClick={ () => history.push( BASKET_ROUTE ) }
                             >
