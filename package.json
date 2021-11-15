@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js: .env.production.local, .env.production, .env.local, .env",
+    "start": "node index.js",
     "run": "nodemon index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
