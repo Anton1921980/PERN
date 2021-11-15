@@ -39,7 +39,7 @@ const start = async ()=> {
 start()
 
 
-process.env.NODE_ENV="production";
+// process.env.NODE_ENV="production";
 // process.env.NODE_ENV="development";
 
 // Server static assets if in production
