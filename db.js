@@ -7,11 +7,13 @@ DATABASE_URL='postgres://qgilefayctavim:5027d2cb19434db55904e0c1091723fd34c68839
 module.exports = new Sequelize(
     DATABASE_URL,
     { 
-        dialect: "postgres",
-        ssl: true, 
+        dialect: "postgres",       
         dialectOptions: {
-          ssl: true
-        }
+            ssl: {
+              require: true,
+              rejectUnauthorized: false // <<<<<<< YOU NEED THIS
+            }
+          },
       }
 )
 
