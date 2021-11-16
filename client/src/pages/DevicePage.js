@@ -52,7 +52,7 @@ const DevicePage = observer( () =>
             <Row className='mt-3'>
                 <Col md={ 6 }>
                     <div style={ { width: 500, height: 400, overflow: 'hidden' } }>
-                        <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } } src={ process.env.REACT_APP_API_URL + device1.img } />
+                        <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } } src={ device1.img } />
                     </div>
                 </Col>
                 <Col md={ 6 } >

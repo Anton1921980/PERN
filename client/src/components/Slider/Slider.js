@@ -72,11 +72,11 @@ export const SliderHomepage = props =>
   // }, [] );
   const slides = [
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-      src={ process.env.REACT_APP_API_URL + 'ip12promax.jpg' } />,
+      src={ 'ip12promax.jpg' } />,
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-      src={ process.env.REACT_APP_API_URL + 'iphoneairpods.jpg' } />,
+      src={ 'iphoneairpods.jpg' } />,
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-      src={ process.env.REACT_APP_API_URL + 'iphone13.jpg' } />,
+      src={ 'iphone13.jpg' } />,
 
   ]
 
