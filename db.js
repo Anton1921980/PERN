@@ -1,7 +1,7 @@
 const { Sequelize } = require( 'sequelize' );
 
 process.env.NODE_ENV = "production";
-
+ // "proxy": "http://localhost:5000", (client/package.json)
 DATABASE_URL = 'postgres://qgilefayctavim:5027d2cb19434db55904e0c1091723fd34c68839ec0957861fec416d3c2ce34f@ec2-3-222-11-129.compute-1.amazonaws.com:5432/d7jnu23kq4nunb'
 // DATABASE_URL = 'postgres://lisxsnui:qnUaUZZXwRpaaDADZMOgkTu_dM6eHRKV@abul.db.elephantsql.com/lisxsnui' 
 
