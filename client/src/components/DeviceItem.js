@@ -29,7 +29,7 @@ const DeviceItem = observer( ( props ) =>
             <Card className='ml-3' style={ { width: 250, height: 400, cursor: 'pointer' } } border={ 'light' }>
                 <div style={ { width: 250, height: 250, overflow: 'hidden' } }>
                     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-                        src={ device1.img } />
+                        src={ '/'+ device1.img } />
                 </div>
                 <div className="text-black-50 mt-3 d-flex justify-content-between align-items-center">
                     <div className='d-flex align-items-center'>
