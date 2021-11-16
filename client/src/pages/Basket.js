@@ -62,7 +62,7 @@ const Basket = observer( () =>
                 >
                     <Row className="d-flex ">
                         <Col md={ 3 }>
-                            <img src={ process.env.REACT_APP_API_URL + product.device.img } alt={ 'device' } height={ 60 } />
+                            <img src={ product.device.img } alt={ 'device' } height={ 60 } />
                         </Col>
                         <Col md={ 6 }>
                             <div className="d-flex h-100 flex-row justify-content-start align-items-center">
