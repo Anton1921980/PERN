@@ -1,12 +1,14 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Pagination } from 'react-bootstrap';
 import { Context } from '../index';
+import DevicePage from '../pages/DevicePage';
 import '../scss/styles.scss';
 
 const Pages = observer( () =>
 {
     const { device } = useContext( Context )
+
 
     const pagesCount = Math.ceil( device.totalCount / device.limit )//количество страниц всего и номер последней страницы 
     let portionSize = 1
@@ -44,7 +46,7 @@ const Pages = observer( () =>
 
             <Pagination.Item
                 className={ 'paginationItemStyle' }
-                active={ device.page === 1 }
+                active={ device.page == 1 }
                 activeLabel={ false }
                 onClick={ () => device.setPage( 1 ) }
             >
@@ -64,10 +66,10 @@ const Pages = observer( () =>
                     page =>
                         page + 1 >= leftPortionPageNumber &&
                         page - 1 <= rightPortionPageNumber
-                ).map( page =>
+                ).map( ( page, i ) =>
                     ( page != 1 ) && ( page != pagesCount ) && <Pagination.Item
                         className={ 'paginationItemStyle' }
-                        key={ page }
+                        key={ i }
                         active={ device.page === page }
                         activeLabel={ false }
                         onClick={ () => device.setPage( page ) }
@@ -109,36 +111,8 @@ const Pages = observer( () =>
                 </Pagination.Item>
             ) }
         </Pagination>
-
-
-
-        // CREATE INDEX devices_idx ON devices (name);
-        // CLUSTER devices USING devices_idx;
-        // CREATE SEQUENCE devices_seq;
-        // SELECT setval('devices_seq', 1);
-        // UPDATE devices set id=nextval('devices_seq');
-
-
-        // </div>
     );
 } );
 
 export default Pages;
 
-/* <Pagination>
-  <Pagination.First />
-  <Pagination.Prev />
-  <Pagination.Item>{1}</Pagination.Item>
-  <Pagination.Ellipsis />
-
-  <Pagination.Item>{10}</Pagination.Item>
-  <Pagination.Item>{11}</Pagination.Item>
-  <Pagination.Item active>{12}</Pagination.Item>
-  <Pagination.Item>{13}</Pagination.Item>
-  <Pagination.Item disabled>{14}</Pagination.Item>
-
-  <Pagination.Ellipsis />
-  <Pagination.Item>{20}</Pagination.Item>
-  <Pagination.Next />
-  <Pagination.Last />
-</Pagination> */

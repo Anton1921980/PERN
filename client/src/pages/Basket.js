@@ -14,11 +14,7 @@ const Basket = observer( () =>
     const { device } = useContext( Context )
 
     console.log( "TCL: device", device )
-
-    useEffect( () =>
-    {
-        getBasket().then( data => device.setBaskets( data ) )
-    }, [ device ] )
+ 
 
     useEffect( () =>
     {
@@ -44,7 +40,7 @@ const Basket = observer( () =>
 
     let prices = 0;
     {
-        ( device.basket.length > 0 ) && ( device.basket.map( price =>
+        ( device.basket.length > 0 ) && ( device.basket.map( price =>                       
             prices += Number( price.device.price )
         ) )
     }
@@ -54,10 +50,10 @@ const Basket = observer( () =>
         >
             <h1 className="p-4">Корзина</h1>
 
-            { ( device.basket.length > 0 ) && ( device.basket.map( product =>
+            { ( device.basket.length > 0 ) && ( device.basket.map( (product,i) =>
 
                 <Card
-                    className="d-flex w-100 p-2 justify-content-center mb-2" key={ product.id }
+                    className="d-flex w-100 p-2 justify-content-center mb-2" key={ i }
                     style={ { borderBottom: '1px solid grey' } }
                 >
                     <Row className="d-flex ">

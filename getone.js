@@ -131,7 +131,7 @@ let brand = 'samsung';
                 let fileName = uuid.v4() + ".jpg" //создаем уникальное имя
                 console.log( "TCL: fileName", fileName )
                 fs.writeFile(
-                    path.resolve( __dirname, '..', 'server/static', fileName ),
+                    path.resolve( __dirname, '..', 'static', fileName ),
                     imagedata,
                     "binary",
                     function ( err )

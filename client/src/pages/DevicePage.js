@@ -4,13 +4,16 @@ import bigStar from '../assets/bigStar.png'
 import { useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
-import { fetchBrands, fetchOneDevice, fetchTypes, addtoBasket } from '../http/deviceAPI';
+import { fetchBrands, fetchOneDevice, fetchTypes, addtoBasket, getBasket } from '../http/deviceAPI';
 
 
 const DevicePage = observer( () =>
 {
-    const { device } = useContext( Context )
+    const { user, device } = useContext( Context )
+
+    console.log( "TCL: user", user )
     console.log( "TCL: device", device )
+
     useEffect( () =>
     {
         fetchTypes().then( data => device.setTypes( data ) )
@@ -33,39 +36,46 @@ const DevicePage = observer( () =>
     //     { id: 2, title: 'Камера', description: '48 mp' },
     //     { id: 3, title: 'Процессор', description: '2 ghz' },
     //     { id: 4, title: 'Аккумулятор', description: '4000 mah' },
-    // ]
+    // ]   
 
 
-
-    //если в базе id товара не подряд в корзину не добавляет ошибка на сервере
-    //UnhandledPromiseRejectionWarning: SequelizeForeignKeyConstraintError: insert або update в таблиці "basket_devices" порушує обмеження зовнішнього ключа "basket_devices_deviceId_fkey"
-
-    //   функция для записи 
-    const add = async () =>
+  const add = async () =>
     {
         const formData = new FormData()
         await formData.append( 'deviceId', id )
-        await addtoBasket( formData ).then( response => alert( `Товар ` + device1.name + ` был добавлен в вашу корзину!` ) )
+        //await addtoBasket( formData ).then( response => alert( `Товар ` + device1.name + ` был добавлен в вашу корзину!` ) )
+        await addtoBasket( formData )
+        await getBasket().then( data => device.setBaskets( data ) )
     }
+
+    const addLocal = async () =>
+    {
+        const arr = JSON.parse( localStorage.getItem( 'ids' ) ) || []
+        const ids = [ ...arr,id ]
+        localStorage.setItem( 'ids', JSON.stringify( ids ) )
+      device.setLocalBasket( JSON.parse(localStorage.getItem('ids')).length ) 
+      
+    }
+
     return (
         <Container>
             <Row className='mt-3'>
-                <Col md={ 6 }>
-                    <div style={ { width: 500, height: 400, overflow: 'hidden' } }>
-                        <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } } src={'/' + device1.img } />
+                <Col md={ 3 }>
+                    <div style={ { width: '100%', overflow: 'hidden' } }>
+                        <Image style={ { objectFit: 'contain', width: '70%' } } src={ '/' + device1.img } />
                     </div>
                 </Col>
-                <Col md={ 6 } >
+                <Col md={ 9 } >
                     <div className='d-flex flex-column'>
                         <h2>{ device1.name }&nbsp;
                             <div style={ { color: 'lightgrey' } }>
-                                { device.brands.map( brand =>
-                                    <span key={ brand.id }>
+                                { device.brands.map( (brand,i) =>
+                                    <span key={ i }>
                                         { brand.id === device1.brandId ? brand.name : '' }
                                     </span>
                                 ) }&nbsp;
-                                { device.types.map( type =>
-                                    <span key={ type.id }>
+                                { device.types.map( (type,i) =>
+                                    <span key={ i }>
                                         { type.id === device1.typeId ? type.name : '' }
                                     </span>
                                 ) }
@@ -83,7 +93,17 @@ const DevicePage = observer( () =>
                                     { device1.rating }
                                 </div>
                                 <h3>{ device1.price } грн</h3>
-                                <Button variant={ "outline-dark" } onClick={ add } >Добавить в корзину</Button>
+                                { user.isAuth ?
+                                    <Button
+                                        variant={ "outline-dark" }
+                                        onClick={ add }
+                                    >Добавить в корзину</Button>
+                                    :
+                                    <Button
+                                        variant={ "outline-dark" }
+                                        onClick={ addLocal }
+                                    >Добавить в корзину</Button>
+                                }
                             </Card>
                         </div>
 
@@ -95,7 +115,7 @@ const DevicePage = observer( () =>
             <Row className='d-flex flex-column m-3'>
                 <h1 >Характеристики:</h1>
                 { device1.info.map( ( info, index ) =>
-                    <Row key={ info.id } style={ { background: index % 2 === 0 ? 'lightgrey' : 'transparent', padding: 5 } }>
+                    <Row key={ index } style={ { background: index % 2 === 0 ? 'lightgrey' : 'transparent', padding: 5 } }>
                         { info.title }:{ info.description }
                     </Row> ) }
             </Row>

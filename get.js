@@ -270,7 +270,7 @@ async function getProducts ( links )
                     let fileName = uuid.v4() + ".jpg" //создаем уникальное имя
                     console.log( "TCL: fileName", fileName )
                     fs.writeFile(
-                        path.resolve( __dirname, '..', 'server/static', fileName ),
+                        path.resolve( __dirname, '..', 'static', fileName ),//server папки уже нет после deploy
                         imagedata,
                         "binary",
                         function ( err )

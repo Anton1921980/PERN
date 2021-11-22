@@ -34,13 +34,13 @@ const DeviceItem = observer( ( props ) =>
                 <div className="text-black-50 mt-3 d-flex justify-content-between align-items-center">
                     <div className='d-flex align-items-center'>
                         <div>
-                            { device.brands.map( brand =>
-                                <span key={ brand.id }>
+                            { device.brands.map( (brand,i )=>
+                                <span key={ i }>
                                     { brand.id === device1.brandId ? brand.name : '' }
                                 </span>
                             ) }&nbsp;
-                            { device.types.map( type =>
-                                <span key={ type.id }>
+                            { device.types.map( (type,i) =>
+                                <span key={ i }>
                                     { type.id === device1.typeId ? type.name : '' }
                                 </span>
 
