@@ -28,7 +28,7 @@ export const SliderHomepage = props =>
     draggable: true,
     autoplay: props.auto,
     speed: 1000,
-    nextArrow: <SampleNextArrow homePage={ props.homePage } right={ 24 } />,
+    nextArrow: <SampleNextArrow homePage={ props.homePage } right={ 22 } />,
     prevArrow: (
       <SamplePrevArrow homePage={ props.homePage } left={ 70 } prev={ -3 } />
     ),
@@ -88,10 +88,10 @@ export const SliderHomepage = props =>
     return (
       <CarouselWrapper className="carousel_wrapper">
         <Slider { ...settings }>
-          { itemsHomePage.map( item =>
+          { itemsHomePage.map( (item,i )=>
           {
             return (
-              <div key={ item }>
+              <div key={ i }>
                 <NavLink to={ '/shop' }>
                   <CarouselImage height={ props.height } >
                     { item }

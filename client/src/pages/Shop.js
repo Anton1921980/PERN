@@ -13,8 +13,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 const Shop = observer( () =>
 {
-    const [loading, setLoading] = useState(true)
-   
+    const [ loading, setLoading ] = useState( true )
+
 
     const { device } = useContext( Context )
     const history = useHistory()
@@ -31,7 +31,7 @@ const Shop = observer( () =>
 
     const queryString = require( "query-string" )
     const parsed = queryString.parse( path )
-    console.log( "TCL: parsed.types", parsed.types )
+    console.log( "TCL: parsed", parsed )
 
     let parsedTypes
     parsed.types ? parsedTypes = +parsed.types : parsedTypes = null
@@ -39,8 +39,8 @@ const Shop = observer( () =>
     parsed.brands ? parsedBrands = +parsed.brands : parsedBrands = null
     let parsedSort
     parsed.sort ? parsedSort = parsed.sort : parsedSort = ''
-    console.log("TCL: parsed.sort", parsed.sort)
-  
+    console.log( "TCL: parsed.sort", parsed.sort )
+
 
     let shopUrl = undefined;//переход по урл /shop
     let linked = undefined;//переход по урл querystring
@@ -79,8 +79,8 @@ const Shop = observer( () =>
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
                 // device.setSort( parsedSort )
-            } ).finally(() => setLoading(false))
-         
+            } ).finally( () => setLoading( false ) )
+
             console.log( 'device по строке:', device )
         }
 
@@ -95,7 +95,7 @@ const Shop = observer( () =>
             {
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
-            } ).finally(() => setLoading(false))
+            } ).finally( () => setLoading( false ) )
             console.log( 'device без фильтров:', device )
         }
     }, [] )
@@ -107,7 +107,7 @@ const Shop = observer( () =>
     useEffect( () =>
     {
 
-       
+
 
         fetchBrands( device.selectedType.id ).then( data =>
         {
@@ -120,24 +120,24 @@ const Shop = observer( () =>
         {
             device.setDevices( data.rows )
             device.setTotalCount( data.count )
-            
+
             device.selectedType.id ? type = `types=${ device.selectedType.id }` : type = ''
-           
+
             device.selectedBrand.id ? brand = `&brands=${ device.selectedBrand.id }` : brand = ''
-          
+
             device.sort ? ( sort = `&sort=${ device.sort }` ) : sort = ''
-          
-    
+
+
             let query = `${ type }${ brand }&page=${ device.page }&limit=${ device.limit }${ sort }`;
-    
+
             console.log( "TCL: query", query )
-    
+
             history.push( `/shop/?${ query }` )
 
 
 
             console.log( "TCL: device с фильтрами", device );
-        } ).finally(() => setLoading(false))
+        } ).finally( () => setLoading( false ) )
 
 
         // }
@@ -148,15 +148,16 @@ const Shop = observer( () =>
     //сделать чтобы отображались только категории которые в этом бренде?
 
 
-    if (loading) {
-        return <Spinner animation={"border"} variant="secondary"/>
+    if ( loading )
+    {
+        return <Spinner animation={ "border" } variant="secondary" />
     }
 
 
 
     return (
-        <Container>
-            <Row className="mt-3">
+        <Container className="mt-5" >
+            <Row className="mt-5">
                 <Col md={ 3 }>
                     <TypeBar seltype={ parsed.type } />
                 </Col>
@@ -172,19 +173,19 @@ const Shop = observer( () =>
                             >
                                 { chosen === false ?
                                     <div style={ { width: '100%', height: '100%' } }
-                                        onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
-                                    >{['- ', <span>&#8372;</span>]}
+                                        onClick={ () => { setChosen( true ); device.setPage( '1' ); device.setSort( 'DESC' ); } }
+                                    >{ [ '- ', <span>&#8372;</span> ] }
                                     </div>
                                     :
                                     ( 'DESC' === device.sort ) ? (
                                         <div style={ { width: '100%', height: '100%' } }
-                                            onClick={ () => { setChosen( false ); device.setSort( '' ) } }
-                                        >{['- ', <span>&#8372;</span>]}
+                                            onClick={ () => { setChosen( false ); device.setPage( '1' ); device.setSort( '' ); } }
+                                        >{ [ '- ', <span>&#8372;</span> ] }
                                         </div> )
                                         :
                                         ( <div style={ { width: '100%', height: '100%' } }
-                                            onClick={ () => { setChosen( true ); device.setSort( 'DESC' ) } }
-                                        > {['- ', <span>&#8372;</span>]}
+                                            onClick={ () => { setChosen( true ); device.setPage( '1' ); device.setSort( 'DESC' ); } }
+                                        > { [ '- ', <span>&#8372;</span> ] }
                                         </div> )
                                 }
                             </Card>
@@ -195,19 +196,19 @@ const Shop = observer( () =>
                             >
                                 { chosen === false ?
                                     <div style={ { width: '100%', height: '100%' } }
-                                        onClick={ () => { setChosen( true ); device.setSort( 'ASC' ) } }
-                                    >{['+ ', <span>&#8372;</span>]}
+                                        onClick={ () => { setChosen( true ); device.setPage( '1' ); device.setSort( 'ASC' ) } }
+                                    >{ [ '+ ', <span>&#8372;</span> ] }
                                     </div>
                                     :
                                     ( 'ASC' === device.sort ) ? (
                                         <div style={ { width: '100%', height: '100%' } }
-                                            onClick={ () => { setChosen( false ); device.setSort( '' ) } }
-                                        >{['+ ', <span>&#8372;</span>]}
+                                            onClick={ () => { setChosen( false ); device.setPage( '1' ); device.setSort( '' ) } }
+                                        >{ [ '+ ', <span>&#8372;</span> ] }
                                         </div> )
                                         :
                                         ( <div style={ { width: '100%', height: '100%' } }
-                                            onClick={ () => { setChosen( true ); device.setSort( 'ASC' ) } }
-                                        >{['+ ', <span>&#8372;</span>]}
+                                            onClick={ () => { setChosen( true ); device.setPage( '1' ); device.setSort( 'ASC' ) } }
+                                        >{ [ '+ ', <span>&#8372;</span> ] }
                                         </div> )
                                 }
                             </Card>

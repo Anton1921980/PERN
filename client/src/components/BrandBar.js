@@ -11,9 +11,9 @@ const BrandBar = observer( () =>
 
     return (
         <div className='d-flex flex-direction-row flex-wrap '>
-            { device.brands.map( brand =>
+            { device.brands.map( (brand,i) =>
                 <Card
-                    key={ brand.id }
+                    key={ i }
                     style={ { cursor: 'pointer' } }
                     // style={ brand.id === device.selectedBrand.id ? { cursor: 'pointer', borderBottom: '2px solid black' } : { cursor: 'pointer', borderBottom: '2px solid white' } }               
                     border={ brand.id === device.selectedBrand.id ? 'secondary' : 'light' }

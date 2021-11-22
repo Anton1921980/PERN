@@ -16,6 +16,7 @@ export default class DeviceStore
             // { id: 1, name: 'Iphone 12pro', price: 158566, rating: 5, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
             // { id: 2, name: 'Iphone 12pro', price: 158566, rating: 2, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
         ]
+        this._localBasket=[]
         this._baskets = []
         this._selectedType = ''
         this._selectedBrand = {}
@@ -45,6 +46,10 @@ export default class DeviceStore
     setBaskets ( basket )
     {
         this._baskets = basket
+    }
+    setLocalBasket ( basketLocal )
+    {
+        this._localBasket = basketLocal
     }
     setSelectedType ( types )//type?
     {
@@ -91,6 +96,10 @@ export default class DeviceStore
     get basket ()
     {
         return this._baskets
+    }
+    get localBasket ()
+    {
+        return this._localBasket
     }
     get selectedType ()
     {

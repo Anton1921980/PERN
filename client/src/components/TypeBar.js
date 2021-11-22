@@ -13,26 +13,26 @@ const TypeBar = observer( ( props ) =>
 
     return (
         <ListGroup variant='flush'>
-            { device.types.map( type =>
+            { device.types.map( ( type, i ) =>
                 <ListGroup.Item
                     style={ { cursor: 'pointer' } }
                     active={ type.id === device.selectedType.id }
                     action variant="light"
-                    key={ type.id }>
+                    key={ i }>
                     { chosen === false ?
                         <div className='d-flex justify-content-between'
-                            onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand(''); setChosen( true ) } }
+                            onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand( '' ); setChosen( true ) } }
                         > <span>{ type.name }</span><span>&gt;</span>
                         </div>
                         :
                         ( type.id === device.selectedType.id ) ? (
                             <div className='d-flex justify-content-between'
-                                onClick={ () => { device.setSelectedType( '' ); device.setSelectedBrand(''); setChosen( false ) } }
+                                onClick={ () => { device.setSelectedType( '' ); device.setSelectedBrand( '' ); setChosen( false ) } }
                             > <span>{ type.name }</span><span>&gt;</span>
                             </div> )
                             :
                             ( <div className='d-flex justify-content-between'
-                                onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand(''); setChosen( true ) } }
+                                onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand( '' ); setChosen( true ) } }
                             > <span>{ type.name }</span><span>&gt;</span>
                             </div> )
                     }

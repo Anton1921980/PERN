@@ -37,19 +37,18 @@ const Main = observer( () =>
 
 
     return (
-        <Container className='d-flex mt-3'>
+        <Container className='d-flex flex-column flex-lg-row mt-3'>
             {/* <h1>MAIN PAGE</h1> */ }
-            <Col md={ 3 }>
+            <Col className='col-12 col-lg-6'>
                 <TypeBar />
             </Col>
-            <Col md={ 9 }>
+            <Col className='col-12 col-lg-6'>
                 <SliderHomepage
                     dots={ true }
                     center={ false }
                     auto={ true }
                     homePage={ true }
-                    show={ 1 }
-                    height={ '100%' }
+                    show={ 1 }                   
                     width={ '100%' }
                     arrows={ false } />
             </Col>

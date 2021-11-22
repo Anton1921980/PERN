@@ -1,20 +1,33 @@
 import React, { useContext, useState } from 'react';
-import { Container, Form, Card, Button} from "react-bootstrap";
+import { Container, Form, Card, Button } from "react-bootstrap";
 import { NavLink, useLocation, useHistory } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { login, registration } from "../http/userAPI";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
+import { addtoBasket, getBasket } from '../http/deviceAPI';
 
 
 const Auth = observer( () =>
 {
     const location = useLocation()
-    const { user } = useContext( Context )
+    const { user, device } = useContext( Context )
     let isLogin = ( location.pathname === LOGIN_ROUTE ) //без скобок не работает?
     const history = useHistory()
     const [ email, setEmail ] = useState( '' )
     const [ password, setPassword ] = useState( '' )
+
+
+    const add = async ( id ) =>
+    {
+        const formData = new FormData()
+        await formData.append( 'deviceId', id )
+        //await addtoBasket( formData ).then( response => alert( `Товар ` + device1.name + ` был добавлен в вашу корзину!` ) )
+        await addtoBasket( formData )
+        await getBasket().then( data => device.setBaskets( data ) )
+    }
+
+
 
     const click = async () =>
     {
@@ -28,12 +41,22 @@ const Auth = observer( () =>
             {
                 data = await registration( email, password );
             }
-            // user.setUser( user )
-           
-           user.setUser( data )
-           console.log("TCL: user", user)
+
+            user.setUser( data )
+
+            console.log( "TCL: user", user )
 
             user.setIsAuth( true )
+
+            // добавляем локальную корзину если она есть к базе которая была, или создалась только что с новым юзером
+            let localBasket = JSON.parse( localStorage.getItem( 'ids' ) )
+            localBasket && localBasket.forEach( ( id ) =>
+            {
+                add( id )
+            } )
+            localStorage.removeItem( 'ids' )
+            device.setLocalBasket( '' )
+
             history.push( SHOP_ROUTE )
         } catch ( e )
         {
