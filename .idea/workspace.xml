@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="060330c4-7c8e-4ad8-bc15-29c013b09cb3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/client/.eslintcache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/client/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="060330c4-7c8e-4ad8-bc15-29c013b09cb3" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +19,7 @@
   <component name="ProjectId" id="20pp2OsDQjc9IbJxN9Rk3kGRjyy" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/jewelry_shop_final_project" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -47,6 +44,7 @@
       <option name="presentableId" value="Default" />
       <updated>1636751175675</updated>
       <workItem from="1636751178264" duration="403000" />
+      <workItem from="1637679595595" duration="249000" />
     </task>
     <servers />
   </component>
@@ -58,7 +56,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
