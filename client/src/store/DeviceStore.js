@@ -31,6 +31,11 @@ export default class DeviceStore
     }
 
     //экшены
+    setLimit ( limit )
+    {
+        this._limit = limit
+    }
+
     setTypes ( types )
     {
         this._types = types

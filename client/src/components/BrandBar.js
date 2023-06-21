@@ -7,6 +7,7 @@ import '../scss/styles.scss';
 const BrandBar = observer( () =>
 {
     const { device } = useContext( Context )
+    console.log("device:brandbar ", device);
     const [ chosen, setChosen ] = useState( false )
 
     return (

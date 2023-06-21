@@ -16,7 +16,7 @@ const Shop = observer( () =>
     const [ loading, setLoading ] = useState( true )
 
 
-    const { device } = useContext( Context )
+    const { device } = useContext( Context )   
     const history = useHistory()
 
 
@@ -107,14 +107,11 @@ const Shop = observer( () =>
     useEffect( () =>
     {
 
-
-
         fetchBrands( device.selectedType.id ).then( data =>
         {
-            device.setBrands( data )
-
-            console.log( "fetch brands2" )
-
+            console.log("fetch brands2 data: ", data);
+            device.setBrands( data );      
+           
         } )
         fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, device.sort ).then( data =>
         {

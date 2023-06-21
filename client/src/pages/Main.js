@@ -19,7 +19,7 @@ const Main = observer( () =>
     useEffect( () =>
     {
         fetchTypes().then( data => device.setTypes( data ) )
-        // fetchBrands().then( data => device.setBrands( data ) )
+        fetchBrands().then( data => device.setBrands( data ) )
         console.log( 'device:', device )
     }, [] )
 

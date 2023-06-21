@@ -18,6 +18,20 @@ app.use(express.static((path.resolve(__dirname,'static'))))
 app.use(fileUpload({}))
 app.use('/api', router)
 
+//перенести через роутер
+app.post("/send-data", async (req, res) => {
+  const data = req.body.data;
+  console.log("Data received:", data);
+
+  // Додаємо обробку даних тут, можна викликати зовнішній файл, наприклад:
+  const getOneResult = require('./getone2.js');
+  const result = await getOneResult(data);
+  console.log("result: ", result);
+  // const result = "Оброблений результат: " + data;
+
+ result!=={} && res.json({ result: result });
+});
+
 //обработка ошибок всегда в конце списка
 app.use(errorHandler)
 
@@ -39,8 +53,8 @@ const start = async ()=> {
 start()
 
 
-process.env.NODE_ENV="production";
-// process.env.NODE_ENV="development";
+// process.env.NODE_ENV="production";
+process.env.NODE_ENV="development";
 
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {

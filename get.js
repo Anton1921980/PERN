@@ -11,18 +11,16 @@ let type;
 let brand;
 
 
-// type = 'phone';
+type = 'phone';
 // type = 'tv'
 // type = 'notebook'
-type = 'tablet'
+// type = 'tablet'
 
 
-
-// brand = 'samsung'
 brand = 'apple'
+// brand = 'samsung'
 // brand = 'xiaomi'
 // brand = 'HP'
-// brand = 'apple'
 // brand = 'lenovo'
 // brand='motorola'
 

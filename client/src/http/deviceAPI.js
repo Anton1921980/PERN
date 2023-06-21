@@ -30,7 +30,9 @@ export const fetchBrands = async (typeId) =>//typeId
             typeId
         }
     } )
+    console.log("data: ", data);
     return data
+   
 }
 
 export const createDevice = async ( device ) =>
@@ -80,14 +82,15 @@ export const getBasket = async () =>
 }
 export const deleteFromBasket = async ( id ) =>
 {
-    // try
-    // {
+    try
+    {
+        console.log("id", id)
     const { data } = await $authHost.delete( `api/basket/${id}` )
     console.log( 'data', data )
     return data
-    // }
-    // catch(error){
-    //     console.log(error)
-    // }
+    }
+    catch(error){
+        console.log(error)
+    }
     
 }

@@ -8,14 +8,15 @@ var fs = require( "fs" );
 
 console.log( "start" );
 
-let type = 'смартфоны';
-let brand = 'samsung';
-
+let type = 'phone';
+let brand = 'iphone';
 
 // ; перед функцией!
-( async () =>
+
+
+     async function getResult(data) 
 {
-    const url = 'https://rozetka.com.ua/planshet-apple-ipad-mini-2021-wi-fi-64gb/g41556667/';
+    const url = data;
     const url_2 = url + 'characteristics'
     const url_3 = url + 'photo'
 
@@ -23,32 +24,34 @@ let brand = 'samsung';
 
     const nightmare = Nightmare( { show: true } );
 
+    
     await nightmare
         .goto( url_2 )
         .wait( 'body' )
         //  .wait( 'tabs__list' )
         // .click( 'tabs__list:nth-child(2)' )
         .wait( '.buy-button.ng-star-inserted' )
+        // .wait( '.picture-container__picture' )           
         .evaluate( () => document.querySelector( 'body' ).innerHTML )
         .then( response =>
         {
-            console.log( getData( response ) );
+            console.log( getData( response ) );          
         } ).catch( err =>
         {
             console.log( err );
         }
         )
 
-    await nightmare
-        .goto( url_3 )
+        await nightmare
+        .goto( url )
         .wait( 'body' )
         .evaluate( () => window.scrollTo( 0, 700 ) )
-        .wait( '.product-photos__picture.ng-lazyloaded' )
+        .wait( '.picture-container__picture' )
         .evaluate( () => document.querySelector( 'body' ).innerHTML )
         .end()
         .then( response =>
         {
-            console.log( getData2( response ) );
+            console.log( getData1( response ) );
         } )
         .catch( err =>
         {
@@ -84,35 +87,42 @@ let brand = 'samsung';
 
         console.log( "TCL: price", devicePrice )
 
-        let deviceName = $( 'h1' ).text();
-        console.log( "TCL: deviceName", deviceName )
-        console.log( "TCL: info", info )
+        const deviceNameRaw = $( 'h1' ).text();
+        function removeWordAndParentheses(text) {
+            const removeWord = text.replace(/Характеристики/g, '');
+            // const removeParentheses = removeWord.replace(/\(.*?\)/g, '');
+            return removeWord
+            // return removeParentheses;
+        }
+        const deviceName = removeWordAndParentheses(deviceNameRaw);
+
+
+        console.log( "TCL: deviceName", deviceName );
+        console.log( "TCL: info", info );
+
         device = {
             name: deviceName,
             price: devicePrice,
             brandId: '2',
-            typeId: '2',
+            typeId: '1',
             // img: fileName,
             // info: '[{"title":"test8","description":"test9","number":1635838157222},{"title":"test9","description":"test8","number":1635838158222}]',
             info: info,
         }
-        return device
+             return device
     }
 
-    function getData2 ( html )
+     function getData1 ( html )
     {
         data = [];
         const $ = cheerio.load( html );
         //фото
 
-        let imgMain = $( ".product-photos__picture.ng-lazyloaded" ).attr( 'src' )
+        let imgMain = $( ".picture-container__picture" ).attr( 'src' )
         console.log( "TCL: imgMain", imgMain )
 
         imgNameFile( imgMain )
     }
-
-    addProduct( device )
-
 
     function imgNameFile ( imgMain )
     {
@@ -129,9 +139,11 @@ let brand = 'samsung';
             res.on( "end", function ()
             {
                 let fileName = uuid.v4() + ".jpg" //создаем уникальное имя
+                device.img = fileName  
+                addProduct( device )
                 console.log( "TCL: fileName", fileName )
                 fs.writeFile(
-                    path.resolve( __dirname, '..', 'static', fileName ),
+                    path.resolve( __dirname, '..', 'PERN/static', fileName ),
                     imagedata,
                     "binary",
                     function ( err )
@@ -140,13 +152,13 @@ let brand = 'samsung';
                         console.log( "File saved." );
                     }
                 );
-                return device.img = fileName
+                return device               
             } );
         } )
-
-
+        console.log("device2: ", device);
+        
+return device
     }
-
 
     function addProduct ( device )
     {
@@ -177,9 +189,10 @@ let brand = 'samsung';
                 console.log( "TCL: addProduct -> err", err );
             } );
     }
+return  device
+}
 
-} )
-    ()
+module.exports = getResult;
 
         // // let { name, price, brandId, typeId, img, info } = req.body
         // // info [{"title":"333","description":"44","number":1635838152823},{"title":"555","description":"77","number":1635838158623}]
