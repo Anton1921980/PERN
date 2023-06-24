@@ -89,16 +89,16 @@ const Pages = observer( () =>
 
             ) }
             {/* last page */ }
-            <Pagination.Item
+            {pagesCount > 1 && <Pagination.Item
                 className={ 'paginationItemStyle' }
                 active={ device.page === pagesCount }
                 activeLabel={ false }
                 onClick={ () => device.setPage( pagesCount ) }
             >
                 { pagesCount }
-            </Pagination.Item>
+            </Pagination.Item>}
             {/* {след} */ }
-            { ( device.page != pagesCount ) && (
+            { ( device.page != pagesCount ) &&( pagesCount > 1) && (
                 <Pagination.Item
                     className={ 'paginationItemStyle' }
                     activeLabel={ false }
