@@ -22,12 +22,13 @@ const DevicePage = observer( () =>
     }, [] )
 
 
-    const [ device1, setdevice1 ] = useState( { info: [] } )
+    const [ device1, set$device1 ] = useState( { info: [] } )
+    console.log("device1: ", device1);
     const { id } = useParams()
 
     useEffect( () =>
     {
-        fetchOneDevice( id ).then( data => setdevice1( data ) )
+        fetchOneDevice( id ).then( data => set$device1( data ) )
     }, [] )
 
     // const device1 = { id: 1, name: 'Iphone 12pro', price: 158566, rating: 5, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' }

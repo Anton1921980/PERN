@@ -1,130 +1,194 @@
+const uuid = require("uuid");
+const path = require("path");
+const {
+  Device,
+  DeviceInfo,
+  Basket,
+  BasketDevice,
+} = require("../models/models");
+const ApiError = require("../error/ApiError");
 
-const uuid = require( 'uuid' )
-const path = require( 'path' )
-const { Device, DeviceInfo, Basket, BasketDevice } = require( '../models/models' )
-const ApiError = require( '../error/ApiError' )
+class DeviceController {
+  //для админки
+  async create(req, res, next) {
+    try {
+      if (process.env.NODE_ENV === "production") {
+        let { name, price, brandId, typeId, info } = req.body;
+        console.log("TCL: req", req);
 
+        const { img } = req.files;
+        let fileName = uuid.v4() + ".jpg"; //создаем уникальное имя запишется в базу
 
+        // console.log( "TCL: fileName", fileName )
 
-class DeviceController //для админки
-{
-    async create ( req, res, next )
-    {
-        try
-        {
-            if ( process.env.NODE_ENV === "production" )
-            {
+        img.mv(path.resolve(__dirname, "..", "static", fileName)); //папка на сервере server/static уже нет server после deploy
 
-                let { name, price, brandId, typeId, info } = req.body
-                console.log( "TCL: req", req )
+        console.log("info", info);
 
-                const { img } = req.files
-                let fileName = uuid.v4() + ".jpg" //создаем уникальное имя запишется в базу
+        const device = await Device.create({
+          name,
+          price,
+          brandId,
+          typeId,
+          img: fileName,
+        });
 
-                // console.log( "TCL: fileName", fileName )
+        info = JSON.parse(info);
+        const deviceInfo = await info.forEach((i) =>
+          DeviceInfo.create({
+            title: i.title,
+            description: i.description,
+            deviceId: device.id, //не успевает получать надо .then или await
+          })
+        );
+        console.log("deviceInfo", deviceInfo);
+        return res.json(device).json(deviceInfo);
+      } //parser
+      else {
+        let { name, price, brandId, typeId, img, info } = req.body;
+        console.log("TCL: req", req);
 
-                img.mv( path.resolve( __dirname, '..', 'static', fileName ) )//папка на сервере server/static уже нет server после deploy
+        const device = await Device.create({
+          name,
+          price,
+          brandId,
+          typeId,
+          img,
+        });
+        info = JSON.parse(info);
+        const deviceInfo = await info.forEach((i) =>
+          DeviceInfo.create({
+            title: i.title,
+            description: i.description,
+            deviceId: device.id, //не успевает получать надо .then или await
+          })
+        );
+        console.log("deviceInfo", deviceInfo);
+        return res.json(device).json(deviceInfo);
+        // .then(//because res.json calls 2 times get not critical error: 'Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client'
+        // res.json( deviceInfo ) )
+      }
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
 
-                console.log( 'info', info )
+  async getAll(req, res) {
+    let { brandId, typeId, limit, page, sort } = req.query;
 
-                const device = await Device.create( { name, price, brandId, typeId, img: fileName } )
-                info = JSON.parse( info )
-                const deviceInfo = await info.forEach( i => DeviceInfo.create( {
-                    title: i.title,
-                    description: i.description,
-                    deviceId: device.id//не успевает получать надо .then или await
-                } )
-                )
-                console.log( 'deviceInfo', deviceInfo )
-                return (
-                    res.json( device ).json( deviceInfo )
-                )
-            }
-            else //parser
-            {
-                let { name, price, brandId, typeId, img, info } = req.body
-                console.log( "TCL: req", req )
+    page = page || 1;
+    limit = limit || 1000;
 
-                const device = await Device.create( { name, price, brandId, typeId, img } )
-                info = JSON.parse( info )
-                const deviceInfo = await info.forEach( i => DeviceInfo.create( {
-                    title: i.title,
-                    description: i.description,
-                    deviceId: device.id//не успевает получать надо .then или await
-                } )
-                )
-                console.log( 'deviceInfo', deviceInfo )
-                return (
-                    res.json( device ).json( deviceInfo )
-                    // .then(//because res.json calls 2 times get not critical error: 'Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client'
-                    // res.json( deviceInfo ) )
-                )
-            }
-        } catch ( e )
-        {
-            next( ApiError.badRequest( e.message ) )
-        }
+    console.log("TCL sort", sort);
 
+    if (sort && sort !== "") {
+      sort = [["price", sort]];
+    } else {
+      sort = [["id", "ASC"]];
     }
 
-    async getAll ( req, res )
-        {
-            let { brandId, typeId, limit, page, sort } = req.query;
-    
-            page = page || 1
-            limit = limit || 1000
-    
-            console.log( 'TCL sort', sort )
-    
-            if ( sort && ( sort !== '' ) )
-            {
-                sort = [ [ 'price', sort ] ]
-            }
-            else
-            {
-                sort = [ [ 'id', 'ASC' ] ]
-            }
-    
-            let offset = page * limit - limit
-            let devices;
-            if ( !brandId && !typeId )
-            {
-                devices = await Device.findAndCountAll( { limit, offset, order: sort } )
-            }
-            if ( brandId && !typeId )
-            {
-                devices = await Device.findAndCountAll( { where: { brandId }, limit, offset, order: sort } )
-            }
-            if ( !brandId && typeId )
-            {
-                devices = await Device.findAndCountAll( { where: { typeId }, limit, offset, order: sort } )
-            }
-            if ( brandId && typeId )
-            {
-                devices = await Device.findAndCountAll( { where: { typeId, brandId }, limit, offset, order: sort } )
-            }
-    
-    
-            return res.json( devices )  
-    
-        }
-
-    async getOne ( req, res )
-    {
-        const { id } = req.params
-        const device = await Device.findOne(
-            {
-                where: { id },
-                include: [ { model: DeviceInfo, as: 'info' } ]
-            }
-        )
-        return res.json( device )
+    let offset = page * limit - limit;
+    let devices;
+    if (!brandId && !typeId) {
+      devices = await Device.findAndCountAll({ limit, offset, order: sort });
+    }
+    if (brandId && !typeId) {
+      devices = await Device.findAndCountAll({
+        where: { brandId },
+        limit,
+        offset,
+        order: sort,
+      });
+    }
+    if (!brandId && typeId) {
+      devices = await Device.findAndCountAll({
+        where: { typeId },
+        limit,
+        offset,
+        order: sort,
+      });
+    }
+    if (brandId && typeId) {
+      devices = await Device.findAndCountAll({
+        where: { typeId, brandId },
+        limit,
+        offset,
+        order: sort,
+      });
     }
 
+    return res.json(devices);
+  }
+
+  async getOne(req, res) {
+    const { id } = req.params;
+    const device = await Device.findOne({
+      where: { id },
+      include: [{ model: DeviceInfo, as: "info" }],
+    });
+    return res.json(device);
+  }
+
+  async editOne(req, res) {
+    const { id } = req.params;
+    let { name, price, brandId, typeId, info } = req.body;
+    let fileName;
+    if (req.files) {
+      const { img } = req.files;
+      fileName = uuid.v4() + ".jpg"; //создаем уникальное имя запишется в базу
+      // console.log( "TCL: fileName", fileName )
+      img.mv(path.resolve(__dirname, "..", "static", fileName)); //папка на сервере server/static уже нет server после deploy
+      console.log("info", info);
+    }
+
+    const updatedDevice = {};
+
+    if (fileName?.length>0) {
+      updatedDevice.img = fileName;
+    }
+    if (name?.length>0) {
+      updatedDevice.name = name;
+    }
+    if (price>0) {
+      updatedDevice.price = price;
+    }
+    if (brandId>0) {
+      updatedDevice.brandId = brandId;
+    }
+    if (typeId>0) {
+      updatedDevice.typeId = typeId;
+    }
+    console.log("updatedDevice: ", updatedDevice);
+
+    const device = await Device.update(updatedDevice, { where: { id } });
+    console.log("device id: ", device.id);
+   
+
+  const infoParsed = JSON.parse(info);
+  console.log("infoParsed: ", infoParsed);
+    const deviceInfo = await infoParsed.forEach((i) =>
+      DeviceInfo.create(
+        {
+          title: i.title,
+          description: i.description,
+          deviceId: id, //не успевает получать надо .then или await
+        },
+        // { where: { id } }
+      )
+    );
+    console.log("deviceInfo", deviceInfo);
+    return res.json(device).json(deviceInfo);
+  }
+
+  async deleteOne(req, res) {
+    const { id } = req.params;
+    const device = await Device.destroy({
+      where: { id },
+      include: [{ model: DeviceInfo, as: "info" }],
+    });
+    return res.sendStatus(200);
+  }
 }
-
-
-
 
 // class DeviceController //для парсера
 // {
@@ -193,9 +257,7 @@ class DeviceController //для админки
 //             devices = await Device.findAndCountAll( { where: { typeId, brandId }, limit, offset, order: sort } )
 //         }
 
-
 //         return res.json( devices )
-
 
 //     }
 //     async getOne ( req, res )
@@ -211,6 +273,4 @@ class DeviceController //для админки
 //     }
 // }
 
-
-
-module.exports = new DeviceController()
+module.exports = new DeviceController();

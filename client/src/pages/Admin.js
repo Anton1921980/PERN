@@ -1,11 +1,19 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { Button, Container, Spinner } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
+import { Button, Container, Spinner, Image } from "react-bootstrap";
 import CreateBrand from "../components/modals/createBrand";
 import CreateDevice from "../components/modals/createDevice";
+import EditDevice from "../components/modals/editDevice";
 import CreateType from "../components/modals/createType";
-import { fetchBrands, fetchDevices, fetchTypes } from "../http/deviceAPI";
-import DeviceList from "../components/DeviceList";
+import {
+  fetchBrands,
+  fetchDevices,
+  fetchTypes,
+  deleteOneDevice,
+  editOneDevice,
+} from "../http/deviceAPI";
+// import DeviceList from "../components/DeviceList";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Context } from "../index";
 
@@ -14,12 +22,14 @@ const Admin = observer(() => {
   const [brandVisible, setBrandVisible] = useState(false);
   const [typeVisible, setTypeVisible] = useState(false);
   const [deviceVisible, setDeviceVisible] = useState(false);
-
+  const [deviceVisible2, setDeviceVisible2] = useState(false);
   const [data, setData] = useState("");
   const [data2, setData2] = useState("");
   const [result, setResult] = useState("");
+  const [id,set$id] = useState(null);
   const { device } = React.useContext(Context);
-  device.setLimit( 1000 );
+
+  device.setLimit(1000);
 
   const sendData = async () => {
     const response = await fetch("http://localhost:5000/send-data", {
@@ -105,30 +115,87 @@ const Admin = observer(() => {
       </Container>
       {result.name && (
         <>
-          <h3>Result</h3>
-          <p>product {result.name} added successfully</p>
+          <p>Product {result.name} </p>
         </>
       )}
       {/* <DeviceList /> */}
-      <ListGroup variant='flush'>
-            {device.devices.map( ( device, i )=>
-                <ListGroup.Item
-                    style={ { cursor: 'pointer' } }
-                    // active={ type.id === device.selectedType.id }
-                    action variant="light"
-                    key={ i }>
-                  
-                        <div className='d-flex justify-content-between'
-                            // onClick={ () => { device.setSelectedType( type ); device.setSelectedBrand( '' ); setChosen( true ) } }
-                        > <span>{ device.name }</span><span>&gt;</span>
-                        </div>
-                       
-                    
+      <ListGroup variant="flush">
+        {device.devices.map((device, i) => (
+          <div
+            className="d-flex justify-content-between"
+            style={{ width: "80%", marginLeft: "10%" }}    
+            // style={{ cursor: "pointer", width: "70%" }}
+            // active={ type.id === device.selectedType.id }
+            // action
+            // variant="light"
+            key={i}
+          >
+            <NavLink to={`/device/${device.id}`} style={{ width: "90%" }}>
+              <ListGroup.Item
+                action
+                variant="light"
+                style={{ cursor: "pointer", width: "100%" }}
+                className="d-flex justify-content-between mt-1  mb-1"                
+              >
+                <div style={{ width: 50, height: 50, overflow: "hidden" }}>
+                  <Image
+                    style={{
+                      objectFit: "contain",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    src={"/" + device.img}
+                  />
+                </div>
+                <span>{device.name}</span>
 
-                </ListGroup.Item>
-            ) }
-        </ListGroup>
-
+                {/* <span>&gt;</span> */}
+              </ListGroup.Item>
+            </NavLink>
+            <Button
+              variant={"outline-dark"}
+              className="mt-4  mb-4"
+              onClick={() => {setDeviceVisible2(true); set$id(device.id)}}
+            >
+              Edit
+            </Button>
+        
+            {/* <Button
+              variant={"outline-dark"}
+              //відкрити модалку форму, отримати та відобразити повні дані товару щод їх відредагувати, зробити зміни textarea? сабміт відправити
+              onClick={() =>
+                editOneDevice(device)
+                  .then((data) => {
+                    console.log(data);
+                    setResult({ name: `edited: ${device.name}` });
+                  })
+                  .finally(() => setLoading(false))
+              }
+            >
+              edit
+            </Button>{" "} */}
+            <Button
+               variant={"outline-dark"}
+               className="mt-4  mb-4"
+              onClick={() =>
+                deleteOneDevice(device.id)
+                  .then((data) => {
+                    console.log(data);
+                    setResult({ name: `deleted: ${device.name}` }); //to reload page
+                  })
+                  .finally(() => setLoading(false))
+              }
+            >
+              Delete
+            </Button>{" "}
+          </div>
+        ))}
+           { id && <EditDevice
+              id={id}
+              show={deviceVisible2}
+              onHide={() => setDeviceVisible2(false)}
+            />}
+      </ListGroup>
     </>
   );
 });

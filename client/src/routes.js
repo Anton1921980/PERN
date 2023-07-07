@@ -39,5 +39,5 @@ export const publicRoutes=[
     {
         path: DEVICE_ROUTE + '/:id',
         Component: DevicePage
-    },
+    },  
 ]

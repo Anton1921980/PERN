@@ -2,16 +2,22 @@ import React, { useContext, useEffect, useState } from 'react';
 import Modal from "react-bootstrap/Modal";
 import { Button, Dropdown, Form, Row, Col } from "react-bootstrap";
 import { Context } from "../../index";
-import { createDevice, fetchBrands, fetchDevices, fetchTypes } from "../../http/deviceAPI";
+import { editOneDevice, fetchBrands, fetchDevices, fetchTypes, fetchOneDevice } from "../../http/deviceAPI";
 import { observer } from "mobx-react-lite";
 
-const CreateDevice = observer( ( { show, onHide } ) =>
+const EditDevice = observer( ( { show, onHide, id } ) =>
 {
     const { device } = useContext( Context )
     const [ name, setName ] = useState( '' )
     const [ price, setPrice ] = useState( 0 )
     const [ file, setFile ] = useState( null )
     const [ info, setInfo ] = useState( [] )
+    const [ device2, set$device2 ] = useState( { info: [] } )
+    console.log("id: ", id);
+    // useEffect( () =>
+    // {
+    //     fetchOneDevice( id ).then( data => set$device2( data ) )
+    // }, [id] )
 
     useEffect( () =>
     {
@@ -40,7 +46,7 @@ const CreateDevice = observer( ( { show, onHide } ) =>
     const addDevice = () =>
     {
         console.log( 'info', info )
-        const formData = new FormData()  
+        const formData = new FormData()          
         try
         {
             formData.append( 'name', name )
@@ -49,8 +55,7 @@ const CreateDevice = observer( ( { show, onHide } ) =>
             formData.append( 'brandId', device.selectedBrand.id )
             formData.append( 'typeId', device.selectedType.id )
             formData.append( 'info', JSON.stringify( info ) )            
-            createDevice( formData ).then( data => onHide() )
-            console.log("formData: ", formData);
+            editOneDevice( formData, id ).then( data => onHide() )  
         } catch ( error )
         {
             alert( error )
@@ -65,7 +70,7 @@ const CreateDevice = observer( ( { show, onHide } ) =>
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Добавить устройство
+                    Edit device
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -142,7 +147,7 @@ const CreateDevice = observer( ( { show, onHide } ) =>
                                     onClick={ () => removeInfo( i.number ) }
                                     variant={ "outline-danger" }
                                 >
-                                    Удалить
+                                    Delete
                                 </Button>
                             </Col>
                         </Row>
@@ -150,11 +155,11 @@ const CreateDevice = observer( ( { show, onHide } ) =>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-danger" onClick={ onHide }>Закрыть</Button>
-                <Button variant="outline-success" onClick={ addDevice }>Добавить</Button>
+                <Button variant="outline-danger" onClick={ onHide }>X</Button>
+                <Button variant="outline-success" onClick={ addDevice }>Add</Button>
             </Modal.Footer>
         </Modal>
     );
 } );
 
-export default CreateDevice;
+export default EditDevice;

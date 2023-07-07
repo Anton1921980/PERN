@@ -9,7 +9,7 @@ router.post( '/', checkRole('ADMIN'),deviceController.create )
 // router.post( '/', deviceController.create )
 router.get( '/', deviceController.getAll )
 router.get( '/:id', deviceController.getOne )
-
-
+router.put( '/edit/:id', deviceController.editOne )
+router.delete( '/delete/:id', deviceController.deleteOne )
 
 module.exports = router
