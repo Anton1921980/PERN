@@ -1,8 +1,12 @@
 body, div, h1, h2, h3, h4, a{
     font-family: 'Verdana' , sans-serif !important;
 }
-
-
+@media (min-width: 576px){
+.modal-dialog {
+    max-width: 90%;
+    margin: 1.75rem auto;
+}
+}
 .paginationItemStyle {
 	margin: 5px;
     .page-link{
@@ -46,4 +50,15 @@ body, div, h1, h2, h3, h4, a{
   .card{  
 border: 1px solid white;
 border-radius: 0.01rem;
+  }
+  .dropdown-menu.show {    
+    position: relative !important;
+    transform: translate3d(0,0,0) !important;
+}
+.rotate-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .open .rotate-icon {
+    transform: rotate(180deg);
   }

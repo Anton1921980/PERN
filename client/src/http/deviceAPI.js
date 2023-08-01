@@ -46,14 +46,16 @@ export const createDevice = async (device) => {
   }
 };
 
-export const fetchDevices = async (typeId, brandId, page, limit, sort) => {
+export const fetchDevices = async (typeId=null, brandId=null, page, limit, min=null , max=null, sort) => {
   const { data } = await $host.get("api/device", {
     params: {
       typeId,
       brandId,
-      page,
+      page,        
       limit,
-      sort,
+      min,
+      max, 
+      sort        
     },
   });
   console.log("data", data);
@@ -65,6 +67,7 @@ export const fetchOneDevice = async (id) => {
   return data;
 };
 
+// додати айдішнік інфо шо видаляється якшо є
 export const editOneDevice = async (device,id) => {
   const { data } = await $host.put("api/device/edit/" + id, device);
   return data;
@@ -72,6 +75,7 @@ export const editOneDevice = async (device,id) => {
 
 export const deleteOneDevice = async (id) => {
   const { data } = await $host.delete("api/device/delete/" + id);
+//чи видаляється також інфо?
   return data;
 };
 

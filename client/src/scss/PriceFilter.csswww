@@ -1,0 +1,43 @@
+
+
+
+
+.price-filter {
+    margin: 20px;
+  }
+  
+  .price-range {
+    /* display: flex; */
+    /* align-items: center; */
+    display: block;
+  }
+  .range2 {
+    position: relative;  
+    left: 17px;
+    bottom: 24px;
+    
+    /* z-index: 2; */
+    /* background-color: red !important; */
+  }
+  .range1 {
+    /* z-index: 2; */
+    position: relative;
+   
+  }
+  .price-range input {
+   width:97%;
+    margin: 0 5px;
+  }
+  
+  .price-values {
+    margin-top: 10px;
+    text-align: center;
+  }
+ 
+  input[type='range'] {
+    overflow: hidden;
+    /* width: 80px; */
+    -webkit-appearance: none;
+    /* background-color: grey; */
+    background-color: transparent;
+  }

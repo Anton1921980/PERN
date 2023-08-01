@@ -12,7 +12,19 @@ export default class DeviceStore
             // { id: 1, name: 'Samsung' },
             // { id: 2, name: 'Apple' },
         ]
+        this._alltypes = [
+            // { id: 1, name: 'Samsung' },
+            // { id: 2, name: 'Apple' },
+        ]
+        this._allbrands = [
+            // { id: 1, name: 'Samsung' },
+            // { id: 2, name: 'Apple' },
+        ]
         this._devices = [
+            // { id: 1, name: 'Iphone 12pro', price: 158566, rating: 5, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
+            // { id: 2, name: 'Iphone 12pro', price: 158566, rating: 2, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
+        ]
+        this._alldevices = [
             // { id: 1, name: 'Iphone 12pro', price: 158566, rating: 5, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
             // { id: 2, name: 'Iphone 12pro', price: 158566, rating: 2, img: 'https://content1.rozetka.com.ua/goods/images/big/173869349.jpg' },
         ]
@@ -44,9 +56,21 @@ export default class DeviceStore
     {
         this._brands = brands
     }
+    setAlltypes ( alltypes )
+    {
+        this._alltypes = alltypes
+    }
+    setAllbrands ( allbrands )
+    {
+        this._allbrands = allbrands
+    }
     setDevices ( devices )
     {
         this._devices = devices
+    }
+    setAlldevices ( alldevices )
+    {
+        this._alldevices = alldevices
     }
     setBaskets ( basket )
     {
@@ -94,9 +118,21 @@ export default class DeviceStore
     {
         return this._brands
     }
+    get allbrands ()
+    {
+        return this._allbrands
+    }
+    get alltypes ()
+    {
+        return this._alltypes
+    }
     get devices ()
     {
         return this._devices
+    }
+    get alldevices ()
+    {
+        return this._alldevices
     }
     get basket ()
     {

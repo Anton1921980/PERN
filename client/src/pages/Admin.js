@@ -16,6 +16,7 @@ import {
 // import DeviceList from "../components/DeviceList";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Context } from "../index";
+import EditDevicePage from "../components/modals/editDevicePage";
 
 const Admin = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -26,10 +27,12 @@ const Admin = observer(() => {
   const [data, setData] = useState("");
   const [data2, setData2] = useState("");
   const [result, setResult] = useState("");
-  const [id,set$id] = useState(null);
+  const [id, set$id] = useState(null);
   const { device } = React.useContext(Context);
 
-  device.setLimit(1000);
+  React.useEffect(() => {
+    device.setLimit(1000);
+  }, [device]);
 
   const sendData = async () => {
     const response = await fetch("http://localhost:5000/send-data", {
@@ -102,7 +105,7 @@ const Admin = observer(() => {
             value={data}
             onChange={(e) => setData(e.target.value)}
           />
-          <button onClick={sendData}>додати товар</button>
+          <button onClick={sendData}>Add one product by link</button>
         </div>
         <div>
           <input
@@ -110,7 +113,7 @@ const Admin = observer(() => {
             value={data2}
             onChange={(e) => setData2(e.target.value)}
           />
-          <button onClick={sendData}>додати каталог</button>
+          <button onClick={sendData}>Add page of products by link</button>
         </div>
       </Container>
       {result.name && (
@@ -123,7 +126,7 @@ const Admin = observer(() => {
         {device.devices.map((device, i) => (
           <div
             className="d-flex justify-content-between"
-            style={{ width: "80%", marginLeft: "10%" }}    
+            style={{ width: "80%", marginLeft: "10%" }}
             // style={{ cursor: "pointer", width: "70%" }}
             // active={ type.id === device.selectedType.id }
             // action
@@ -135,7 +138,7 @@ const Admin = observer(() => {
                 action
                 variant="light"
                 style={{ cursor: "pointer", width: "100%" }}
-                className="d-flex justify-content-between mt-1  mb-1"                
+                className="d-flex justify-content-between mt-1  mb-1"
               >
                 <div style={{ width: 50, height: 50, overflow: "hidden" }}>
                   <Image
@@ -144,7 +147,7 @@ const Admin = observer(() => {
                       width: "100%",
                       height: "100%",
                     }}
-                    src={"/" + device.img}
+                    src={"/" + device.img && device.img}
                   />
                 </div>
                 <span>{device.name}</span>
@@ -155,11 +158,13 @@ const Admin = observer(() => {
             <Button
               variant={"outline-dark"}
               className="mt-4  mb-4"
-              onClick={() => {setDeviceVisible2(true); set$id(device.id)}}
+              onClick={() => {
+                setDeviceVisible2(true);
+                set$id(device.id);
+              }}
             >
               Edit
             </Button>
-        
             {/* <Button
               variant={"outline-dark"}
               //відкрити модалку форму, отримати та відобразити повні дані товару щод їх відредагувати, зробити зміни textarea? сабміт відправити
@@ -175,8 +180,8 @@ const Admin = observer(() => {
               edit
             </Button>{" "} */}
             <Button
-               variant={"outline-dark"}
-               className="mt-4  mb-4"
+              variant={"outline-dark"}
+              className="mt-4  mb-4"
               onClick={() =>
                 deleteOneDevice(device.id)
                   .then((data) => {
@@ -190,11 +195,13 @@ const Admin = observer(() => {
             </Button>{" "}
           </div>
         ))}
-           { id && <EditDevice
-              id={id}
-              show={deviceVisible2}
-              onHide={() => setDeviceVisible2(false)}
-            />}
+        {id && (
+          <EditDevicePage
+            id={id}
+            show={deviceVisible2}
+            onHide={() => setDeviceVisible2(false)}
+          />
+        )}
       </ListGroup>
     </>
   );
