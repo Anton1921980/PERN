@@ -26,19 +26,12 @@ app.post("/send-data", async (req, res) => {
   // Додаємо обробку даних тут, можна викликати зовнішній файл, наприклад:
   const getOneResult = require('./getone2.js');
   const result = await getOneResult(data);
-  console.log("result: ", result);
-  // const result = "Оброблений результат: " + data;
-
+  // console.log("result: ", result);
  result!=={} && res.json({ result: result });
 });
 
 //обработка ошибок всегда в конце списка
 app.use(errorHandler)
-
-
-// app.get('/', (req, res) =>{
-//     res.status(200).json({message: 'working!!!'})
-// })
 
 const start = async ()=> {
     try {

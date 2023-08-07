@@ -14,13 +14,19 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
         marginLeft: "15px",
         cursor: "pointer",
         transform: `rotate(${
-          expand!==false ? (isOpen ? "270deg" : "90deg") : isOpen ? "0deg" : "180deg"
+          expand !== false
+            ? isOpen
+              ? "270deg"
+              : "90deg"
+            : isOpen
+            ? "0deg"
+            : "180deg"
         })`,
         transition: "transform 0.3s ease",
       }}
       onClick={() => {
         onToggle && onToggle(eventKey);
-        expand!==false && decoratedOnClick();
+        expand !== false && decoratedOnClick();
       }}
     >
       &gt;
@@ -28,11 +34,38 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
   );
 }
 
-const TypeBar = observer((props) => {
+function CustomToggleBrand({ eventKey, isOpen, onToggle, expand }) {
+  const decoratedOnClick = (eventKey, () =>
+    console.log("totally custom!", isOpen)
+  );
+  return (
+    <div
+      style={{
+        marginLeft: "15px",
+        cursor: "pointer",
+        transform: `rotate(${
+          isOpen
+              ? "180deg"
+              : "0deg"
+           
+        })`,
+        transition: "transform 0.3s ease",
+      }}
+      onClick={() => {
+        onToggle && onToggle(eventKey);
+        expand !== false && decoratedOnClick();
+      }}
+    >
+      &gt;
+    </div>
+  );
+}
 
+
+const TypeBar = observer((props) => {
   const { device } = useContext(Context);
   const [isOpenMap, set$isOpenMap] = useState({});
-
+  const [IsOpenMapBrand, set$isOpenMapBrand] = useState({});
   // Function to toggle the isOpen state for a specific category
   const toggleCategory = (typeId) => {
     set$isOpenMap((prevIsOpenMap) => ({
@@ -40,7 +73,12 @@ const TypeBar = observer((props) => {
       [typeId]: !prevIsOpenMap[typeId],
     }));
   };
-
+  const toggleBrand = (brandId) => {
+    set$isOpenMapBrand((prevIsOpenMapBrand) => ({
+      ...prevIsOpenMapBrand,
+      [brandId]: !prevIsOpenMapBrand[brandId],
+    }));
+  };
   return (
     <>
       <Accordion defaultActiveKey="0">
@@ -55,7 +93,7 @@ const TypeBar = observer((props) => {
             >
               &gt;
             </CustomToggle>
-           <span style={{ width: "50%" }}>Categories</span>
+            <span style={{ width: "50%" }}>Categories</span>
             <span
               style={{ marginLeft: "15px", cursor: "pointer" }}
               onClick={() => {
@@ -137,9 +175,9 @@ const TypeBar = observer((props) => {
                             key={brandId}
                           >
                             {
-                              device.allbrands.filter(
+                              device.allbrands.find(
                                 (brand) => brand.id === brandId
-                              )[0]?.name
+                              )?.name
                             }
                             <Badge bg="secondary" pill>
                               {props?.arrayOfDevicesCountPerTypePerBrand?.find(
@@ -151,22 +189,21 @@ const TypeBar = observer((props) => {
                           <span
                             style={{ marginLeft: "15px", cursor: "pointer" }}
                             onClick={() => {
-                              device.selectedBrand !== ""
+                              device.selectedBrand.id === brandId
                                 ? device.setSelectedBrand("")
                                 : device.setSelectedBrand(
-                                    device.brands.filter(
+                                    device.brands.find(
                                       (brand) => brand.id === brandId
-                                    )[0]
+                                    )
                                   );
                               device.setSelectedType(type);
                             }}
                           >
-                            <CustomToggle
-                              eventKey={type.id}
-                              isOpen={isOpenMap[type.id]}
-                              onToggle={toggleCategory} // Pass the callback function
-                              expand={false}
-                            />
+                             <CustomToggleBrand
+                      eventKey={brandId}
+                      isOpen={IsOpenMapBrand[brandId]}
+                      onToggle={toggleBrand} // Pass the callback function
+                    />
                           </span>
                         </div>
                       ))}

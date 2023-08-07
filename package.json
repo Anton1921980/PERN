@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "fs": "0.0.1-security",
+    "google-translate-api": "^2.3.0",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "needle": "^3.0.0",
@@ -27,7 +28,7 @@
     "path": "^0.12.7",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.7.0",
+    "sequelize": "^6.32.1",
     "uuid": "^8.3.2",
     "webdriverio": "^7.16.3"
   },

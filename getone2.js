@@ -1,237 +1,147 @@
-const Nightmare = require( 'nightmare' );
-const cheerio = require( 'cheerio' );
-const uuid = require( 'uuid' );
-const path = require( 'path' );
-var axios = require( "axios" );
-var http = require( "https" );
-var fs = require( "fs" );
 
-console.log( "start" );
+const Nightmare = require("nightmare");
+const cheerio = require("cheerio");
+const uuid = require("uuid");
+const path = require("path");
+var axios = require("axios");
+var http = require("https");
+var fs = require("fs");
+const translate = require("google-translate-api");
+const { remove } = require("cheerio/lib/api/manipulation");
 
-let type = 'phone';
-let brand = 'iphone';
+console.log("start");
 
-// ; перед функцией!
+let type = "phone";
+let brand = "iphone";
 
-
-     async function getResult(data) 
-{
+async function getResult(data) {
     const url = data;
-    const url_2 = url + 'characteristics'
-    const url_3 = url + 'photo'
+    let device = {};
 
-    let device = {}
+    const nightmare = Nightmare({ show: true });
 
-    const nightmare = Nightmare( { show: true } );
+    const response_1 = await nightmare
+        .goto(`${url}characteristics`)
+        .wait("body")
+        .wait(".buy-button.ng-star-inserted")
+        .evaluate(() => document.querySelector("body").innerHTML);
 
+    await getData(response_1);
+
+    const response_2 = await nightmare
+        .goto(url)
+        .wait(".picture-container__picture")
+        .evaluate(() => document.querySelector("body").innerHTML)
+        .end();
+
+    await getData1(response_2);
+
+    async function getData(html) {
+        const $ = cheerio.load(html);
+        const descriptionText = $(".ng-star-inserted>.characteristics-full__label>*").append(":").text();
+        const descriptionItems = descriptionText.split(":");
+        const valueText = $(".characteristics-full__value").append(":").text();
+        const valueItems = valueText.split(":");
+        const info1 = descriptionItems.map((item, index) => {
+            return {
+                title: item,
+                description: valueItems[index],
+                number: Date.now(),
+            };
+        });
+        const info = JSON.stringify(info1);
+
+        const devicePrice = $(".product-carriage__price")
+            ? +$(".product-carriage__price").text().replace(/\D+/g, "")
+            : +$(".product-prices__big").text().replace(/\D+/g, "");
+
+        const deviceNameRaw = $("h1").text();
+
+        await removeWordAndParentheses(deviceNameRaw, devicePrice, info);
+    }
+
+    async function removeWordAndParentheses(text, devicePrice, info) {
+        const removeWord = text.replace(/Характеристики/g, "");
+        const removeWordArr = removeWord.split(" ");
+        const typeWordRaw = removeWordArr[1].split(" ").join("").toLowerCase();
+        const brandWord = removeWordArr[2];
+
+        if (typeWordRaw.length) {
+            const encodedTypeWord = encodeURIComponent(typeWordRaw);
+            const url = `https://libretranslate.de/translate?q=${encodedTypeWord}&source=uk&target=en`;
+            const response = await axios.post(url);
+
+            const translatedText = response.data.translatedText;
+
+            device = {
+                name: removeWord,
+                price: devicePrice,
+                brandId: brandWord,
+                typeId: translatedText,
+                info: info,
+            };
+        }
+    }
+
+    async function getData1(html) {
+        const $ = cheerio.load(html);
+        const imgMain = $(".picture-container__picture").attr("src");
+        await imgNameFile(imgMain);
+    }
+
+    async function imgNameFile(imgMain) {
+        await new Promise((resolve, reject) => {
+            http.get(imgMain, function (res) {
+                let imagedata = "";
+                res.setEncoding("binary");
+
+                res.on("data", function (chunk) {
+                    imagedata += chunk;
+                });
+
+                res.on("end", function () {
+                    const fileName = `${uuid.v4()}.jpg`;
+                    device.img = fileName;
+                    fs.writeFile(
+                        path.resolve(__dirname, "..", "PERN/static", fileName),
+                        imagedata,
+                        "binary",
+                        function (err) {
+                            if (err) {
+                                console.error(err);
+                                reject(err);
+                            } else {
+                                console.log("File saved.");
+                                resolve();
+                            }
+                        }
+                    );
+                });
+            });
+        });
+
+        await addProduct(device);
+    }
+
+    async function addProduct(device) {
+      try {
+        const loginResponse = await axios.post("http://localhost:5000/api/user/login", {
+          email: "customer@gmail.com",
+          password: "1111111",
+        });
     
-    await nightmare
-        .goto( url_2 )
-        .wait( 'body' )
-        //  .wait( 'tabs__list' )
-        // .click( 'tabs__list:nth-child(2)' )
-        .wait( '.buy-button.ng-star-inserted' )
-        // .wait( '.picture-container__picture' )           
-        .evaluate( () => document.querySelector( 'body' ).innerHTML )
-        .then( response =>
-        {
-            console.log( getData( response ) );          
-        } ).catch( err =>
-        {
-            console.log( err );
-        }
-        )
-
-        await nightmare
-        .goto( url )
-        .wait( 'body' )
-        .evaluate( () => window.scrollTo( 0, 700 ) )
-        .wait( '.picture-container__picture' )
-        .evaluate( () => document.querySelector( 'body' ).innerHTML )
-        .end()
-        .then( response =>
-        {
-            console.log( getData1( response ) );
-        } )
-        .catch( err =>
-        {
-            console.log( err );
-        } )
-
-    function getData ( html )
-    {
-        data = [];
-        const $ = cheerio.load( html );
-        //характеристики {} 
-        let th1 = $( ".ng-star-inserted>.characteristics-full__label>*" ).append( ":" ).text();//этот меня устраивает
-        let th = th1.split( ":" );
-
-        let td1 = $( ".characteristics-full__value" ).append( ":" ).text()
-        let td = td1.split( ":" );
-
-        let info1 = [];
-        for ( var i = 0; i < th.length; i++ )
-        {
-            info1[ i ] = {
-                "title": th[ i ],
-                "description": td[ i ],
-                "number": Date.now(),
-            }
-        }
-        let info = JSON.stringify( info1 )
-
-        let devicePrice // убрать пробелы и грн " 10 999₴"
-        $( ".product-carriage__price" ) ?
-            devicePrice = +( $( ".product-carriage__price" ).text() ).replace( /\D+/g, "" )
-            : devicePrice = +( $( ".product-prices__big" ).text() ).replace( /\D+/g, "" )
-
-        console.log( "TCL: price", devicePrice )
-
-        const deviceNameRaw = $( 'h1' ).text();
-        function removeWordAndParentheses(text) {
-            const removeWord = text.replace(/Характеристики/g, '');
-            // const removeParentheses = removeWord.replace(/\(.*?\)/g, '');
-            return removeWord
-            // return removeParentheses;
-        }
-        const deviceName = removeWordAndParentheses(deviceNameRaw);
-
-
-        console.log( "TCL: deviceName", deviceName );
-        console.log( "TCL: info", info );
-
-        device = {
-            name: deviceName,
-            price: devicePrice,
-            brandId: '2',
-            typeId: '1',
-            // img: fileName,
-            // info: '[{"title":"test8","description":"test9","number":1635838157222},{"title":"test9","description":"test8","number":1635838158222}]',
-            info: info,
-        }
-             return device
+        const token = await loginResponse.data.token;
+    
+        const deviceResponse = await axios.post("http://localhost:5000/api/device", device, {
+          headers: { authorization: `Bearer ${token}` },
+        });
+        await deviceResponse.data
+        // console.log("deviceResponse.data",await deviceResponse.data);
+      } catch (err) {
+        console.log("TCL: addProduct -> err", err);
+      }
     }
-
-     function getData1 ( html )
-    {
-        data = [];
-        const $ = cheerio.load( html );
-        //фото
-
-        let imgMain = $( ".picture-container__picture" ).attr( 'src' )
-        console.log( "TCL: imgMain", imgMain )
-
-        imgNameFile( imgMain )
-    }
-
-    function imgNameFile ( imgMain )
-    {
-        http.get( imgMain, function ( res )
-        {
-            var imagedata = "";
-            res.setEncoding( "binary" );
-
-            res.on( "data", function ( chunk )
-            {
-                imagedata += chunk;
-            } );
-
-            res.on( "end", function ()
-            {
-                let fileName = uuid.v4() + ".jpg" //создаем уникальное имя
-                device.img = fileName  
-                addProduct( device )
-                console.log( "TCL: fileName", fileName )
-                fs.writeFile(
-                    path.resolve( __dirname, '..', 'PERN/static', fileName ),
-                    imagedata,
-                    "binary",
-                    function ( err )
-                    {
-                        if ( err ) throw err;
-                        console.log( "File saved." );
-                    }
-                );
-                return device               
-            } );
-        } )
-        console.log("device2: ", device);
-        
-return device
-    }
-
-    function addProduct ( device )
-    {
-        axios
-            .post( "http://localhost:5000/api/user/login", {
-                email: "customer@gmail.com",
-                password: "1111111"
-            } )
-            .then( response =>
-            {
-                let token = response.data.token;
-
-                axios
-                    .post( "http://localhost:5000/api/device", device, {
-                        headers: { authorization: `Bearer ${ token }` }
-                    } )
-                    .then( device =>
-                    {
-                        console.log( device );
-                    } )
-                    .catch( err =>
-                    {
-                        console.log( "TCL: addProduct -> err", err );
-                    } );
-            } )
-            .catch( err =>
-            {
-                console.log( "TCL: addProduct -> err", err );
-            } );
-    }
-return  device
+    return device;
 }
 
 module.exports = getResult;
-
-        // // let { name, price, brandId, typeId, img, info } = req.body
-        // // info [{"title":"333","description":"44","number":1635838152823},{"title":"555","description":"77","number":1635838158623}]
-        // // number:Date.now()
-
-        // let device = {
-        //     name: '756871133444444',
-        //     price: '777',
-        //     brandId: '2',
-        //     typeId: '2',
-        //     img: 'b7e4ecf9-0ed8-4a00-8544-6f309e1ddb3a.jpg',
-        //     info: '[{"title":"test5","description":"test5","number":1635838152555}]',
-        // }
-
-
-
-
-// //взять массив ссылок на картинки из result.imageUrls
-// // обрезать конец в название и сохранить в папку
-// // добавить адрес папки  и записать в result.imageUrls_2
-
-
-// //массив картинок
-// //   var i = 0;
-// //   while (result.imageUrls2.length > i) {
-// //     let url3 = result.imageUrls2[i];
-// //     // let ur14 = url3.replace(/iamge.*/i, "");
-// //     request(url3);
-// //     i++;
-// //   }
-
-
-
-
-
-
-
-
-
-
-
-

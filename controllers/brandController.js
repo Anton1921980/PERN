@@ -14,10 +14,8 @@ class BrandController
     async getAll ( req, res )
     {
         let type_brands
-        let brands
-        let id
-        let id1
-        let id2
+        let brands    
+        let id1     
         let id3
         // brands = await Brand.findAll()
 
@@ -40,7 +38,7 @@ class BrandController
             console.log( "TCL: id", id )//[3,4]
 
 
-            brands = await Brand.findAll( { where: { id } } ) //без await ошибка
+            brands = await Brand.findAll( { where: { id } } ) 
 
 
         } else if ( !typeId  )
