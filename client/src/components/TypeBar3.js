@@ -41,7 +41,7 @@ const TypeBar = observer((props) => {
                 style={{width:"80%"}}
                 onClick={() => {
                   device.setSelectedType("");
-                  device.setSelectedBrand("");
+                  device.setSelectedBrands("");
                 }}
               >
                 {" "}
@@ -58,7 +58,7 @@ const TypeBar = observer((props) => {
                 className="d-flex justify-content-between"
                 onClick={() => {
                   device.setSelectedType(type);
-                  device.setSelectedBrand("");
+                  device.setSelectedBrands("");
                 }}
               >
                 {" "}

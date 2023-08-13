@@ -1,6 +1,8 @@
 const uuid = require("uuid");
 const path = require("path");
+const { Sequelize } = require("../db");
 const { Op } = require("sequelize");
+
 const {
   Device,
   DeviceInfo,
@@ -10,6 +12,7 @@ const {
   Brand,
   TypeBrand,
 } = require("../models/models");
+
 const ApiError = require("../error/ApiError");
 // const { all } = require("sequelize/types/lib/operators");
 
@@ -50,19 +53,7 @@ class DeviceController {
       }
       console.log("newTypeId: ", newTypeId);
 
-      //   const typeIdExist = await res
-      //     .json(types)
-      //     .find(({ name }) => name === typeId);
-
-      //     console.log("typeIdExist: ", typeIdExist);
-
-      //   if (typeIdExist?.id) {
-      //     newTypeId = typeIdExist.id;
-      //   } else {
-      //     const newType = await Type.create({ typeId });
-      //     newTypeId = await res.json(newType).id;
-      //   }
-      // }
+  
 
       if (typeof brandId !== "number") {
         const brands = await Brand.findAll();
@@ -77,20 +68,7 @@ class DeviceController {
           newBrandId = newBrand.id;
         }
         console.log("newBrandId: ", newBrandId);
-        // const brandIdExist = await res
-        //   .json(brands)
-        //   .find(({ name }) => name === brandId);
-
-        //   console.log("brandIdExist: ", brandIdExist);
-
-        // if (brandIdExist?.id) {
-        //   newBrandId = brandIdExist.id;
-        // } else {
-        //   const newBrand = await Brand.create({ brandId });
-        //   newBrandId = await res.json(newBrand).id;
-        // }
-
-        // json(brands);
+    
       }
       // if (typeof newTypeId === "number" && typeof newBrandId === "number") {
       const type_brands = await TypeBrand.findAll({
@@ -110,16 +88,7 @@ class DeviceController {
         typeBrandExist = typeBrandNew.id;
       }
       console.log("typeBrandExist: ", typeBrandExist);
-      // let typeBrandExist = await res.json(type_brands).id;
-
-      // if (!typeof typeBrandExist === "number") {
-      //   const typeBrandNew = await TypeBrand.create({
-      //     typeId: newTypeId,
-      //     brandId: newBrandId,
-      //   });
-
-      // typeBrandExist = await res.json(typeBrandNew).id;
-      // }
+    
       console.log(" newBrandId,  newTypeId,: ", newBrandId, newTypeId);
 
       const device = await Device.create({
@@ -175,7 +144,7 @@ class DeviceController {
   }
 
   async getAll(req, res) {
-    let { typeId, brandId, page, sort, limit, min, max } = req.query;
+    let { typeId, brandId, page, limit, min, max, sort } = req.query;
     console.log("req.query: ", req.query);
 
     page = page || 1;
@@ -184,7 +153,7 @@ class DeviceController {
     console.log("TCL sort", sort);
 
     if (sort && sort !== "") {
-      sort = [["price sort", sort]];
+      sort = [["price", sort]];
     } else {
       sort = [["id", "DESC"]];
     }
@@ -227,6 +196,40 @@ class DeviceController {
       include: [{ model: DeviceInfo, as: "info" }],
     });
     return res.json(device);
+  }
+
+  async getMinMaxPrices(req, res) {
+    let { brandId, typeId } = req.query;
+    console.log("typeId: ", typeId);
+    console.log("brandId: ", brandId);
+  
+    try {
+      const whereClause = {};
+      if (typeId) {
+        whereClause.typeId = typeId;
+      }
+      if (brandId) {
+        whereClause.brandId = brandId;
+      }
+
+      const minmax = await Device.findOne({
+        attributes: [
+          [Sequelize.fn("min", Sequelize.col("price")), "minPrice"],
+          [Sequelize.fn("max", Sequelize.col("price")), "maxPrice"],
+        ],
+        where: whereClause,
+      });
+
+      const minPrice = minmax.getDataValue("minPrice");
+      console.log("minPrice: ", minPrice);
+      const maxPrice = minmax.getDataValue("maxPrice");
+      console.log("maxPrice: ", maxPrice);
+
+      return res.json([minPrice, maxPrice]);
+    } catch (error) {
+      console.error("Error fetching min-max prices:", error);
+      return null;
+    }
   }
 
   async editOne(req, res) {

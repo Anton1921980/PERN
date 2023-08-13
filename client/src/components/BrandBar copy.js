@@ -15,14 +15,14 @@ const BrandBar = observer((props) => {
         <Card
           key={i}
           style={{ cursor: "pointer" }}
-          // style={ brand.id === device.selectedBrand.id ? { cursor: 'pointer', borderBottom: '2px solid black' } : { cursor: 'pointer', borderBottom: '2px solid white' } }
-          border={brand.id === device.selectedBrand.id ? "secondary" : "light"}
+          // style={ brand.id === device.selectedBrands.id ? { cursor: 'pointer', borderBottom: '2px solid black' } : { cursor: 'pointer', borderBottom: '2px solid white' } }
+          border={brand.id === device.selectedBrands.id ? "secondary" : "light"}
         >
-         { brand.id === device.selectedBrand.id ? (
+         { brand.id === device.selectedBrands.id ? (
             <div
               className="p-2"
               onClick={() => {
-                device.setSelectedBrand("");
+                device.setSelectedBrands("");
               }}               
             >
               {" "}
@@ -34,7 +34,7 @@ const BrandBar = observer((props) => {
             <div
               className="p-2"
               onClick={() => {
-                device.setSelectedBrand(brand);               
+                device.setSelectedBrands(brand);               
               }}
             >
               {" "}

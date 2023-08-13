@@ -34,38 +34,12 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
   );
 }
 
-function CustomToggleBrand({ eventKey, isOpen, onToggle, expand }) {
-  const decoratedOnClick = (eventKey, () =>
-    console.log("totally custom!", isOpen)
-  );
-  return (
-    <div
-      style={{
-        marginLeft: "15px",
-        cursor: "pointer",
-        transform: `rotate(${
-          isOpen
-              ? "180deg"
-              : "0deg"
-           
-        })`,
-        transition: "transform 0.3s ease",
-      }}
-      onClick={() => {
-        onToggle && onToggle(eventKey);
-        expand !== false && decoratedOnClick();
-      }}
-    >
-      &gt;
-    </div>
-  );
-}
-
-
 const TypeBar = observer((props) => {
   const { device } = useContext(Context);
-  const [isOpenMap, set$isOpenMap] = useState({});
-  const [IsOpenMapBrand, set$isOpenMapBrand] = useState({});
+  // const [isOpenMap, set$isOpenMap] = useState(Object.fromEntries(device.types.map((type) => [type.id, true]))); //all categories except main rotated
+  const [isOpenMap, set$isOpenMap] = useState({ 888: true }); //main only rotated
+  console.log("isOpenMap: ", isOpenMap);
+
   // Function to toggle the isOpen state for a specific category
   const toggleCategory = (typeId) => {
     set$isOpenMap((prevIsOpenMap) => ({
@@ -73,15 +47,13 @@ const TypeBar = observer((props) => {
       [typeId]: !prevIsOpenMap[typeId],
     }));
   };
-  const toggleBrand = (brandId) => {
-    set$isOpenMapBrand((prevIsOpenMapBrand) => ({
-      ...prevIsOpenMapBrand,
-      [brandId]: !prevIsOpenMapBrand[brandId],
-    }));
-  };
+
   return (
     <>
-      <Accordion defaultActiveKey="0">
+      <Accordion
+        defaultActiveKey="888" //opened
+        // defaultActiveKey="0" //closed
+      >
         <Card>
           <Card.Header
             style={{ display: "flex", justifyContent: "space-around" }}
@@ -98,7 +70,7 @@ const TypeBar = observer((props) => {
               style={{ marginLeft: "15px", cursor: "pointer" }}
               onClick={() => {
                 device.setSelectedType("");
-                device.setSelectedBrand("");
+                device.setSelectedBrands([]);
               }}
             >
               &gt;
@@ -107,10 +79,17 @@ const TypeBar = observer((props) => {
           <Accordion.Collapse eventKey="888">
             <Card.Body>
               {device.types.map((type, i) => (
-                <Accordion defaultActiveKey="0" key={type.id}>
+                <Accordion
+                  //  defaultActiveKey={type.id}// all opened
+                  defaultActiveKey="0" // all closed
+                  key={type.id}
+                >
                   <Card.Header
                     className={isOpenMap[type.id] ? "open" : ""}
-                    style={{ display: "flex" }}
+                    style={{
+                      display: "flex",
+                      backgroundColor: isOpenMap[type.id] && "lightgrey",
+                    }}
                   >
                     <CustomToggle
                       eventKey={type.id}
@@ -133,7 +112,7 @@ const TypeBar = observer((props) => {
                         {" "}
                         <span>{type.name}</span>
                         {props?.productCountPerType && (
-                          <Badge bg="secondary" pill>
+                          <Badge bg="light" text="dark" pill>
                             {props.productCountPerType[type.id] || ""}
                           </Badge>
                         )}
@@ -141,21 +120,36 @@ const TypeBar = observer((props) => {
                       <span
                         style={{ marginLeft: "15px", cursor: "pointer" }}
                         onClick={() => {
-                          type.id === device.selectedType.id
+                          type.id === device.selectedType.id &&
+                          !device?.selectedBrands?.length //вибраний тип нема бренду
                             ? device.setSelectedType("")
                             : device.setSelectedType(type);
-                          device.setSelectedBrand("");
+                          device.setSelectedBrands([]);
                         }}
                       >
-                        &gt;
+                        <div
+                          style={{
+                            marginLeft: "15px",
+                            cursor: "pointer",
+                            transform: `rotate(${
+                              type.id === device.selectedType.id &&
+                              device.selectedBrands?.length === 0
+                                ? "180deg"
+                                : "0deg"
+                            })`,
+                            transition: "transform 0.3s ease",
+                          }}
+                        >
+                          &gt;
+                        </div>
                       </span>
                     </div>
                   </Card.Header>
                   <Accordion.Collapse
                     eventKey={type.id}
                     style={{ cursor: "pointer" }}
-                    active={type.id === device.selectedType.id}
-                    action
+                    // active={type?.id === device.selectedType?.id?"true":"false"}
+                    action="true"
                     variant="light"
                     key={type.id}
                   >
@@ -168,18 +162,19 @@ const TypeBar = observer((props) => {
                             alignItems: "flex-start",
                             width: "80%",
                           }}
+                          key={brandId}
                         >
                           <div
                             className="d-flex justify-content-between"
                             style={{ marginLeft: "20%", width: "70%" }}
-                            key={brandId}
+                            // key={brandId}
                           >
                             {
                               device.allbrands.find(
                                 (brand) => brand.id === brandId
                               )?.name
                             }
-                            <Badge bg="secondary" pill>
+                            <Badge bg="light" text="dark" pill>
                               {props?.arrayOfDevicesCountPerTypePerBrand?.find(
                                 (el) =>
                                   el.typeId === type.id && el.brand === brandId
@@ -189,21 +184,49 @@ const TypeBar = observer((props) => {
                           <span
                             style={{ marginLeft: "15px", cursor: "pointer" }}
                             onClick={() => {
-                              device.selectedBrand.id === brandId
-                                ? device.setSelectedBrand("")
-                                : device.setSelectedBrand(
-                                    device.brands.find(
-                                      (brand) => brand.id === brandId
+                              if (
+                                device?.selectedType?.id === undefined || // клікаємо вперше тип не визначено
+                                device.selectedType.id !== type.id
+                              ) {
+                                //  клікаємо по бренду з іншої категорії
+                                device.setSelectedBrands([brandId]);
+                                device.setSelectedType(type);
+                              } else {
+                                device.selectedType.id !== type.id &&
+                                  device.setSelectedType(type);
+                                device.selectedBrands.includes(brandId)
+                                  ? device.setSelectedBrands(
+                                      //case ввидаляємо бренд якшо він вже є
+                                      device.selectedBrands.filter(
+                                        (id) => id !== brandId
+                                      )
                                     )
-                                  );
-                              device.setSelectedType(type);
+                                  : device.setSelectedBrands([
+                                      // додоємо якшо не було
+                                      ...device.selectedBrands,
+                                      brandId,
+                                    ]);
+                              }
                             }}
                           >
-                             <CustomToggleBrand
-                      eventKey={brandId}
-                      isOpen={IsOpenMapBrand[brandId]}
-                      onToggle={toggleBrand} // Pass the callback function
-                    />
+                            <div
+                              style={{
+                                marginLeft: "15px",
+                                cursor: "pointer",
+                                transform: `rotate(${
+                                  type.id === device.selectedType.id &&
+                                  brandId ===
+                                    device.selectedBrands.find(
+                                      (id) => id === brandId
+                                    )
+                                    ? "180deg"
+                                    : "0deg"
+                                })`,
+                                transition: "transform 0.3s ease",
+                              }}
+                            >
+                              &gt;
+                            </div>
                           </span>
                         </div>
                       ))}

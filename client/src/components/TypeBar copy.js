@@ -56,7 +56,7 @@ const TypeBar = observer((props) => {
                   }}
                   onClick={() => {
                     device.setSelectedType("");
-                    device.setSelectedBrand("");
+                    device.setSelectedBrands("");
                   }}
                 >
                   {" "}
@@ -78,7 +78,7 @@ const TypeBar = observer((props) => {
                   }}
                   onClick={() => {
                     device.setSelectedType(type);
-                    device.setSelectedBrand("");
+                    device.setSelectedBrands("");
                   }}
                 >
                   {" "}

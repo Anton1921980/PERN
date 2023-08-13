@@ -61,7 +61,7 @@ const Shop = observer( () =>
             fetchBrands( parsedTypes ).then( data =>
             {
                 device.setBrands( data )
-                device.setSelectedBrand( { id: +parsedBrands } )
+                device.setSelectedBrands( { id: +parsedBrands } )
             } )
 
             fetchDevices( parsedTypes, parsedBrands, parsed.page, parsed.limit, parsed.sort ).then( data =>
@@ -102,7 +102,7 @@ const Shop = observer( () =>
         if ( string !== 1 )
         {
             device.selectedType.id ? type = `types=${ device.selectedType.id }` : type = ''
-            device.selectedBrand.id ? brand = `&brands=${ device.selectedBrand.id }` : brand = ''
+            device.selectedBrands.id ? brand = `&brands=${ device.selectedBrands.id }` : brand = ''
             device.sort && ( sort = `&sort=${ device.sort }` )
 
             let query = `${ type }${ brand }&page=${ device.page }&limit=${ device.limit }${ sort }`;
@@ -110,7 +110,7 @@ const Shop = observer( () =>
 
             history.push( `/shop/?${ query }` )
 
-            fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, device.sort ).then( data =>
+            fetchDevices( device.selectedType.id, device.selectedBrands.id, device.page, device.limit, device.sort ).then( data =>
             {
                 device.setDevices( data.rows )
                 device.setTotalCount( data.count )
@@ -121,13 +121,13 @@ const Shop = observer( () =>
             fetchBrands( parsedTypes ).then( data =>
             {
                 device.setBrands( data )
-                // device.setSelectedBrand( { id: +parsedBrands } )
+                // device.setSelectedBrands( { id: +parsedBrands } )
 
                 console.log( "fetch brands2" )
 
             } )
         }
-    }, [ device.page, device.selectedType, device.selectedBrand, device.sort ] )
+    }, [ device.page, device.selectedType, device.selectedBrands, device.sort ] )
 
 
 
@@ -141,10 +141,10 @@ const Shop = observer( () =>
     //     let sort = "";
 
 
-    //     // else if ( device.selectedType.id || device.selectedBrand.id || device.sort || device.page ) //загрузка по фильтрам
+    //     // else if ( device.selectedType.id || device.selectedBrands.id || device.sort || device.page ) //загрузка по фильтрам
     //     // {
     //     device.selectedType.id ? type = `types=${ device.selectedType.id }` : type = ''
-    //     device.selectedBrand.id ? brand = `&brands=${ device.selectedBrand.id }` : brand = ''
+    //     device.selectedBrands.id ? brand = `&brands=${ device.selectedBrands.id }` : brand = ''
     //     device.sort ?  sort = `&sort=${ device.sort }` : sort = ''
 
     //     let query = `${ type }${ brand }&page=${ device.page }&limit=${ device.limit }${ sort }`;
@@ -161,10 +161,10 @@ const Shop = observer( () =>
     //     fetchBrands( parsedTypes ).then( data =>
     //     {
     //         device.setBrands( data )
-    //         device.setSelectedBrand( { id: +parsedBrands } )
+    //         device.setSelectedBrands( { id: +parsedBrands } )
     //     } )
 
-    //     fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, device.sort ).then( data =>
+    //     fetchDevices( device.selectedType.id, device.selectedBrands.id, device.page, device.limit, device.sort ).then( data =>
     //     {
     //         device.setDevices( data.rows )
     //         device.setTotalCount( data.count )
@@ -175,7 +175,7 @@ const Shop = observer( () =>
 
 
         // }
-    // }, [ parsed.page, parsed.selectedType,parsed.selectedBrand, parsed.sort ] )
+    // }, [ parsed.page, parsed.selectedType,parsed.selectedBrands, parsed.sort ] )
 
 
     return (

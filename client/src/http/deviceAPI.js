@@ -46,7 +46,7 @@ export const createDevice = async (device) => {
   }
 };
 
-export const fetchDevices = async (typeId=null, brandId=null, page, limit, min=null , max=null, sort) => {
+export const fetchDevices = async (typeId=null, brandId=null, page, limit, min=null , max=null, sort=null) => {
   const { data } = await $host.get("api/device", {
     params: {
       typeId,
@@ -69,16 +69,27 @@ export const fetchOneDevice = async (id) => {
 
 // додати айдішнік інфо шо видаляється якшо є
 export const editOneDevice = async (device,id) => {
-  const { data } = await $host.put("api/device/edit/" + id, device);
+  const { data } = await $authHost.put("api/device/edit/" + id, device);
   return data;
 };
 
 export const deleteOneDevice = async (id) => {
-  const { data } = await $host.delete("api/device/delete/" + id);
+  const { data } = await  $authHost.delete("api/device/delete/" + id);
 //чи видаляється також інфо?
   return data;
 };
+export const minmaxDevices = async (typeId=null, brandId=null) => {
+  console.log("brandId: ", brandId);
+  console.log("typeId: ", typeId);
 
+  const { data } = await $host.get("api/device/minmax", {
+    params: {
+      typeId: typeId,
+      brandId: brandId          
+    },
+  });
+  return data;
+};
 export const addtoBasket = async (deviceId) => {
   const { response } = await $authHost.post("api/basket", deviceId);
   return response;

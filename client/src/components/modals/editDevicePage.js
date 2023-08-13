@@ -86,7 +86,7 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
       formData.append("name", name);
       formData.append("price", `${price}`);
       formData.append("img", file);
-      formData.append("brandId", device.selectedBrand.id);
+      formData.append("brandId", device.selectedBrands.id);
       formData.append("typeId", device.selectedType.id);
       formData.append("info", JSON.stringify([...info, ...infoOldDeleted]));
       editOneDevice(formData, id).then((data) => onHide());
@@ -131,13 +131,13 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
           </Dropdown>
           <Dropdown className="mt-2 mb-2">
             <Dropdown.Toggle>
-              {device.selectedBrand.name ||
+              {device.selectedBrands.name ||
                 device.brands.filter((brand) => brand.id === brandId)[0]?.name}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {device.brands.map((brand) => (
                 <Dropdown.Item
-                  onClick={() => device.setSelectedBrand(brand)}
+                  onClick={() => device.setSelectedBrands(brand)}
                   key={brand.id}
                 >
                   {brand.name}

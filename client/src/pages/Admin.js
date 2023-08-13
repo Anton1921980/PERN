@@ -128,8 +128,8 @@ const Admin = observer(() => {
             className="d-flex justify-content-between"
             style={{ width: "80%", marginLeft: "10%" }}
             // style={{ cursor: "pointer", width: "70%" }}
-            // active={ type.id === device.selectedType.id }
-            // action
+            // active={ type.id === device.selectedType.id}
+            // action="true"
             // variant="light"
             key={i}
           >

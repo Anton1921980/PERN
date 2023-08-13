@@ -58,7 +58,7 @@ const TypeBar = observer((props) => {
               // className="rotate-icon"
               onClick={() => {
                 device.setSelectedType("");
-                device.setSelectedBrand("");
+                device.setSelectedBrands("");
               }}
             >
               &gt;
@@ -105,7 +105,7 @@ const TypeBar = observer((props) => {
                           type.id === device.selectedType.id
                             ? device.setSelectedType("")
                             : device.setSelectedType(type);
-                          device.setSelectedBrand("");
+                          device.setSelectedBrands("");
                         }}
                       >
                         &gt;
@@ -146,7 +146,7 @@ const TypeBar = observer((props) => {
                           type.id === device.selectedType.id
                             ? device.setSelectedType("")
                             : device.setSelectedType(type);
-                          device.setSelectedBrand("");
+                          device.setSelectedBrands("");
                         }}
                       >
                         &gt;

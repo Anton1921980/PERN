@@ -4,10 +4,7 @@ import classnames from "classnames";
 import "../scss/multiRangeSlider.css"; // Custom CSS for styling the price filter
 import { Button } from "react-bootstrap";
 
-const MultiRangeSlider = ({ min, max, onChange, onBlur }) => {
-  console.log("min: ", min);
-
-
+const MultiRangeSlider = ({ min, max, onChange }) => {
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
   const minValRef = useRef(null);
@@ -19,6 +16,11 @@ const MultiRangeSlider = ({ min, max, onChange, onBlur }) => {
     (value) => Math.round(((value - min) / (max - min)) * 100),
     [min, max]
   );
+
+  useEffect(() => {
+    setMinVal(min);
+    setMaxVal(max);
+  }, [min, max]);
 
   // Set width of the range to decrease from the left side
   useEffect(() => {
@@ -50,7 +52,6 @@ const MultiRangeSlider = ({ min, max, onChange, onBlur }) => {
     onChange({ min: minVal, max: maxVal });
   }, [minVal, maxVal, onChange]);
 
-
   return (
     <div className="container_slider">
       <input
@@ -64,7 +65,6 @@ const MultiRangeSlider = ({ min, max, onChange, onBlur }) => {
           setMinVal(value);
           event.target.value = value.toString();
         }}
-       
         className={classnames("thumb thumb--zindex-3", {
           "thumb--zindex-5": minVal > max - 100,
         })}
@@ -80,7 +80,6 @@ const MultiRangeSlider = ({ min, max, onChange, onBlur }) => {
           setMaxVal(value);
           event.target.value = value.toString();
         }}
-       
         className="thumb thumb--zindex-4"
       />
 
@@ -90,9 +89,7 @@ const MultiRangeSlider = ({ min, max, onChange, onBlur }) => {
         <div className="slider__left-value">{minVal}</div>
         <div className="slider__right-value">{maxVal}</div>
       </div>
-      
     </div>
-    
   );
 };
 

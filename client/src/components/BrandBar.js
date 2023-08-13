@@ -66,7 +66,7 @@ const BrandBar = observer((props) => {
               style={{ marginLeft: "15px", cursor: "pointer" }}
               onClick={() => {
                 device.setSelectedType("");
-                device.setSelectedBrand("");
+                device.setSelectedBrands("");
               }}
             >
               &gt;
@@ -74,20 +74,20 @@ const BrandBar = observer((props) => {
           </Card.Header>
           <Accordion.Collapse eventKey="888">
             <Card.Body>
-              {device.brands.map((brand, i) => (
+              {device.brands.map((brand) => (
                 <Card
-                  key={i}
+                  key={brand.id}
                   style={{ cursor: "pointer" }}
-                  // style={ brand.id === device.selectedBrand.id ? { cursor: 'pointer', borderBottom: '2px solid black' } : { cursor: 'pointer', borderBottom: '2px solid white' } }
+                  // style={ brand.id === device.selectedBrands.id ? { cursor: 'pointer', borderBottom: '2px solid black' } : { cursor: 'pointer', borderBottom: '2px solid white' } }
                   border={
-                    brand.id === device.selectedBrand.id ? "secondary" : "light"
+                    brand.id === device.selectedBrands.id ? "secondary" : "light"
                   }
                 >
-                  {brand.id === device.selectedBrand.id ? (
+                  {brand.id === device.selectedBrands.id ? (
                     <div
                       className="p-2"
                       onClick={() => {
-                        device.setSelectedBrand("");
+                        device.setSelectedBrands("");
                       }}
                     >
                       {" "}
@@ -102,7 +102,7 @@ const BrandBar = observer((props) => {
                     <div
                       className="p-2"
                       onClick={() => {
-                        device.setSelectedBrand(brand);
+                        device.setSelectedBrands(brand);
                       }}
                     >
                       {" "}
