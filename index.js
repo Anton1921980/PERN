@@ -30,6 +30,16 @@ app.post("/send-data", async (req, res) => {
  result!=={} && res.json({ result: result });
 });
 
+app.post("/send-all-data", async (req, res) => {
+  const data = req.body;
+  console.log("Data received:", data);
+
+const getAllResults = require('./get2.js');
+const result = await getAllResults(data);
+// console.log("result: ", result);
+result!=={} && res.json({ result: result });
+});
+
 //обработка ошибок всегда в конце списка
 app.use(errorHandler)
 

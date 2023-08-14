@@ -12,11 +12,14 @@ import queryString from "query-string";
 import {
   fetchBrands,
   fetchDevices,
+  fetchInfos,
+  fetchOneDevice,
   fetchTypes,
   minmaxDevices,
 } from "../http/deviceAPI";
 
 import { useHistory, useLocation } from "react-router-dom";
+import InfoBar from "../components/InfoBar";
 
 // import { set } from 'mobx';
 
@@ -31,11 +34,11 @@ const Shop = observer(() => {
     set$arrayOfDevicesCountPerTypePerBrand,
   ] = useState([]);
   const [range, set$range] = useState([]);
-  console.log("range: ", range);
   const [minValue, set$minValue] = useState("");
   const [maxValue, set$maxValue] = useState("");
   const [minMax, set$minMax] = useState({ min: null, max: null });
-  console.log("minMax: ", minMax);
+  const [infoArray, set$infoArray] = useState([]);
+  const [infoArrayObjects, set$infoArrayObjects] = useState([]);
 
   const handleMinMax = (min, max) => {
     set$minMax({
@@ -48,7 +51,7 @@ const Shop = observer(() => {
   const history = useHistory();
 
   const location = useLocation();
-  const path = location.search;  
+  const path = location.search;
 
   const parsed = queryString.parse(path);
 
@@ -267,6 +270,48 @@ const Shop = observer(() => {
   //если нет этого бренда в категории, а он был активен удалить из строки или сбросить из селектед
   //сделать чтобы отображались только категории которые в этом бренде?
 
+  useEffect(() => {
+    //запит на один товар з категорії за типом
+    // fetchOneDevice("", device.selectedType.id).then((data) => {
+    //   set$infoArray(data.info);
+    //   console.log("device для інфо", data);
+
+   if (device.selectedType?.id && device.alldevices.length){
+      const ids = device.alldevices?.filter((item)=>item?.typeId===device?.selectedType?.id)?.map((obj) => obj.id)?.join(","); // у строку для передачі
+      console.log("ids: ", ids);
+      fetchInfos(ids).then((data) => {
+        console.log("infoarrobj ", data);
+
+        const result = []; // Результат буде масив об'єктів з ключами: title , масивами унікальних дескріпшенів,  кількістю повторень
+
+        data.rows.forEach((infoItem) => {
+          const { title, description } = infoItem;
+        
+          const existingTitleItem = result.find((item) => item.title === title);
+        
+          if (!existingTitleItem) {
+            result.push({ title, descriptions: [{ description, count: 1 }] });
+          } else {
+            const existingDescription = existingTitleItem.descriptions.find(
+              (desc) => desc.description === description
+            );
+        
+            if (!existingDescription) {
+              existingTitleItem.descriptions.push({ description, count: 1 });
+            } else {
+              existingDescription.count++;
+            }
+          }
+        });
+                
+        
+        set$infoArrayObjects(result);
+      
+      });
+    }
+    // });
+  }, [device.selectedType?.id]);
+  console.log("infoArrayObjects: ", infoArrayObjects);
   if (loading) {
     return <Spinner animation={"border"} variant="secondary" />;
   }
@@ -304,12 +349,18 @@ const Shop = observer(() => {
               </Button>
             </>
           )}
+          {infoArrayObjects?.length &&
+            infoArrayObjects?.map((item) => (
+              <InfoBar key={item.title} info={item} />
+            ))}
+
+         
         </Col>
         <Col md={9}>
           {/* <BrandBar productCountPerBrand={productCountPerBrand} /> */}
           <div className="d-flex justify-content-end">
             <Pages />
-            <PagesSort/>
+            <PagesSort />
           </div>
           <DeviceList />
         </Col>

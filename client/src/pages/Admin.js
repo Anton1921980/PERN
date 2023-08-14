@@ -25,7 +25,9 @@ const Admin = observer(() => {
   const [deviceVisible, setDeviceVisible] = useState(false);
   const [deviceVisible2, setDeviceVisible2] = useState(false);
   const [data, setData] = useState("");
+  console.log("data: ", data);
   const [data2, setData2] = useState("");
+  console.log("data2: ", data2);
   const [result, setResult] = useState("");
   const [id, set$id] = useState(null);
   const { device } = React.useContext(Context);
@@ -46,6 +48,21 @@ const Admin = observer(() => {
     console.log("jsonResponse: ", jsonResponse);
     setResult(jsonResponse.result);
   };
+
+  const sendAllData = async () => {
+    const response = await fetch("http://localhost:5000/send-all-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data2 ? JSON.stringify({ data2 }):"fuuuu",
+    });
+    const jsonResponse = await response.json();
+    console.log("jsonResponse: ", jsonResponse);
+    setResult(jsonResponse.result);
+  };
+
+
 
   //отрабатывает один раз при переходе по url или на /shop
   React.useEffect(() => {
@@ -113,12 +130,12 @@ const Admin = observer(() => {
             value={data2}
             onChange={(e) => setData2(e.target.value)}
           />
-          <button onClick={sendData}>Add page of products by link</button>
+          <button onClick={sendAllData}>Add page of products by link</button>
         </div>
       </Container>
-      {result.name && (
+      {result?.name && (
         <>
-          <p>Product {result.name} </p>
+          <p>Product {result?.name} </p>
         </>
       )}
       {/* <DeviceList /> */}

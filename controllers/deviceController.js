@@ -190,13 +190,43 @@ class DeviceController {
   }
 
   async getOne(req, res) {
-    const { id } = req.params;
+    const { id, typeId } = req.query;  
+
+    let where = {};
+    if (id) {
+      where.id = id;
+    }
+    if (typeId) {
+      where.typeId = typeId;
+    }
     const device = await Device.findOne({
-      where: { id },
+      where,
       include: [{ model: DeviceInfo, as: "info" }],
     });
     return res.json(device);
   }
+
+  async getInfos(req, res) {
+    const { ids } = req.query;  
+    try {
+    let where = {};
+    if (ids) {
+      where.deviceId = {
+        [Sequelize.Op.in]: ids.split(',').map(Number),
+      };
+    }
+    
+    const device = await  DeviceInfo.findAndCountAll({
+      where,     
+    });
+    return res.json(device);
+  } catch (error) {
+    console.error("Error infos:", error);
+    return null;
+  }
+  }
+
+
 
   async getMinMaxPrices(req, res) {
     let { brandId, typeId } = req.query;

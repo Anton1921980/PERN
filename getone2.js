@@ -11,11 +11,9 @@ const { remove } = require("cheerio/lib/api/manipulation");
 
 console.log("start");
 
-let type = "phone";
-let brand = "iphone";
-
 async function getResult(data) {
     const url = data;
+    console.log("url: ", url);
     let device = {};
 
     const nightmare = Nightmare({ show: true });
@@ -38,10 +36,10 @@ async function getResult(data) {
 
     async function getData(html) {
         const $ = cheerio.load(html);
-        const descriptionText = $(".ng-star-inserted>.characteristics-full__label>*").append(":").text();
-        const descriptionItems = descriptionText.split(":");
-        const valueText = $(".characteristics-full__value").append(":").text();
-        const valueItems = valueText.split(":");
+        const descriptionText = $(".ng-star-inserted>.characteristics-full__label>*").append("|||").text();
+        const descriptionItems = descriptionText.split("|||");
+        const valueText = $(".characteristics-full__value").append("|||").text();
+        const valueItems = valueText.split("|||");
         const info1 = descriptionItems.map((item, index) => {
             return {
                 title: item,
@@ -61,10 +59,14 @@ async function getResult(data) {
     }
 
     async function removeWordAndParentheses(text, devicePrice, info) {
-        const removeWord = text.replace(/Характеристики/g, "");
-        const removeWordArr = removeWord.split(" ");
+        const removeWord = text.replace(/Характеристики/g, "");       
+        const removeWordArr = removeWord.split(" ");   
         const typeWordRaw = removeWordArr[1].split(" ").join("").toLowerCase();
-        const brandWord = removeWordArr[2];
+
+        const latinRegex = /^[A-Za-z]*$/; // Тільки латинські букви від 'A' до 'Z' та від 'a' до 'z'
+        const isLatin = (str) => latinRegex.test(str);
+
+        const brandWord = isLatin(removeWordArr[2])?removeWordArr[2]:removeWordArr[3];
 
         if (typeWordRaw.length) {
             const encodedTypeWord = encodeURIComponent(typeWordRaw);

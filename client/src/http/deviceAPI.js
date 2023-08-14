@@ -30,7 +30,6 @@ export const fetchBrands = async (
       typeId,
     },
   });
-  console.log("data: ", data);
   return data;
 };
 
@@ -58,12 +57,25 @@ export const fetchDevices = async (typeId=null, brandId=null, page, limit, min=n
       sort        
     },
   });
-  console.log("data", data);
   return data;
 };
 
-export const fetchOneDevice = async (id) => {
-  const { data } = await $host.get("api/device/" + id);
+export const fetchInfos = async (ids) => {
+  const { data } = await $host.get("api/device/getinfos", {
+    params: {
+      ids:ids,  
+    },
+  });
+  return data;
+};
+
+export const fetchOneDevice = async (id,typeId) => {
+  const { data } = await $host.get("api/device/info" ,{
+    params: {
+      id: id,
+      typeId: typeId,           
+    },
+  });
   return data;
 };
 
