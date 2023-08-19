@@ -30,6 +30,7 @@ export default class DeviceStore {
     this._baskets = [];
     this._selectedType = ""; //{}
     this._selectedBrands = []; //{}
+    this._selectedInfos = {};
     this._selectedBasket = {};
     this._page = 1;
     this._sort = "";
@@ -70,16 +71,22 @@ export default class DeviceStore {
     this._localBasket = basketLocal;
   }
   setSelectedType(
-    types //type?
+    types
   ) {
     this.setPage(1);
     this._selectedType = types;
   }
   setSelectedBrands(
-    brands //brand?
+    brands
   ) {
     this.setPage(1);
     this._selectedBrands = brands;
+  }
+  setSelectedInfos(
+    infos
+  ) {
+    this.setPage(1);
+    this._selectedInfos = infos;
   }
   setSelectedBasket(basket) {
     this._selectedBasket = basket;
@@ -126,6 +133,9 @@ export default class DeviceStore {
   }
   get selectedBrands() {
     return this._selectedBrands;
+  }
+  get selectedInfos() {
+    return this._selectedInfos;
   }
   get selectedBasket() {
     return this._selectedBasket;

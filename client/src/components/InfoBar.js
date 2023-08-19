@@ -11,6 +11,12 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
   );
   return (
     <div
+    style={{
+     display:"flex",
+     alignItems: "center", 
+    }}
+    >
+    <div
       style={{
         marginLeft: "15px",
         cursor: "pointer",
@@ -32,11 +38,29 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
     >
       &gt;
     </div>
+    </div>
   );
 }
-
+function CustomToggle2({ eventKey, isOpen, onToggle, expand }) {
+  const decoratedOnClick = (eventKey, () => console.log(eventKey));
+  return (
+    <div
+      style={{      
+        cursor: "pointer",
+        transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
+        transition: "transform 0.3s ease",
+      }}
+      onClick={() => {
+        onToggle && onToggle(eventKey);
+        expand !== false && decoratedOnClick();
+      }}
+    >
+      &gt;
+    </div>
+  );
+}
 const InfoBar = observer((props) => {
-  // const { device } = useContext(Context);
+  const { device } = useContext(Context);
   const [isOpenMap, set$isOpenMap] = useState({});
 
   // Function to toggle the isOpen state for a specific category
@@ -46,19 +70,17 @@ const InfoBar = observer((props) => {
       [typeId]: !prevIsOpenMap[typeId],
     }));
   };
- 
+
   const info = props?.info;
 
-
-  console.log("info ", info);
-
+  // console.log("info ", info);
 
   return (
     <>
       <Accordion defaultActiveKey="0">
         <Card>
           <Card.Header
-            style={{ display: "flex", justifyContent: "space-around" }}
+            style={{ display: "flex", justifyContent: "space-between" }}
           >
             <CustomToggle
               eventKey="888"
@@ -67,61 +89,85 @@ const InfoBar = observer((props) => {
             >
               &gt;
             </CustomToggle>
-            <span style={{ width: "50%" }}>{info?.title}</span>
-            {/* <span
-              style={{ marginLeft: "15px", cursor: "pointer" }}
-              onClick={() => {
-                device.setSelectedType("");
-                device.setSelectedBrands("");
-              }}
-            >
-              &gt;
-            </span> */}
+            <span style={{ width: "80%" }}>{info?.title}</span>
           </Card.Header>
           <Accordion.Collapse eventKey="888">
             <Card.Body>
               {info?.descriptions.length &&
-                info.descriptions?.map((descriptionsItem) => (
-                  <Card
-                    key={descriptionsItem.description}
-                    style={{ cursor: "pointer" }}
-
-                    // border={
-                    //   brand.id === device.selectedBrands.id ? "secondary" : "light"
-                    // }
+                info?.descriptions.map((descriptionsItem) => (
+                  <div
+                    key={descriptionsItem?.description}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      width: "95%",
+                    }}
                   >
-                    {/* {brand.id === device.selectedBrands.id ? ( */}
                     <div
-                      className="p-2"
-                      // onClick={() => {
-                      //   device.setSelectedBrands("");
-                      // }}
-                    >
-                      {" "}
-                      {descriptionsItem.description}
-                                           
+                      className="d-flex justify-content-between"
+                      style={{ marginLeft: "10%", width: "85%" }}
+                    >                      
+                      {descriptionsItem?.description}
                       <Badge bg="secondary" text="dark" pill>
-                          {descriptionsItem.count || ""}
-                        </Badge>
+                        {descriptionsItem?.count || ""}
+                      </Badge>
                     </div>
-                    {/* ) : (
-                    <div
-                      className="p-2"
+                    <span
+                      style={{ marginLeft: "15px", cursor: "pointer" }}
+                      
+                 
                       onClick={() => {
-                        device.setSelectedBrands(brand);
+                        const currentTitle = info.title;
+                        const updatedSelectedInfos = { ...device.selectedInfos };
+                        let existingTitle = updatedSelectedInfos[currentTitle] || [];
+                      
+                        const existingDescription = existingTitle.find(
+                          (item) => item.description === descriptionsItem.description  );
+                      
+                        if (existingDescription) {
+                          existingTitle = existingTitle.filter(
+                            (item) => item.description !== descriptionsItem.description
+                          );
+                        } else {
+                          existingTitle.push({
+                            description: descriptionsItem.description,
+                            deviceIdArr: descriptionsItem.deviceIdArr,
+                          });
+                        }
+                      
+                        updatedSelectedInfos[currentTitle] = existingTitle;
+                      
+                        const arraysByKey = {}; 
+                      
+                        Object.keys(updatedSelectedInfos).forEach((key) => {
+                          if (key !== "result" && updatedSelectedInfos[key].length > 0) {
+                            arraysByKey[key] = updatedSelectedInfos[key].flatMap((item) => item.deviceIdArr);
+                          }
+                        });
+                      
+                        const intersection = Object.keys(arraysByKey).reduce((acc, key, index) => {
+                          if (index === 0) {
+                            return arraysByKey[key];
+                          }
+                      
+                          return acc.filter(id => arraysByKey[key].includes(id));
+                        }, []);
+                      
+                        updatedSelectedInfos.result = intersection;
+                      
+                        device.setSelectedInfos(updatedSelectedInfos);
                       }}
+  
                     >
-                      {" "}
-                      {descriptionsItem}
-                      {props?.productCountPerBrand && (
-                        <Badge bg="secondary" text="dark" pill>
-                          {descriptions.count || ""}
-                        </Badge>
-                      )} 
-                    </div>
-                  )
-                  } */}
-                  </Card>
+                      <CustomToggle2
+                        eventKey={descriptionsItem.description}
+                        isOpen={isOpenMap[descriptionsItem.description]}
+                        onToggle={toggleCategory}
+                      >
+                        &gt;
+                      </CustomToggle2>
+                    </span>
+                  </div>
                 ))}
             </Card.Body>
           </Accordion.Collapse>

@@ -45,17 +45,13 @@ export const createDevice = async (device) => {
   }
 };
 
-export const fetchDevices = async (typeId=null, brandId=null, page, limit, min=null , max=null, sort=null) => {
+export const fetchDevices = async (
+devices
+) => {
   const { data } = await $host.get("api/device", {
-    params: {
-      typeId,
-      brandId,
-      page,        
-      limit,
-      min,
-      max, 
-      sort        
-    },
+    params: 
+     devices
+    ,
   });
   return data;
 };
@@ -63,41 +59,41 @@ export const fetchDevices = async (typeId=null, brandId=null, page, limit, min=n
 export const fetchInfos = async (ids) => {
   const { data } = await $host.get("api/device/getinfos", {
     params: {
-      ids:ids,  
+      ids: ids,
     },
   });
   return data;
 };
 
-export const fetchOneDevice = async (id,typeId) => {
-  const { data } = await $host.get("api/device/info" ,{
+export const fetchOneDevice = async (id, typeId) => {
+  const { data } = await $host.get("api/device/info", {
     params: {
       id: id,
-      typeId: typeId,           
+      typeId: typeId,
     },
   });
   return data;
 };
 
 // додати айдішнік інфо шо видаляється якшо є
-export const editOneDevice = async (device,id) => {
+export const editOneDevice = async (device, id) => {
   const { data } = await $authHost.put("api/device/edit/" + id, device);
   return data;
 };
 
 export const deleteOneDevice = async (id) => {
-  const { data } = await  $authHost.delete("api/device/delete/" + id);
-//чи видаляється також інфо?
+  const { data } = await $authHost.delete("api/device/delete/" + id);
+  //чи видаляється також інфо?
   return data;
 };
-export const minmaxDevices = async (typeId=null, brandId=null) => {
+export const minmaxDevices = async (typeId = null, brandId = null) => {
   console.log("brandId: ", brandId);
   console.log("typeId: ", typeId);
 
   const { data } = await $host.get("api/device/minmax", {
     params: {
       typeId: typeId,
-      brandId: brandId          
+      brandId: brandId,
     },
   });
   return data;

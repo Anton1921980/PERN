@@ -144,7 +144,7 @@ class DeviceController {
   }
 
   async getAll(req, res) {
-    let { typeId, brandId, page, limit, min, max, sort } = req.query;
+    let { typeId, brandId, infoId, page, limit, min, max, sort } = req.query;
     console.log("req.query: ", req.query);
 
     page = page || 1;
@@ -164,11 +164,17 @@ class DeviceController {
     let where = {}; // Create an empty object for the 'where' clause
 
     // Check for the presence of min and max
-    if (min || max) {
+    if (min && max) {
       where.price = {
         [Op.between]: [min, max],
       };
     }
+
+    if (infoId){
+      //search by device ids so type, brand  not needed
+      where.id = infoId;
+    }
+    else{
     // Check for the presence of typeId
     if (typeId) {
       where.typeId = typeId;
@@ -177,7 +183,7 @@ class DeviceController {
     if (brandId) {
       where.brandId = brandId;
     }
-
+  }
     // Use the 'where' object in the query
     devices = await Device.findAndCountAll({
       where,

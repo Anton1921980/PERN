@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Card, Container, Row, Col, Spinner, Button } from "react-bootstrap";
 import TypeBar from "../components/TypeBar";
+import InfoBar from "../components/InfoBar";
 import BrandBar from "../components/BrandBar";
 import DeviceList from "../components/DeviceList";
 import Pages from "../components/Pages";
@@ -19,7 +20,6 @@ import {
 } from "../http/deviceAPI";
 
 import { useHistory, useLocation } from "react-router-dom";
-import InfoBar from "../components/InfoBar";
 
 // import { set } from 'mobx';
 
@@ -65,6 +65,7 @@ const Shop = observer(() => {
   parsed.sort ? (parsedSort = parsed.sort) : (parsedSort = null);
   console.log("TCL: parsed.sort", parsed.sort);
 
+  // перша загрузка
   useEffect(() => {
     fetchTypes().then((data) => {
       device.setTypes(data);
@@ -106,28 +107,34 @@ const Shop = observer(() => {
       set$range(data);
     });
 
-    console.log("minMax:2 ", minMax);
-    fetchDevices(
-      device.selectedType.id,
-      device.selectedBrands,
-      device.page,
-      device.limit,
-      minMax.min,
-      minMax.max,
-      device.sort || null
-    )
+    const infosQuery = device?.selectedInfos.result;
+ 
+    console.log("infosQuery: ", device);
+
+    fetchDevices({
+      typeId: device.selectedType.id,
+      brandId: device.selectedBrands,
+      infoId: infosQuery || [],
+      page: device.page,
+      limit: device.limit,
+      min: minMax.min,
+      max: minMax.max,
+      sort: device.sort || null,
+    })
       .then((data) => {
         device.setDevices(data.rows);
         device.setTotalCount(data.count);
 
         //пеоріввнювати minmax та  range та коректувати щоб за межі не виходило
 
-        // Serialize the selectedBrands array to a comma-separated string
+        // Serialize the selectedBrands and selectedInfos array to a comma-separated string
         const brandsQueryString = device?.selectedBrands?.join(",");
+        const infosQueryString = infosQuery?.join(",");
         // Construct the query parameters object based on the state values
         const queryParams = {
           types: device.selectedType?.id || null,
           brands: brandsQueryString || null,
+          infos: infosQueryString || null,
           page: device.page || null,
           limit: device.limit || null,
           min: minMax.min || null,
@@ -151,6 +158,7 @@ const Shop = observer(() => {
   }, [
     device.selectedType,
     device.selectedBrands,
+    device.selectedInfos,
     device.sort,
     device.page,
     device.limit,
@@ -173,8 +181,8 @@ const Shop = observer(() => {
       // Функція для знаходження унікальних значень в масиві
       function getUniqueValues(arr) {
         return arr?.reduce((uniqueValues, currentValue) => {
-          console.log("currentValue: ", currentValue);
-          console.log("uniqueValues: ", uniqueValues);
+          // console.log("currentValue: ", currentValue);
+          // console.log("uniqueValues: ", uniqueValues);
           if (!uniqueValues?.includes(currentValue)) {
             uniqueValues.push(currentValue);
           }
@@ -258,10 +266,10 @@ const Shop = observer(() => {
         arrayOfDevicesCountPerTypePerBrand
       );
 
-      console.log("Кількість брендів у кожн типі:", brandCountPerType);
-      console.log("Кількість товарів у кожн типі:", productCountPerType);
-      console.log("Кількість типів у кожн бренді:", typeCountPerBrand);
-      console.log("Кількість товарів у кожн бренді:", productCountPerBrand);
+      // console.log("Кількість брендів у кожн типі:", brandCountPerType);
+      // console.log("Кількість товарів у кожн типі:", productCountPerType);
+      // console.log("Кількість типів у кожн бренді:", typeCountPerBrand);
+      // console.log("Кількість товарів у кожн бренді:", productCountPerBrand);
     }
     // }
     // );
@@ -276,42 +284,58 @@ const Shop = observer(() => {
     //   set$infoArray(data.info);
     //   console.log("device для інфо", data);
 
-   if (device.selectedType?.id && device.alldevices.length){
-      const ids = device.alldevices?.filter((item)=>item?.typeId===device?.selectedType?.id)?.map((obj) => obj.id)?.join(","); // у строку для передачі
+    if (device.selectedType?.id && device.alldevices.length) {
+      const ids = device.alldevices
+        ?.filter((item) => item?.typeId === device?.selectedType?.id)
+        ?.map((obj) => obj.id)
+        ?.join(","); // у строку для передачі
+
+      //додати фільтрацію девайсів при зміні бренду чи мінмакс
+      //щоб оновлювати каунт у фільтрах
+
       console.log("ids: ", ids);
       fetchInfos(ids).then((data) => {
         console.log("infoarrobj ", data);
 
-        const result = []; // Результат буде масив об'єктів з ключами: title , масивами унікальних дескріпшенів,  кількістю повторень
+        const result = []; // Результат буде масив об'єктів з ключами: title , масивами унікальних дескріпшенів,  кількістю повторень, масив deviceId
 
         data.rows.forEach((infoItem) => {
-          const { title, description } = infoItem;
-        
+          const { title, description, deviceId } = infoItem;
+
           const existingTitleItem = result.find((item) => item.title === title);
-        
+
           if (!existingTitleItem) {
-            result.push({ title, descriptions: [{ description, count: 1 }] });
+            result.push({
+              title,
+              descriptions: [
+                { description, count: 1, deviceIdArr: [deviceId] },
+              ],
+            });
           } else {
-            const existingDescription = existingTitleItem.descriptions.find(
+            const existingDescription = existingTitleItem?.descriptions?.find(
               (desc) => desc.description === description
             );
-        
+
             if (!existingDescription) {
-              existingTitleItem.descriptions.push({ description, count: 1 });
+              existingTitleItem?.descriptions?.push({
+                description,
+                count: 1,
+                deviceIdArr: [deviceId],
+              });
             } else {
               existingDescription.count++;
+              existingDescription?.deviceIdArr?.push(deviceId);
             }
           }
         });
-                
-        
+
         set$infoArrayObjects(result);
-      
       });
     }
     // });
-  }, [device.selectedType?.id]);
-  console.log("infoArrayObjects: ", infoArrayObjects);
+  }, [device.selectedType?.id, device.selectedBrands, minMax]);
+  // console.log("infoArrayObjects: ", infoArrayObjects);
+
   if (loading) {
     return <Spinner animation={"border"} variant="secondary" />;
   }
@@ -353,8 +377,6 @@ const Shop = observer(() => {
             infoArrayObjects?.map((item) => (
               <InfoBar key={item.title} info={item} />
             ))}
-
-         
         </Col>
         <Col md={9}>
           {/* <BrandBar productCountPerBrand={productCountPerBrand} /> */}

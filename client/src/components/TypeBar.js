@@ -157,8 +157,7 @@ const TypeBar = observer((props) => {
                       {props?.brandCountPerType[type.id]?.map((brandId) => (
                         <div
                           style={{
-                            display: "flex",
-                            // marginTop: "-30px",
+                            display: "flex",                            
                             alignItems: "flex-start",
                             width: "80%",
                           }}
