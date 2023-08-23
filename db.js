@@ -1,8 +1,8 @@
 const { Sequelize } = require( 'sequelize' );
 
-// process.env.NODE_ENV = "production";
-
-DATABASE_URL = 'postgres://qgilefayctavim:5027d2cb19434db55904e0c1091723fd34c68839ec0957861fec416d3c2ce34f@ec2-3-222-11-129.compute-1.amazonaws.com:5432/d7jnu23kq4nunb'
+process.env.NODE_ENV = "production";
+DATABASE_URL = 'postgres://default:LWauS1t4OqlA@ep-long-bird-27136927-pooler.us-east-1.postgres.vercel-storage.com:5432/verceldb'
+// DATABASE_URL = 'postgres://qgilefayctavim:5027d2cb19434db55904e0c1091723fd34c68839ec0957861fec416d3c2ce34f@ec2-3-222-11-129.compute-1.amazonaws.com:5432/d7jnu23kq4nunb'
 // DATABASE_URL = 'postgres://lisxsnui:qnUaUZZXwRpaaDADZMOgkTu_dM6eHRKV@abul.db.elephantsql.com/lisxsnui' 
 //проблема с heroku была в адресах запросов на localhost5000 их надо поменять на / и записать в  proxy в client/package.json 
 //  перенос таблицы в heroku : 
@@ -15,18 +15,21 @@ DATABASE_URL = 'postgres://qgilefayctavim:5027d2cb19434db55904e0c1091723fd34c688
 
 //heroku pg:reset postgresql-spherical-02694
 //PGUSER=postgres PGPASSWORD=anton192 heroku pg:push online_store2 postgresql-spherical-02694 --app idevice-pern
-
+const sequelize = new Sequelize('postgres://admin:admin@localhost:5432/mydb', {
+  dialectModule: require('pg')
+});
 process.env.NODE_ENV === "production" ?
 module.exports = new Sequelize(
      DATABASE_URL,
     {
-        dialect: "postgres",
+        dialect: "postgres",        
         dialectOptions: {
             ssl: {
                 require: true,
                 rejectUnauthorized: false // <<<<<<< YOU NEED THIS
             }
         },
+        // dialectModule: require('pg')
     } )
     :
     module.exports = new Sequelize(

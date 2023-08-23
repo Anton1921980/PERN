@@ -45,13 +45,9 @@ export const createDevice = async (device) => {
   }
 };
 
-export const fetchDevices = async (
-devices
-) => {
+export const fetchDevices = async (devices) => {
   const { data } = await $host.get("api/device", {
-    params: 
-     devices
-    ,
+    params: devices,
   });
   return data;
 };
@@ -117,3 +113,28 @@ export const deleteFromBasket = async (id) => {
     console.log(error);
   }
 };
+
+// export const sendData = async (data) => {
+//   try {
+//     const response = await $authHost.post(
+//       "api/device/send-data", {data}
+   
+//     ); // виконати POST запит за допомогою axios
+//     return response.data; // отримати дані з відповіді
+//   } catch (error) {
+//     console.error(error); // обробити помилки
+//   }
+// };
+
+// export const sendAllData = async (data) => {
+//   try {
+
+//     const response = await $authHost.post(
+//       "api/device/send-all-data", {data}
+    
+//     ); // виконати POST запит за допомогою axios
+//     return response.data; // отримати дані з відповіді
+//   } catch (error) {
+//     console.error(error); // обробити помилки
+//   }
+// };

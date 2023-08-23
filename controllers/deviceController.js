@@ -351,7 +351,30 @@ class DeviceController {
     });
     return res.sendStatus(200);
   }
+
+  async sendData(req, res) {
+    const data = req.body.data;
+    console.log("Data received:", data);
+    //Додаємо обробку даних тут, можна викликати зовнішній файл:
+    const getOneResult = require("../getone2.js");
+    const result = await getOneResult(data); 
+    // const result = data; 
+    result !== {} && res.json({ result: result });
+  }
+
+  async sendAllData(req, res) {
+    const data = req.body;
+  console.log("Data received:", data);
+  const getAllResults = require("../get2.js");
+  const result = await getAllResults(data); 
+  result !== {} && res.json({ result: result });
+  }
+
 }
+
+
+
+
 
 // class DeviceController //для парсера
 // {

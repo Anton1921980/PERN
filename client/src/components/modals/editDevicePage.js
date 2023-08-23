@@ -163,7 +163,7 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
           <div style={{ width: "50%", overflow: "hidden" }}>
             <Image
               style={{ objectFit: "contain", width: "70%" }}
-              src={previewImage || "/" + device2.img}
+              src={previewImage || "https://pern-server-seven.vercel.app/" + device2.img}
             />
           </div>
 

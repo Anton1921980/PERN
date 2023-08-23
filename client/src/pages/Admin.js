@@ -11,12 +11,14 @@ import {
   fetchDevices,
   fetchTypes,
   deleteOneDevice,
-  editOneDevice,
+  sendData,
+  sendAllData
 } from "../http/deviceAPI";
 // import DeviceList from "../components/DeviceList";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Context } from "../index";
 import EditDevicePage from "../components/modals/editDevicePage";
+import { $authHost } from "../http";
 
 const Admin = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -25,19 +27,19 @@ const Admin = observer(() => {
   const [deviceVisible, setDeviceVisible] = useState(false);
   const [deviceVisible2, setDeviceVisible2] = useState(false);
   const [data, setData] = useState("");
-  console.log("data: ", data);
   const [data2, setData2] = useState("");
-  console.log("data2: ", data2);
+  console.log("data: ", data);
+
   const [result, setResult] = useState("");
   const [id, set$id] = useState(null);
   const { device } = React.useContext(Context);
 
   React.useEffect(() => {
     device.setLimit(1000);
-  }, [device]);
+  }, []);
 
   const sendData = async () => {
-    const response = await fetch("http://localhost:5000/send-data", {
+    const response = await fetch(`https://pern-server-seven.vercel.app/api/device/send-data`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +52,7 @@ const Admin = observer(() => {
   };
 
   const sendAllData = async () => {
-    const response = await fetch("http://localhost:5000/send-all-data", {
+    const response = await fetch("https://pern-server-seven.vercel.app/api/device/send-all-data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +124,15 @@ const Admin = observer(() => {
             value={data}
             onChange={(e) => setData(e.target.value)}
           />
-          <button onClick={sendData}>Add one product by link</button>
+          <button
+          onClick={() =>
+            sendData(data)
+              // .then((data) => {
+              //   console.log(data);
+              //   setResult(data); //to reload page
+              // })             
+          }
+         >Add one product by link</button>
         </div>
         <div>
           <input
@@ -130,7 +140,15 @@ const Admin = observer(() => {
             value={data2}
             onChange={(e) => setData2(e.target.value)}
           />
-          <button onClick={sendAllData}>Add page of products by link</button>
+          <button 
+           onClick={() =>
+            sendAllData(data2)
+              .then((data) => {
+                console.log(data);
+                setResult(data); //to reload page
+              })             
+          }
+          >Add page of products by link</button>
         </div>
       </Container>
       {result?.name && (
@@ -140,7 +158,7 @@ const Admin = observer(() => {
       )}
       {/* <DeviceList /> */}
       <ListGroup variant="flush">
-        {device.devices.map((device, i) => (
+        {device.devices?.map((device, i) => (
           <div
             className="d-flex justify-content-between"
             style={{ width: "80%", marginLeft: "10%" }}
@@ -164,10 +182,10 @@ const Admin = observer(() => {
                       width: "100%",
                       height: "100%",
                     }}
-                    src={"/" + device.img && device.img}
+                    src={"https://pern-server-seven.vercel.app/" + device?.img}
                   />
                 </div>
-                <span>{device.name}</span>
+                <span>{device?.name}</span>
 
                 {/* <span>&gt;</span> */}
               </ListGroup.Item>

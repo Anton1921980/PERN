@@ -16,7 +16,7 @@ async function getResult(data) {
     console.log("url: ", url);
     let device = {};
 
-    const nightmare = Nightmare({ show: true });
+    const nightmare = Nightmare({ show: false });
 
     const response_1 = await nightmare
         .goto(`${url}characteristics`)
@@ -127,14 +127,14 @@ async function getResult(data) {
 
     async function addProduct(device) {
       try {
-        const loginResponse = await axios.post("http://localhost:5000/api/user/login", {
+        const loginResponse = await axios.post("https://pern-server-seven.vercel.app/api/user/login", {
           email: "customer@gmail.com",
           password: "1111111",
         });
     
         const token = await loginResponse.data.token;
     
-        const deviceResponse = await axios.post("http://localhost:5000/api/device", device, {
+        const deviceResponse = await axios.post("https://pern-server-seven.vercel.app/api/device", device, {
           headers: { authorization: `Bearer ${token}` },
         });
         await deviceResponse.data

@@ -14,4 +14,7 @@ router.get( '/getinfos', deviceController.getInfos )
 router.put( '/edit/:id',checkRole('ADMIN'), deviceController.editOne )
 router.delete( '/delete/:id',checkRole('ADMIN'), deviceController.deleteOne )
 
+router.post( '/send-data', deviceController.sendData )
+router.post( '/send-all-data',checkRole('ADMIN'), deviceController.sendAllData )
+
 module.exports = router
