@@ -125,6 +125,7 @@ const TypeBar = observer((props) => {
                             ? device.setSelectedType("")
                             : device.setSelectedType(type);
                           device.setSelectedBrands([]);
+                          device.setSelectedInfos({});
                         }}
                       >
                         <div
@@ -190,12 +191,13 @@ const TypeBar = observer((props) => {
                                 //  клікаємо по бренду з іншої категорії
                                 device.setSelectedBrands([brandId]);
                                 device.setSelectedType(type);
+                                device.setSelectedInfos({});
                               } else {
                                 device.selectedType.id !== type.id &&
                                   device.setSelectedType(type);
                                 device.selectedBrands.includes(brandId)
                                   ? device.setSelectedBrands(
-                                      //case ввидаляємо бренд якшо він вже є
+                                      // ввидаляємо бренд якшо він вже є
                                       device.selectedBrands.filter(
                                         (id) => id !== brandId
                                       )

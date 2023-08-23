@@ -60,7 +60,7 @@ const NavBar = observer( () =>
     }, [ device.basket.length ] )
 
     return (
-        <Navbar bg="dark" expand="lg" style={ { width: '100%', position: 'sticky', top: 0, zIndex: 11 } }>
+        <Navbar expand="lg" style={ { width: '100%', position: 'sticky', top: 0, zIndex: 10, backgroundColor:'#9ab1af' } }>
             <Container style={{height:"fit-content"}}>
                 <NavLink style={ { color: 'white', textDecoration: 'none', fontSize: '40px' } } to={ '/' }>Idevice</NavLink>
                 <div className='d-flex flex-row flex-no-wrap justify-content-between'>

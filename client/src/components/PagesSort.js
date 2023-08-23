@@ -11,48 +11,58 @@ const PagesSort = observer(() => {
       <div className="d-flex align-items-center ml-5">
         <Card
           className="p-1 flex-row"
-          style={{ cursor: "pointer", height: "2.5rem" }}
-          border={"DESC" === device.sort ? "dark" : "light"}
+          style={{
+            cursor: "pointer",
+            height: "2.5rem",
+            borderBottom: "DESC" === device.sort ? "1px solid black" : "none",
+          }}
           key={"DESC"}
         >
           <div
             style={{ width: "100%", height: "100%" }}
             onClick={() => {
-              if (device.sort !== "DESC") {                
+              if (device.sort !== "DESC") {
                 device.setPage("1");
                 device.setSort("DESC");
               }
             }}
-          >      
-           {'+ '}
-         <span>&#x20B4;</span>
+          >
+            {"+ "}
+            <span>&#x20B4;</span>
           </div>
         </Card>
         <Card
           className="p-1 flex-row"
-          style={{ cursor: "pointer", height: "2.5rem" }}
-          border={"ASC" === device.sort ? "dark" : "light"}
+          style={{
+            cursor: "pointer",
+            height: "2.5rem",
+            borderBottom: "ASC" === device.sort ? "1px solid black" : "none",
+          }}
+          // border={"ASC" === device.sort ? "dark" : "light"}
           key={"ASC"}
         >
           <div
             style={{ width: "100%", height: "100%" }}
             onClick={() => {
-              if (device.sort !== "ASC") {                
+              if (device.sort !== "ASC") {
                 device.setPage("1");
                 device.setSort("ASC");
               }
             }}
           >
-         {'- '}
-         <span>&#x20B4;</span>
+            {"- "}
+            <span>&#x20B4;</span>
           </div>
         </Card>
       </div>
       <div className="d-flex m-3 align-items-center ">
         <Card
           className="p-1 flex-row"
-          style={{ cursor: "pointer", height: "2.5rem" }}
-          border={3 === device.limit ? "dark" : "light"}
+          style={{
+            cursor: "pointer",
+            height: "2.5rem",
+            borderBottom: 3 === device.limit ? "1px solid black" : "none",
+          }}
           key={3}
         >
           <div
@@ -64,13 +74,16 @@ const PagesSort = observer(() => {
               }
             }}
           >
-            <span>3</span>
+            <span>&nbsp;3&nbsp;</span>
           </div>
         </Card>
         <Card
           className="p-1 flex-row"
-          style={{ cursor: "pointer", height: "2.5rem" }}
-          border={6 === device.limit ? "dark" : "light"}
+          style={{
+            cursor: "pointer",
+            height: "2.5rem",
+            borderBottom: 6 === device.limit ? "1px solid black" : "none",
+          }}
           key={6}
         >
           <div
@@ -82,13 +95,16 @@ const PagesSort = observer(() => {
               }
             }}
           >
-            <span>6</span>
+            <span>&nbsp;6&nbsp; </span>
           </div>
         </Card>
         <Card
           className="p-1 flex-row"
-          style={{ cursor: "pointer", height: "2.5rem" }}
-          border={9 === device.limit ? "dark" : "light"}
+          style={{
+            cursor: "pointer",
+            height: "2.5rem",
+            borderBottom: 9 === device.limit ? "1px solid black" : "none",
+          }}
           key={9}
         >
           <div
@@ -100,7 +116,7 @@ const PagesSort = observer(() => {
               }
             }}
           >
-            <span>9</span>
+            <span>&nbsp;9&nbsp; </span>
           </div>
         </Card>
       </div>

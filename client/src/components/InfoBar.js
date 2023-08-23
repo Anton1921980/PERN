@@ -4,6 +4,7 @@ import { Context } from "../index";
 import { Badge, Card, Accordion, useAccordionButton } from "react-bootstrap";
 
 import "../scss/styles.scss";
+import InfoBarDescriptions from "./infoBarDescriiptions";
 
 function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
   const decoratedOnClick = useAccordionButton(eventKey, () =>
@@ -11,33 +12,33 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
   );
   return (
     <div
-    style={{
-     display:"flex",
-     alignItems: "center", 
-    }}
-    >
-    <div
       style={{
-        marginLeft: "15px",
-        cursor: "pointer",
-        transform: `rotate(${
-          expand !== false
-            ? isOpen
-              ? "270deg"
-              : "90deg"
-            : isOpen
-            ? "0deg"
-            : "180deg"
-        })`,
-        transition: "transform 0.3s ease",
-      }}
-      onClick={() => {
-        onToggle && onToggle(eventKey);
-        expand !== false && decoratedOnClick();
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      &gt;
-    </div>
+      <div
+        style={{
+          marginLeft: "15px",
+          cursor: "pointer",
+          transform: `rotate(${
+            expand !== false
+              ? isOpen
+                ? "270deg"
+                : "90deg"
+              : isOpen
+              ? "0deg"
+              : "180deg"
+          })`,
+          transition: "transform 0.3s ease",
+        }}
+        onClick={() => {
+          onToggle && onToggle(eventKey);
+          expand !== false && decoratedOnClick();
+        }}
+      >
+        &gt;
+      </div>
     </div>
   );
 }
@@ -45,7 +46,7 @@ function CustomToggle2({ eventKey, isOpen, onToggle, expand }) {
   const decoratedOnClick = (eventKey, () => console.log(eventKey));
   return (
     <div
-      style={{      
+      style={{
         cursor: "pointer",
         transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
         transition: "transform 0.3s ease",
@@ -62,9 +63,11 @@ function CustomToggle2({ eventKey, isOpen, onToggle, expand }) {
 const InfoBar = observer((props) => {
   const { device } = useContext(Context);
   const [isOpenMap, set$isOpenMap] = useState({});
+  console.log("isOpenMap: ", isOpenMap);  
 
   // Function to toggle the isOpen state for a specific category
   const toggleCategory = (typeId) => {
+    console.log("typeId: map ", typeId);
     set$isOpenMap((prevIsOpenMap) => ({
       ...prevIsOpenMap,
       [typeId]: !prevIsOpenMap[typeId],
@@ -72,8 +75,6 @@ const InfoBar = observer((props) => {
   };
 
   const info = props?.info;
-
-  // console.log("info ", info);
 
   return (
     <>
@@ -83,92 +84,23 @@ const InfoBar = observer((props) => {
             style={{ display: "flex", justifyContent: "space-between" }}
           >
             <CustomToggle
-              eventKey="888"
-              isOpen={isOpenMap[888]}
+              eventKey={info?.title}
+              isOpen={isOpenMap[info?.title]}
               onToggle={toggleCategory}
             >
               &gt;
             </CustomToggle>
             <span style={{ width: "80%" }}>{info?.title}</span>
           </Card.Header>
-          <Accordion.Collapse eventKey="888">
+          <Accordion.Collapse eventKey={info?.title}>
             <Card.Body>
-              {info?.descriptions.length &&
-                info?.descriptions.map((descriptionsItem) => (
-                  <div
-                    key={descriptionsItem?.description}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      width: "95%",
-                    }}
-                  >
-                    <div
-                      className="d-flex justify-content-between"
-                      style={{ marginLeft: "10%", width: "85%" }}
-                    >                      
-                      {descriptionsItem?.description}
-                      <Badge bg="secondary" text="dark" pill>
-                        {descriptionsItem?.count || ""}
-                      </Badge>
-                    </div>
-                    <span
-                      style={{ marginLeft: "15px", cursor: "pointer" }}
-                      
-                 
-                      onClick={() => {
-                        const currentTitle = info.title;
-                        const updatedSelectedInfos = { ...device.selectedInfos };
-                        let existingTitle = updatedSelectedInfos[currentTitle] || [];
-                      
-                        const existingDescription = existingTitle.find(
-                          (item) => item.description === descriptionsItem.description  );
-                      
-                        if (existingDescription) {
-                          existingTitle = existingTitle.filter(
-                            (item) => item.description !== descriptionsItem.description
-                          );
-                        } else {
-                          existingTitle.push({
-                            description: descriptionsItem.description,
-                            deviceIdArr: descriptionsItem.deviceIdArr,
-                          });
-                        }
-                      
-                        updatedSelectedInfos[currentTitle] = existingTitle;
-                      
-                        const arraysByKey = {}; 
-                      
-                        Object.keys(updatedSelectedInfos).forEach((key) => {
-                          if (key !== "result" && updatedSelectedInfos[key].length > 0) {
-                            arraysByKey[key] = updatedSelectedInfos[key].flatMap((item) => item.deviceIdArr);
-                          }
-                        });
-                      
-                        const intersection = Object.keys(arraysByKey).reduce((acc, key, index) => {
-                          if (index === 0) {
-                            return arraysByKey[key];
-                          }
-                      
-                          return acc.filter(id => arraysByKey[key].includes(id));
-                        }, []);
-                      
-                        updatedSelectedInfos.result = intersection;
-                      
-                        device.setSelectedInfos(updatedSelectedInfos);
-                      }}
-  
-                    >
-                      <CustomToggle2
-                        eventKey={descriptionsItem.description}
-                        isOpen={isOpenMap[descriptionsItem.description]}
-                        onToggle={toggleCategory}
-                      >
-                        &gt;
-                      </CustomToggle2>
-                    </span>
-                  </div>
-                ))}
+              <InfoBarDescriptions
+                toggleCategory={toggleCategory}
+                CustomToggle2={CustomToggle2}
+                info={info}
+                isOpenMap={isOpenMap}
+                set$isOpenMap={set$isOpenMap}
+              />           
             </Card.Body>
           </Accordion.Collapse>
         </Card>

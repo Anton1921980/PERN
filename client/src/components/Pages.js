@@ -25,7 +25,8 @@ const Pages = observer(() => {
 
   return (
     // <div className='d-flex justify-content-between'>
-    <Pagination className="m-3">
+    <Pagination className="m-3"
+     style={{width: '25%'}}>
       {/* пред */}
       {device.page != 1 && (
         <Pagination.Item
