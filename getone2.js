@@ -16,7 +16,7 @@ async function getResult(data) {
     console.log("url: ", url);
     let device = {};
 
-    const nightmare = Nightmare({ show: false });
+    const nightmare = Nightmare({ show: true });
 
     const response_1 = await nightmare
         .goto(`${url}characteristics`)

@@ -114,27 +114,27 @@ export const deleteFromBasket = async (id) => {
   }
 };
 
-// export const sendData = async (data) => {
-//   try {
-//     const response = await $authHost.post(
-//       "api/device/send-data", {data}
+export const sendData = async (data) => {
+  try {
+    const response = await $authHost.post(
+      "api/device/send-data", {data}
    
-//     ); // виконати POST запит за допомогою axios
-//     return response.data; // отримати дані з відповіді
-//   } catch (error) {
-//     console.error(error); // обробити помилки
-//   }
-// };
+    ); // виконати POST запит за допомогою axios
+    return response.data; // отримати дані з відповіді
+  } catch (error) {
+    console.error(error); // обробити помилки
+  }
+};
 
-// export const sendAllData = async (data) => {
-//   try {
+export const sendAllData = async (data) => {
+  try {
 
-//     const response = await $authHost.post(
-//       "api/device/send-all-data", {data}
+    const response = await $authHost.post(
+      "api/device/send-all-data", {data}
     
-//     ); // виконати POST запит за допомогою axios
-//     return response.data; // отримати дані з відповіді
-//   } catch (error) {
-//     console.error(error); // обробити помилки
-//   }
-// };
+    ); // виконати POST запит за допомогою axios
+    return response.data; // отримати дані з відповіді
+  } catch (error) {
+    console.error(error); // обробити помилки
+  }
+};

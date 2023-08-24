@@ -38,31 +38,31 @@ const Admin = observer(() => {
     device.setLimit(1000);
   }, []);
 
-  const sendData = async () => {
-    const response = await fetch(`https://pern-server-seven.vercel.app/api/device/send-data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data ? JSON.stringify({ data }) : JSON.stringify({ data2 }),
-    });
-    const jsonResponse = await response.json();
-    console.log("jsonResponse: ", jsonResponse);
-    setResult(jsonResponse.result);
-  };
+  // const sendData = async () => {
+  //   const response = await fetch(`https://pern-server-seven.vercel.app/api/device/send-data`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: data ? JSON.stringify({ data }) : JSON.stringify({ data2 }),
+  //   });
+  //   const jsonResponse = await response.json();
+  //   console.log("jsonResponse: ", jsonResponse);
+  //   setResult(jsonResponse.result);
+  // };
 
-  const sendAllData = async () => {
-    const response = await fetch("https://pern-server-seven.vercel.app/api/device/send-all-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data2 ? JSON.stringify({ data2 }):"fuuuu",
-    });
-    const jsonResponse = await response.json();
-    console.log("jsonResponse: ", jsonResponse);
-    setResult(jsonResponse.result);
-  };
+  // const sendAllData = async () => {
+  //   const response = await fetch("https://pern-server-seven.vercel.app/api/device/send-all-data", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: data2 ? JSON.stringify({ data2 }):"fuuuu",
+  //   });
+  //   const jsonResponse = await response.json();
+  //   console.log("jsonResponse: ", jsonResponse);
+  //   setResult(jsonResponse.result);
+  // };
 
 
 
@@ -127,10 +127,10 @@ const Admin = observer(() => {
           <button
           onClick={() =>
             sendData(data)
-              // .then((data) => {
-              //   console.log(data);
-              //   setResult(data); //to reload page
-              // })             
+              .then((data) => {
+                console.log(data);
+                setResult(data); //to reload page
+              })             
           }
          >Add one product by link</button>
         </div>
