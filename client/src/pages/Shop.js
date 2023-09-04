@@ -1,8 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Card, Container, Row, Col, Spinner, Button } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  Spinner,
+  Button,
+  useAccordionButton,
+} from "react-bootstrap";
 import TypeBar from "../components/TypeBar";
-import InfoBar from "../components/InfoBar";
-import BrandBar from "../components/BrandBar";
 import DeviceList from "../components/DeviceList";
 import Pages from "../components/Pages";
 import PagesSort from "../components/PagesSort";
@@ -20,8 +26,67 @@ import {
 } from "../http/deviceAPI";
 
 import { useHistory, useLocation } from "react-router-dom";
+import InfoFilter from "../components/InfoFilter";
+import { ChevronRight } from "react-bootstrap-icons";
 
-// import { set } from 'mobx';
+//  function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
+//     const decoratedOnClick = useAccordionButton(eventKey, () =>
+//       console.log("totally custom!", isOpen, expand)
+//     );
+//     return (
+//       <div
+//         style={{
+//           display: "flex",
+//           alignItems: "center",
+//         }}
+//       >
+//         <div
+//           style={{
+//             marginLeft: "15px",
+//             cursor: "pointer",
+//             transform: `rotate(${
+//               expand != false
+//                 ?
+//                 isOpen
+//                   ? "270deg"
+//                   : "90deg"
+//                 : isOpen
+//                 ? "270deg"
+//                 : "90deg"
+//                 // ? "0deg"
+//                 // : "180deg"
+//             })`,
+//             transition: "transform 0.3s ease",
+//           }}
+//           onClick={() => {
+//             onToggle && onToggle(eventKey);
+//             expand !== false && decoratedOnClick();
+//           }}
+//         >
+//           <ChevronRight/>
+//         </div>
+//       </div>
+//     );
+//   }
+// function CustomToggle2({ eventKey, isOpen, onToggle, expand, marginRight }) {
+//   const decoratedOnClick = (eventKey, () => console.log(eventKey));
+//   return (
+//     <div
+//       style={{
+//         cursor: "pointer",
+//         transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
+//         transition: "transform 0.3s ease",
+//         marginRight: marginRight,
+//       }}
+//       onClick={() => {
+//         onToggle && onToggle(eventKey);
+//         expand !== false && decoratedOnClick();
+//       }}
+//     >
+//       <ChevronRight/>
+//     </div>
+//   );
+// }
 
 const Shop = observer(() => {
   const [loading, set$loading] = useState(true);
@@ -37,12 +102,77 @@ const Shop = observer(() => {
   const [minValue, set$minValue] = useState("");
   const [maxValue, set$maxValue] = useState("");
   const [minMax, set$minMax] = useState({ min: null, max: null });
-
+  const [isOpenMap, set$isOpenMap] = useState({"aaa":true, "ccc": true});
+  console.log("isOpenMap: ", isOpenMap);
   const [infoArrayObjects, set$infoArrayObjects] = useState([]);
   const [sortedInfoArrayObjects, set$sortedInfoArrayObjects] = useState([]);
 
-  console.log("infoArrayObjects: ", infoArrayObjects);
-
+  // console.log("infoArrayObjects: ", infoArrayObjects);
+  const CustomToggle = React.memo(
+    ({ eventKey, isOpen, onToggle, expand }) => {
+      const decoratedOnClick = useAccordionButton(eventKey, () => {
+        console.log("totally custom!", isOpen);
+      });
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            marginLeft: "15px",
+            cursor: "pointer",
+            transform: `rotate(${
+              expand != false
+                ? isOpen
+                  ? "270deg"
+                  : "90deg"
+                : isOpen
+                ? "270deg"
+                : "90deg"
+              // ? "0deg"
+              // : "180deg"
+            })`,
+            transition: "transform 2s ease",
+          }}
+          onClick={() => {
+            onToggle && onToggle(eventKey);
+            expand !== false && decoratedOnClick();
+          }}
+        >
+          <ChevronRight/>
+        </div>
+      </div>
+    );
+  })
+  const CustomToggle2=React.memo(({ eventKey, isOpen, onToggle, expand, marginRight })=> {
+    const decoratedOnClick = (eventKey, () => console.log(eventKey));
+    return (
+      <div
+        style={{
+          cursor: "pointer",
+          transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
+          transition: "transform 0.9s ease",
+          marginRight: marginRight,
+        }}
+        onClick={() => {
+          onToggle && onToggle(eventKey);
+          expand !== false && decoratedOnClick();
+        }}
+      >
+        <ChevronRight/>
+      </div>
+    );
+  })
+  // Function to toggle the isOpen state for a specific category
+  const toggleCategory = (id) => {   
+       set$isOpenMap((prevIsOpenMap) => ({
+      ...prevIsOpenMap,
+      [id]: !prevIsOpenMap[id],
+    }));
+  };
   const handleMinMax = (min, max) => {
     set$minMax({
       min: parseInt(min, 10),
@@ -86,16 +216,12 @@ const Shop = observer(() => {
     });
     fetchDevices()
       .then((data) => {
-        console.log("fetch all devices data: ", data);
         device.setAlldevices(data.rows);
       })
       .finally(() => set$loading(false));
   }, []);
 
-  console.log("devices: ", device.devices[0]?.brandId);
-
   //пока аcинхронно грузятся отфильтрованые товары успевает второй useEffect отработать создать пустую строку
-
   // useEffect для фильтров
   useEffect(() => {
     fetchBrands(parsedTypes || device?.selectedType.id).then((data) => {
@@ -259,7 +385,8 @@ const Shop = observer(() => {
       // Виводимо результати
       set$brandCountPerType(brandCountPerType); //айді брендів замість кількості
 
-      !device.selectedType > 0 && set$productCountPerType(productCountPerType);
+      // !device.selectedType.id > 0 &&
+      set$productCountPerType(productCountPerType);
       set$typeCountPerBrand(typeCountPerBrand);
       !device?.selectedBrands?.length > 0 &&
         set$productCountPerBrand(productCountPerBrand);
@@ -269,7 +396,7 @@ const Shop = observer(() => {
       );
 
       // console.log("Кількість брендів у кожн типі:", brandCountPerType);
-      // console.log("Кількість товарів у кожн типі:", productCountPerType);
+      console.log("Кількість товарів у кожн типі:", productCountPerType);
       // console.log("Кількість типів у кожн бренді:", typeCountPerBrand);
       // console.log("Кількість товарів у кожн бренді:", productCountPerBrand);
     }
@@ -303,10 +430,10 @@ const Shop = observer(() => {
       //додати фільтрацію девайсів при зміні бренду чи мінмакс
       //щоб оновлювати каунт у фільтрах
 
-      console.log("ids: ", ids);
+      // console.log("ids: ", ids);
 
       fetchInfos(ids).then((data) => {
-        console.log("111", data.rows);
+        // console.log("111", data.rows);
 
         const result = []; // Результат буде масив об'єктів з ключами: title , масивами унікальних дескріпшенів,  кількістю повторень, масив deviceId
 
@@ -394,6 +521,7 @@ const Shop = observer(() => {
     device.selectedBrands,
     minMax,
     device.selectedInfos,
+    loading,
   ]);
 
   useEffect(() => {
@@ -428,22 +556,24 @@ const Shop = observer(() => {
             arrayOfDevicesCountPerTypePerBrand={
               arrayOfDevicesCountPerTypePerBrand
             }
+            toggleCategory={toggleCategory}
+            CustomToggle={CustomToggle}
+            isOpenMap={isOpenMap}
           />
-          {/* <BrandBar productCountPerBrand={productCountPerBrand} /> */}
-
-          {device.selectedType?.id &&
-            sortedInfoArrayObjects?.length &&
-            sortedInfoArrayObjects?.map((item, i) => (
-              <InfoBar key={`${item.title}-${i}`} info={item} />
-            ))}
+          {device.selectedType?.id && (
+            <InfoFilter
+              sortedInfoArrayObjects={sortedInfoArrayObjects}
+              toggleCategory={toggleCategory}
+              CustomToggle={CustomToggle}
+              CustomToggle2={CustomToggle2}
+              isOpenMap={isOpenMap}
+            />
+          )}
         </Col>
         <Col md={9}>
-          {/* <BrandBar productCountPerBrand={productCountPerBrand} /> */}
           <div className="d-flex justify-content-around align-items-center">
             {range?.length && (
-              <div 
-              className="d-flex justify-content-around align-items-center"
-             >
+              <div className="d-flex justify-content-around align-items-center">
                 <MultiRangeSlider
                   min={range[0] || 0}
                   max={range[1] || 0}
@@ -453,19 +583,16 @@ const Shop = observer(() => {
                   }}
                 />
                 <div
-                style={{cursor: 'pointer', margin:"10px",padding:"5px"}}
-                  // className="rounded-circle"
-                  // size="sm"
-                  // variant="outline-secondary"
+                  style={{ cursor: "pointer", margin: "10px", padding: "5px" }}
                   onClick={() => {
                     handleMinMax(minValue, maxValue);
                     device.setPage("1");
                   }}
                 >
-                  &gt;
+                  <ChevronRight/>
                 </div>
               </div>
-            )}           
+            )}
             <PagesSort />
             <Pages />
           </div>

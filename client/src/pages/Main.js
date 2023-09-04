@@ -40,7 +40,7 @@ const Main = observer( () =>
         <Container className='d-flex flex-column flex-lg-row mt-3'>
             {/* <h1>MAIN PAGE</h1> */ }
             <Col className='col-12 col-lg-6'>
-                <TypeBar />
+                <TypeBar main="main"/>
             </Col>
             <Col className='col-12 col-lg-6'>
                 <SliderHomepage

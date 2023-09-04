@@ -160,10 +160,10 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
           />
           <Form.Control className="mt-3" type="file" onChange={selectFile} />
 
-          <div style={{ width: "50%", overflow: "hidden" }}>
+          <div style={{ width: "30%", overflow: "hidden" }}>
             <Image
               style={{ objectFit: "contain", width: "70%" }}
-              src={previewImage || "https://pern-server-seven.vercel.app/" + device2.img}
+              src={previewImage || `${process.env.REACT_APP_API_URL}${device2?.img}`}
             />
           </div>
 

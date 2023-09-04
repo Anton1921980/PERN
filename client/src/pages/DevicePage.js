@@ -63,7 +63,7 @@ const DevicePage = observer( () =>
             <Row className='mt-3'>
                 <Col md={ 3 }>
                     <div style={ { width: '100%', overflow: 'hidden' } }>
-                        <Image style={ { objectFit: 'contain', width: '70%' } } src={ 'https://pern-server-seven.vercel.app/' + device1.img } />
+                        <Image style={ { objectFit: 'contain', width: '70%' } } src={ `${process.env.REACT_APP_API_URL}${device1.img}` } />
                     </div>
                 </Col>
                 <Col md={ 9 } >

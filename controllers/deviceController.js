@@ -22,7 +22,7 @@ class DeviceController {
     try {
       // if (process.env.NODE_ENV === "production") {
       let { name, price, brandId, typeId, info, img } = req.body;
-      console.log("TCL: req", req.body);
+      // console.log("TCL: req", req.body);
       console.log("hasOwnProperty: ", req.body.hasOwnProperty("img"));
       let fileName;
       if (!req.body.hasOwnProperty("img")) {
@@ -40,10 +40,10 @@ class DeviceController {
 
       if (typeof typeId !== "number") {
         const types = await Type.findAll();
-        console.log("types: ", types);
+        // console.log("types: ", types);
 
         const typeExist = types.find((type) => type.name === typeId);
-        console.log("typeExist: ", typeExist);
+        // console.log("typeExist: ", typeExist);
         if (typeExist) {
           newTypeId = typeExist.id;
         } else {
@@ -60,14 +60,14 @@ class DeviceController {
 
         // Check if brandId exists
         const brandExist = brands.find((brand) => brand.name === brandId);
-        console.log("brandExist: ", brandExist);
+        // console.log("brandExist: ", brandExist);
         if (brandExist) {
           newBrandId = brandExist.id;
         } else {
           const newBrand = await Brand.create({ name: brandId });
           newBrandId = newBrand.id;
         }
-        console.log("newBrandId: ", newBrandId);
+        // console.log("newBrandId: ", newBrandId);
     
       }
       // if (typeof newTypeId === "number" && typeof newBrandId === "number") {
@@ -87,9 +87,9 @@ class DeviceController {
 
         typeBrandExist = typeBrandNew.id;
       }
-      console.log("typeBrandExist: ", typeBrandExist);
+      // console.log("typeBrandExist: ", typeBrandExist);
     
-      console.log(" newBrandId,  newTypeId,: ", newBrandId, newTypeId);
+      // console.log(" newBrandId,  newTypeId,: ", newBrandId, newTypeId);
 
       const device = await Device.create({
         name,
@@ -354,19 +354,18 @@ class DeviceController {
 
   async sendData(req, res) {
     const data = req.body.data;
-    console.log("Data received:", data);
     //Додаємо обробку даних тут, можна викликати зовнішній файл:
     const getOneResult = require("../getone2.js");
     const result = await getOneResult(data); 
-    // const result = data; 
+    console.log("result: ", result);   
     result !== {} && res.json({ result: result });
   }
 
   async sendAllData(req, res) {
     const data = req.body;
-  console.log("Data received:", data);
   const getAllResults = require("../get2.js");
   const result = await getAllResults(data); 
+  console.log("result: sendAllData ", result);
   result !== {} && res.json({ result: result });
   }
 

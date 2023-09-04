@@ -12,13 +12,14 @@ import {
   fetchTypes,
   deleteOneDevice,
   sendData,
-  sendAllData
+  sendAllData,
 } from "../http/deviceAPI";
 // import DeviceList from "../components/DeviceList";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Context } from "../index";
 import EditDevicePage from "../components/modals/editDevicePage";
-import { $authHost } from "../http";
+import CreateDeviceByLink from "../components/modals/createDeviceByLink";
+import CreatePageDevicesByLink from "../components/modals/createPageDevicesByLink";
 
 const Admin = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -26,45 +27,18 @@ const Admin = observer(() => {
   const [typeVisible, setTypeVisible] = useState(false);
   const [deviceVisible, setDeviceVisible] = useState(false);
   const [deviceVisible2, setDeviceVisible2] = useState(false);
-  const [data, setData] = useState("");
-  const [data2, setData2] = useState("");
-  console.log("data: ", data);
+  const [deviceByLinkVisible, setDeviceByLinkVisible] = useState(false);
+  const [devicesPageByLinkVisible, setDevicesPageByLinkVisible] =
+    useState(false);
 
   const [result, setResult] = useState("");
+  console.log("result: ", result);
   const [id, set$id] = useState(null);
   const { device } = React.useContext(Context);
 
   React.useEffect(() => {
     device.setLimit(1000);
   }, []);
-
-  // const sendData = async () => {
-  //   const response = await fetch(`https://pern-server-seven.vercel.app/api/device/send-data`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: data ? JSON.stringify({ data }) : JSON.stringify({ data2 }),
-  //   });
-  //   const jsonResponse = await response.json();
-  //   console.log("jsonResponse: ", jsonResponse);
-  //   setResult(jsonResponse.result);
-  // };
-
-  // const sendAllData = async () => {
-  //   const response = await fetch("https://pern-server-seven.vercel.app/api/device/send-all-data", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: data2 ? JSON.stringify({ data2 }):"fuuuu",
-  //   });
-  //   const jsonResponse = await response.json();
-  //   console.log("jsonResponse: ", jsonResponse);
-  //   setResult(jsonResponse.result);
-  // };
-
-
 
   //отрабатывает один раз при переходе по url или на /shop
   React.useEffect(() => {
@@ -87,27 +61,48 @@ const Admin = observer(() => {
 
   return (
     <>
-      <Container className="d-flex flex-column">
+      <Container className="d-flex justify-content-between p-3"
+      style={{wwidth:"90%"}}
+      >
         <Button
+        style={{width:"19%"}}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setTypeVisible(true)}
         >
-          Добавить тип
+          add type
         </Button>
         <Button
+        style={{width:"19%"}}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setBrandVisible(true)}
         >
-          Добавить бренд
+          add brand
         </Button>
         <Button
+        style={{width:"19%"}}
           variant={"outline-dark"}
-          className="mt-4 pt-2 mb-4"
+          className="mt-4 pt-2"
           onClick={() => setDeviceVisible(true)}
         >
-          Добавить устройство
+          add device
+        </Button>
+        <Button
+        style={{width:"19%"}}
+          variant={"outline-dark"}
+          className="mt-4 pt-2"
+          onClick={() => setDeviceByLinkVisible(true)}
+        >
+          add one device by link
+        </Button>
+        <Button
+        style={{width:"19%"}}
+          variant={"outline-dark"}
+          className="mt-4 pt-2"
+          onClick={() => setDevicesPageByLinkVisible(true)}
+        >
+          add page devices by link
         </Button>
         <CreateBrand
           show={brandVisible}
@@ -118,38 +113,16 @@ const Admin = observer(() => {
           show={deviceVisible}
           onHide={() => setDeviceVisible(false)}
         />
-        <div>
-          <input
-            type="text"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-          />
-          <button
-          onClick={() =>
-            sendData(data)
-              .then((data) => {
-                console.log(data);
-                setResult(data); //to reload page
-              })             
-          }
-         >Add one product by link</button>
-        </div>
-        <div>
-          <input
-            type="text"
-            value={data2}
-            onChange={(e) => setData2(e.target.value)}
-          />
-          <button 
-           onClick={() =>
-            sendAllData(data2)
-              .then((data) => {
-                console.log(data);
-                setResult(data); //to reload page
-              })             
-          }
-          >Add page of products by link</button>
-        </div>
+        <CreateDeviceByLink
+          show={deviceByLinkVisible}
+          onHide={() => setDeviceByLinkVisible(false)}
+          setResult={setResult}
+        />
+        <CreatePageDevicesByLink
+          show={devicesPageByLinkVisible}
+          onHide={() => setDevicesPageByLinkVisible(false)}
+          setResult={setResult}
+        />
       </Container>
       {result?.name && (
         <>
@@ -157,15 +130,13 @@ const Admin = observer(() => {
         </>
       )}
       {/* <DeviceList /> */}
-      <ListGroup variant="flush">
+      <ListGroup variant="flush"
+      style={{width:'90%'}}
+      >
         {device.devices?.map((device, i) => (
           <div
             className="d-flex justify-content-between"
-            style={{ width: "80%", marginLeft: "10%" }}
-            // style={{ cursor: "pointer", width: "70%" }}
-            // active={ type.id === device.selectedType.id}
-            // action="true"
-            // variant="light"
+            style={{ width: "90%", marginLeft: "10%" }}
             key={i}
           >
             <NavLink to={`/device/${device.id}`} style={{ width: "90%" }}>
@@ -182,15 +153,16 @@ const Admin = observer(() => {
                       width: "100%",
                       height: "100%",
                     }}
-                    src={"https://pern-server-seven.vercel.app/" + device?.img}
+                    src={`${process.env.REACT_APP_API_URL}${device?.img}`}
                   />
                 </div>
                 <span>{device?.name}</span>
 
-                {/* <span>&gt;</span> */}
+                {/* <span><ChevronRight/></span> */}
               </ListGroup.Item>
             </NavLink>
             <Button
+            style={{width:"7%"}}
               variant={"outline-dark"}
               className="mt-4  mb-4"
               onClick={() => {
@@ -200,21 +172,8 @@ const Admin = observer(() => {
             >
               Edit
             </Button>
-            {/* <Button
-              variant={"outline-dark"}
-              //відкрити модалку форму, отримати та відобразити повні дані товару щод їх відредагувати, зробити зміни textarea? сабміт відправити
-              onClick={() =>
-                editOneDevice(device)
-                  .then((data) => {
-                    console.log(data);
-                    setResult({ name: `edited: ${device.name}` });
-                  })
-                  .finally(() => setLoading(false))
-              }
-            >
-              edit
-            </Button>{" "} */}
             <Button
+             style={{width:"7%"}}
               variant={"outline-dark"}
               className="mt-4  mb-4"
               onClick={() =>

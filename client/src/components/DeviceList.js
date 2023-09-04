@@ -9,7 +9,7 @@ const DeviceList = observer( () =>
 
     return (
         <>
-            <div className='mt-3'>Товаров:<span style={ { fontSize: '18px' } }>{ device.totalCount }</span></div>
+            <div className='mt-3'>Devices:<span style={ { fontSize: '18px' } }>{ device.totalCount }</span></div>
             <div className='d-flex flex-direction-row flex-wrap'>
                 { device.devices.map( ( device ) =>
                     <DeviceItem key={ device.id } device={ device } />

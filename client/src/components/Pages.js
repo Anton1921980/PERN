@@ -4,6 +4,7 @@ import { Button, Pagination } from "react-bootstrap";
 import { Context } from "../index";
 import DevicePage from "../pages/DevicePage";
 import "../scss/styles.scss";
+import { ChevronRight } from "react-bootstrap-icons";
 
 const Pages = observer(() => {
   const { device } = useContext(Context);
@@ -26,7 +27,7 @@ const Pages = observer(() => {
   return (
     // <div className='d-flex justify-content-between'>
     <Pagination className="m-3"
-     style={{width: '25%'}}>
+     style={{width: '30%'}}>
       {/* пред */}
       {device.page != 1 && (
         <Pagination.Item
@@ -112,7 +113,7 @@ const Pages = observer(() => {
           {portionCount > portionNumber &&
             device.page > rightPortionPageNumber &&
             setPortionNumber(portionNumber + 1)}
-          {">"}
+        <ChevronRight/>
         </Pagination.Item>
       )}
     </Pagination>

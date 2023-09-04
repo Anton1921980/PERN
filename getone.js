@@ -151,7 +151,7 @@ let brand = 'samsung';
     function addProduct ( device )
     {
         axios
-            .post( "https://pern-server-seven.vercel.app/api/user/login", {
+            .post( `${process.env.API_URL}/api/user/login`, {
                 email: "customer@gmail.com",
                 password: "1111111"
             } )
@@ -160,7 +160,7 @@ let brand = 'samsung';
                 let token = response.data.token;
 
                 axios
-                    .post( "https://pern-server-seven.vercel.app/api/device", device, {
+                    .post( `${process.env.API_URL}/api/device`, device, {
                         headers: { authorization: `Bearer ${ token }` }
                     } )
                     .then( device =>

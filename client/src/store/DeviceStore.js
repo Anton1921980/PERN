@@ -122,7 +122,7 @@ export default class DeviceStore {
   get alldevices() {
     return this._alldevices;
   }
-  get basket() {
+  get baskets() {
     return this._baskets;
   }
   get localBasket() {

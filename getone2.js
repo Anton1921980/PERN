@@ -127,14 +127,14 @@ async function getResult(data) {
 
     async function addProduct(device) {
       try {
-        const loginResponse = await axios.post("https://pern-server-seven.vercel.app/api/user/login", {
+        const loginResponse = await axios.post(`${process.env.API_URL}/api/user/login`, {
           email: "customer@gmail.com",
           password: "1111111",
         });
     
         const token = await loginResponse.data.token;
     
-        const deviceResponse = await axios.post("https://pern-server-seven.vercel.app/api/device", device, {
+        const deviceResponse = await axios.post(`${process.env.API_URL}/api/device`, device, {
           headers: { authorization: `Bearer ${token}` },
         });
         await deviceResponse.data

@@ -1,13 +1,12 @@
 import axios from 'axios'
 
-//console.log( "TCL: baseURL", process.env.REACT_APP_API_URL )
 
 const $host = axios.create( {
-    baseURL: 'https://pern-server-seven.vercel.app'//process.env.REACT_APP_API_URL || 'http://localhost:5000/'
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/'
 } )
 
 const $authHost = axios.create( {
-    baseURL: 'https://pern-server-seven.vercel.app'//process.env.REACT_APP_API_URL || 'http://localhost:5000/'
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/'
 } )
 
 const authInterceptor = config =>

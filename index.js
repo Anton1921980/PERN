@@ -1,5 +1,9 @@
-require("dotenv").config();
 const express = require("express");
+
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env.development' });
+console.log('env',process.env.NODE_ENV);
+
 const sequelize = require("./db");
 const models = require("./models/models");
 const cors = require("cors");
@@ -7,6 +11,7 @@ const fileUpload = require("express-fileupload");
 const router = require("./routes/index");
 const errorHandler = require("./middleware/errorHandlerMiddleware");
 const path = require("path");
+
 
 const PORT = process.env.PORT || 5000;
 
@@ -67,7 +72,7 @@ const start = async () => {
 
 start();
 
-process.env.NODE_ENV = "production";
+// process.env.NODE_ENV = "production";
 // process.env.NODE_ENV="development";
 
 // Server static assets if in production

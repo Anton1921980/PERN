@@ -30,7 +30,7 @@ function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
         expand !== false && decoratedOnClick();
       }}
     >
-      &gt;
+      <ChevronRight/>
     </div>
   );
 }
@@ -59,7 +59,7 @@ const BrandBar = observer((props) => {
               isOpen={isOpenMap[888]}
               onToggle={toggleCategory}
             >
-              &gt;
+              <ChevronRight/>
             </CustomToggle>
             <span style={{ width: "50%" }}>Brands</span>
             <span
@@ -69,7 +69,7 @@ const BrandBar = observer((props) => {
                 device.setSelectedBrands("");
               }}
             >
-              &gt;
+              <ChevronRight/>
             </span>
           </Card.Header>
           <Accordion.Collapse eventKey="888">

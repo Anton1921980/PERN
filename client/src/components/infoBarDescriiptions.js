@@ -1,26 +1,29 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Context } from "../index";
-import { Badge, Card, Accordion, useAccordionButton } from "react-bootstrap";
 
 import "../scss/styles.scss";
+import { ChevronRight } from "react-bootstrap-icons";
 
 const InfoBarDescriptions = observer((props) => {
   const { device } = useContext(Context);
   const {
     isOpenMap,
-    set$isOpenMap,
     toggleCategory,
     CustomToggle2,
     info,
     // infoArr,
   } = props;
   const [currentTitleDescriptions, set$currentTitleDescriptions] = useState([]);
-  currentTitleDescriptions?.descriptions?.length>0 && console.log("currentTitleDescriptions: ", info.title, currentTitleDescriptions);
+  currentTitleDescriptions?.descriptions?.length > 0 &&
+    console.log(
+      "currentTitleDescriptions: ",
+      info.title,
+      currentTitleDescriptions
+    );
 
-  // const info = props?.info;
   const infoArr =
-    currentTitleDescriptions?.descriptions?.length>0 &&
+    currentTitleDescriptions?.descriptions?.length > 0 &&
     currentTitleDescriptions?.title === info?.title // якшо є вже збережені дескріпшени у цьому тайтлі
       ? currentTitleDescriptions.descriptions
       : info?.descriptions?.length && info?.descriptions;
@@ -34,6 +37,8 @@ const InfoBarDescriptions = observer((props) => {
             display: "flex",
             alignItems: "flex-start",
             width: "95%",
+            backgroundColor:
+              isOpenMap[descriptionsItem.description] && "lightgrey",
           }}
         >
           <div
@@ -41,16 +46,22 @@ const InfoBarDescriptions = observer((props) => {
             style={{ marginLeft: "10%", width: "85%" }}
           >
             {descriptionsItem?.description}
-            <Badge bg="secondary" text="dark" pill>
+            <span
+              style={{
+                paddingLeft: "10px",
+                paddingRight: "10px",
+                fontSize: "0.6rem",
+                marginTop: "0.4rem",
+              }}
+            >
               {descriptionsItem?.count || ""}
-            </Badge>
+            </span>
           </div>
           <span
-            style={{ marginLeft: "15px", cursor: "pointer" }}
+            style={{ marginLeft: "20px", cursor: "pointer" }}
             onClick={() => {
-
-              !currentTitleDescriptions?.descriptions?.length && set$currentTitleDescriptions(info); //додати також із оpenmap?
-
+              !currentTitleDescriptions?.descriptions?.length &&
+                set$currentTitleDescriptions(info);
               const currentTitle = info.title;
               const updatedSelectedInfos = {
                 ...device.selectedInfos,
@@ -71,9 +82,7 @@ const InfoBarDescriptions = observer((props) => {
                   deviceIdArr: descriptionsItem.deviceIdArr,
                 });
               }
-
               updatedSelectedInfos[currentTitle] = existingTitle;
-
               const arraysByKey = {};
 
               Object.keys(updatedSelectedInfos).forEach((key) => {
@@ -83,21 +92,16 @@ const InfoBarDescriptions = observer((props) => {
                   );
                 }
               });
-
               const intersection = Object.keys(arraysByKey).reduce(
                 (acc, key, index) => {
                   if (index === 0) {
                     return arraysByKey[key];
                   }
-
                   return acc.filter((id) => arraysByKey[key].includes(id));
                 },
                 []
               );
-
               updatedSelectedInfos.result = intersection;
-              console.log("result: ", updatedSelectedInfos.result);
-
               device.setSelectedInfos(updatedSelectedInfos);
             }}
           >
@@ -105,8 +109,9 @@ const InfoBarDescriptions = observer((props) => {
               eventKey={descriptionsItem.description}
               isOpen={isOpenMap[descriptionsItem.description]}
               onToggle={toggleCategory}
+              marginRight={"15px"}
             >
-              &gt;
+              <ChevronRight/>
             </CustomToggle2>
           </span>
         </div>
