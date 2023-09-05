@@ -12,10 +12,8 @@ const PriceFilter = ({
   const defaultMax = maxPrice;
   const step = 10;
 
-  const [activeInput, setActiveInput] = useState(null);
-  console.log("activeInput: ", activeInput);
+  const [activeInput, setActiveInput] = useState(null); 
   const [inputCoords, setInputCoords] = useState({});
-  console.log("inputCoords: ", inputCoords);
 
   const handlePriceChange = (event, index) => {
     let newValues = [...onPriceChange];

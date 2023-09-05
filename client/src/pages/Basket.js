@@ -12,13 +12,10 @@ import { NavLink } from "react-router-dom";
 const Basket = observer(() => {
   const { device } = useContext(Context);
 
-  console.log("TCL: device", device);
-  console.log("device.selectedBasket: ", device.selectedBasket);
-
   const currentBasket = async () => {
     try {
       const data = await getBasket();
-      console.log("data: ", data);
+
       const modifiedData = data?.reduce((acc, currentItem) => {
         const foundItem = acc.find(
           (item) => item?.deviceId === currentItem?.deviceId
@@ -31,21 +28,15 @@ const Basket = observer(() => {
         }
         return acc;
       }, []);
-      
+
       if (
-        JSON.stringify(device.baskets) !== JSON.stringify(modifiedData)       
-        &&
+        JSON.stringify(device.baskets) !== JSON.stringify(modifiedData) &&
         JSON.stringify(data) !== JSON.stringify(device.baskets)
-    
       ) {
-        console.log("JSON.stringify(modifiedData) : ", modifiedData );
-      console.log("JSON.stringify(device.baskets): ", device.baskets);
-      console.log(" JSON.stringify(data): ",  data);
         device.setBaskets([...modifiedData]);
-     
       }
     } catch (error) {
-      console.error("Сталася помилка під час отримання кошика:", error);
+      console.error("Err while getting basket:", error);
     }
   };
   const addDeviceQuantity = async (id) => {
@@ -62,31 +53,27 @@ const Basket = observer(() => {
           await deleteFromBasket(device.selectedBasket);
           device.setSelectedBasket(null);
         } catch (error) {
-          console.error("Сталася помилка під час видалення з кошика:", error);
+          console.error("Err while removing from basket:", error);
         }
       }
       await currentBasket();
     };
     deleteAndFetch();
   }, [device.selectedBasket, device.baskets]);
-  console.log("device.baskets: ", device.baskets);
 
   //Считаем общую сумму, которую юзер набрал в корзину
 
   let prices = 0;
-  device.baskets?.length>2 &&
+  device.baskets?.length > 2 &&
     device.baskets?.map(
       (product) => (prices += Number(product.device?.price * product?.quantity))
     );
 
   return (
-
-    
     <Container className="d-flex flex-column justify-content-center align-items-center mt-3">
-     
       <h1 className="p-4">Basket</h1>
-     
-      {device.baskets?.length>2 &&
+
+      {device.baskets?.length > 2 &&
         device.baskets?.map((product, i) => (
           <Card
             className="d-flex w-100 p-2 justify-content-center mb-2"
@@ -130,29 +117,28 @@ const Basket = observer(() => {
                     >
                       &mdash;
                     </Button>
-                  </h2>          
+                  </h2>
                   <h4 className="font-weight-light">
-                    {(product?.quantity * product.device?.price).toLocaleString("en-GB").replace(/,/g, " ")} &#x20B4;
+                    {(product?.quantity * product.device?.price)
+                      .toLocaleString("en-GB")
+                      .replace(/,/g, " ")}{" "}
+                    &#x20B4;
                   </h4>
                 </div>
               </Col>
             </Row>
           </Card>
-
         ))}
 
       <Card className="d-flex flex-row  p-2 justify-content-between align-items-center m-5 align-self-end">
         <h3 className="pr-2">Total:&nbsp; </h3>
         <h4 className="pl-2">
           {" "}
-          &nbsp;{prices?.toLocaleString("en-GB").replace(/,/g, " ")} <span className="font-weight-normal pl-2"> &#x20B4; </span>
+          &nbsp;{prices?.toLocaleString("en-GB").replace(/,/g, " ")}{" "}
+          <span className="font-weight-normal pl-2"> &#x20B4; </span>
         </h4>
       </Card>
-      
     </Container>
-               
   );
 });
 export default Basket;
-
-

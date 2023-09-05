@@ -22,7 +22,7 @@ const CreateBrand = observer(({show, onHide}) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Добавить бренд
+                   Add Brand
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -30,13 +30,13 @@ const CreateBrand = observer(({show, onHide}) => {
                     <Form.Control
                         value={value}
                         onChange={e => setValue(e.target.value)}
-                        placeholder={"Введите название бренда"}
+                        placeholder={"Input barnd name"}
                     />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
-                <Button variant="outline-success" onClick={addBrand}>Добавить</Button>
+                <Button variant="outline-danger" onClick={onHide}>X</Button>
+                <Button variant="outline-success" onClick={addBrand}>Add</Button>
             </Modal.Footer>
         </Modal>
     );

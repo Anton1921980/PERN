@@ -17,22 +17,17 @@ const ApiError = require("../error/ApiError");
 // const { all } = require("sequelize/types/lib/operators");
 
 class DeviceController {
-  //для админки
+ 
   async create(req, res, next) {
     try {
-      // if (process.env.NODE_ENV === "production") {
+    
       let { name, price, brandId, typeId, info, img } = req.body;
-      // console.log("TCL: req", req.body);
-      console.log("hasOwnProperty: ", req.body.hasOwnProperty("img"));
+
       let fileName;
       if (!req.body.hasOwnProperty("img")) {
         const { img } = req.files;
-        fileName = uuid.v4() + ".jpg"; //создаем уникальное имя запишется в базу
-        console.log("fileName: ", fileName);
-
-        img.mv(path.resolve(__dirname, "..", "static", fileName)); //папка на сервере server/static уже нет server после deploy
-
-        console.log("info", info);
+        fileName = uuid.v4() + ".jpg"; //create unique filename
+        img.mv(path.resolve(__dirname, "..", "static", fileName)); //no folder server/static after deploy?
       }
 
       let newTypeId;
@@ -40,10 +35,8 @@ class DeviceController {
 
       if (typeof typeId !== "number") {
         const types = await Type.findAll();
-        // console.log("types: ", types);
 
         const typeExist = types.find((type) => type.name === typeId);
-        // console.log("typeExist: ", typeExist);
         if (typeExist) {
           newTypeId = typeExist.id;
         } else {
@@ -51,30 +44,25 @@ class DeviceController {
           newTypeId = newType.id;
         }
       }
-      console.log("newTypeId: ", newTypeId);
-
-  
 
       if (typeof brandId !== "number") {
         const brands = await Brand.findAll();
 
         // Check if brandId exists
         const brandExist = brands.find((brand) => brand.name === brandId);
-        // console.log("brandExist: ", brandExist);
+
         if (brandExist) {
           newBrandId = brandExist.id;
         } else {
           const newBrand = await Brand.create({ name: brandId });
           newBrandId = newBrand.id;
         }
-        // console.log("newBrandId: ", newBrandId);
-    
       }
       // if (typeof newTypeId === "number" && typeof newBrandId === "number") {
       const type_brands = await TypeBrand.findAll({
         where: { typeId: newTypeId, brandId: newBrandId },
       });
-      console.log("type_brands: ", type_brands);
+
       // Check if typeBrandExist exists
       let typeBrandExist = type_brands.find(
         (tb) => tb.typeId === newTypeId && tb.brandId === newBrandId
@@ -87,9 +75,6 @@ class DeviceController {
 
         typeBrandExist = typeBrandNew.id;
       }
-      // console.log("typeBrandExist: ", typeBrandExist);
-    
-      // console.log(" newBrandId,  newTypeId,: ", newBrandId, newTypeId);
 
       const device = await Device.create({
         name,
@@ -113,15 +98,6 @@ class DeviceController {
       // Wait for all promises to resolve using Promise.all()
       const deviceInfo = await Promise.all(deviceInfoPromises);
 
-      // info = JSON.parse(info);
-      // const deviceInfo = await info.forEach((i) =>
-      //   DeviceInfo.create({
-      //     title: i.title,
-      //     description: i.description,
-      //     deviceId: device.id, //не успевает получать надо .then или await
-      //   })
-      // );
-      // console.log("deviceInfo", deviceInfo);
       // Combine the data you want to return into a single object
       const responseData = {
         device: {
@@ -145,12 +121,9 @@ class DeviceController {
 
   async getAll(req, res) {
     let { typeId, brandId, infoId, page, limit, min, max, sort } = req.query;
-    console.log("req.query: ", req.query);
 
     page = page || 1;
     limit = limit || 1000;
-
-    console.log("TCL sort", sort);
 
     if (sort && sort !== "") {
       sort = [["price", sort]];
@@ -170,20 +143,19 @@ class DeviceController {
       };
     }
 
-    if (infoId){
+    if (infoId) {
       //search by device ids so type, brand  not needed
       where.id = infoId;
+    } else {
+      // Check for the presence of typeId
+      if (typeId) {
+        where.typeId = typeId;
+      }
+      // Check for the presence of brandId
+      if (brandId) {
+        where.brandId = brandId;
+      }
     }
-    else{
-    // Check for the presence of typeId
-    if (typeId) {
-      where.typeId = typeId;
-    }
-    // Check for the presence of brandId
-    if (brandId) {
-      where.brandId = brandId;
-    }
-  }
     // Use the 'where' object in the query
     devices = await Device.findAndCountAll({
       where,
@@ -196,7 +168,7 @@ class DeviceController {
   }
 
   async getOne(req, res) {
-    const { id, typeId } = req.query;  
+    const { id, typeId } = req.query;
 
     let where = {};
     if (id) {
@@ -213,32 +185,28 @@ class DeviceController {
   }
 
   async getInfos(req, res) {
-    const { ids } = req.query;  
+    const { ids } = req.query;
     try {
-    let where = {};
-    if (ids) {
-      where.deviceId = {
-        [Sequelize.Op.in]: ids.split(',').map(Number),
-      };
+      let where = {};
+      if (ids) {
+        where.deviceId = {
+          [Sequelize.Op.in]: ids.split(",").map(Number),
+        };
+      }
+
+      const device = await DeviceInfo.findAndCountAll({
+        where,
+      });
+      return res.json(device);
+    } catch (error) {
+      console.error("Error infos:", error);
+      return null;
     }
-    
-    const device = await  DeviceInfo.findAndCountAll({
-      where,     
-    });
-    return res.json(device);
-  } catch (error) {
-    console.error("Error infos:", error);
-    return null;
   }
-  }
-
-
 
   async getMinMaxPrices(req, res) {
     let { brandId, typeId } = req.query;
-    console.log("typeId: ", typeId);
-    console.log("brandId: ", brandId);
-  
+
     try {
       const whereClause = {};
       if (typeId) {
@@ -257,9 +225,8 @@ class DeviceController {
       });
 
       const minPrice = minmax.getDataValue("minPrice");
-      console.log("minPrice: ", minPrice);
+
       const maxPrice = minmax.getDataValue("maxPrice");
-      console.log("maxPrice: ", maxPrice);
 
       return res.json([minPrice, maxPrice]);
     } catch (error) {
@@ -274,10 +241,9 @@ class DeviceController {
     let fileName;
     if (req.files) {
       const { img } = req.files;
-      fileName = uuid.v4() + ".jpg"; //создаем уникальное имя запишется в базу
-      // console.log( "TCL: fileName", fileName )
-      img.mv(path.resolve(__dirname, "..", "static", fileName)); //папка на сервере server/static уже нет server после deploy
-      console.log("info", info);
+      fileName = uuid.v4() + ".jpg"; 
+
+      img.mv(path.resolve(__dirname, "..", "static", fileName)); 
     }
 
     const updatedDevice = {};
@@ -297,20 +263,18 @@ class DeviceController {
     if (typeId > 0) {
       updatedDevice.typeId = typeId;
     }
-    console.log("updatedDevice: ", updatedDevice);
 
     const device = await Device.update(updatedDevice, { where: { id } });
-    console.log("device id: ", device.id);
 
     const infoParsed = JSON.parse(info);
-    console.log("infoParsed: ", infoParsed);
+
     const infoNew = infoParsed.filter((i) => i.number);
     const deviceInfoNew = await infoNew.forEach((i) =>
       DeviceInfo.create(
         {
           title: i.title,
           description: i.description,
-          deviceId: id, //не успевает получать надо .then или await
+          deviceId: id, 
         }
         // { where: { id } }
       )
@@ -321,16 +285,15 @@ class DeviceController {
         {
           title: i.title,
           description: i.description,
-          deviceId: id, //не успевает получать надо .then или await
+          deviceId: id, 
         },
         { where: { id: i.id } }
       )
     );
-    console.log("deviceInfo", deviceInfoNew);
 
-    //DeviceInfo.delete передавати сюди айдішнік
+    //DeviceInfo.delete pass id
     const infoDeleted = infoParsed.filter((i) => i.delete == true);
-    console.log("infoDeleted: ", infoDeleted);
+
     const deviceInfoDelete = await infoDeleted.forEach((i) =>
       DeviceInfo.destroy({
         where: { id: i.id },
@@ -353,109 +316,20 @@ class DeviceController {
   }
 
   async sendData(req, res) {
-    const data = req.body.data;
-    //Додаємо обробку даних тут, можна викликати зовнішній файл:
+    const data = req.body.data;     
     const getOneResult = require("../getone2.js");
-    const result = await getOneResult(data); 
-    console.log("result: ", result);   
+    const result = await getOneResult(data);
+
     result !== {} && res.json({ result: result });
   }
 
   async sendAllData(req, res) {
     const data = req.body;
-  const getAllResults = require("../get2.js");
-  const result = await getAllResults(data); 
-  console.log("result: sendAllData ", result);
-  result !== {} && res.json({ result: result });
+    const getAllResults = require("../get2.js");
+    const result = await getAllResults(data);
+
+    result !== {} && res.json({ result: result });
   }
-
 }
-
-
-
-
-
-// class DeviceController //для парсера
-// {
-//     async create ( req, res, next )
-//     {
-//         try
-//         {
-//             let { name, price, brandId, typeId, img, info } = req.body
-//             console.log( "TCL: req", req )
-
-//             const device = await Device.create( { name, price, brandId, typeId, img } )
-//             info = JSON.parse( info )
-//             const deviceInfo = await info.forEach( i => DeviceInfo.create( {
-//                 title: i.title,
-//                 description: i.description,
-//                 deviceId: device.id//не успевает получать надо .then или await
-//             } )
-//             )
-//             console.log( 'deviceInfo', deviceInfo )
-//             return (
-//                 res.json( device ).json( deviceInfo )
-//                 // .then(//because res.json calls 2 times get not critical error: 'Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client'
-//                 // res.json( deviceInfo ) )
-//             )
-
-//         } catch ( e )
-//         {
-//             next( ApiError.badRequest( e.message ) )
-//         }
-//     }
-
-//     async getAll ( req, res )
-//     {
-//         let { brandId, typeId, limit, page, sort } = req.query;
-
-//         page = page || 1
-//         limit = limit || 1000
-
-//         console.log( 'TCL sort', sort )
-
-//         if ( sort && ( sort !== '' ) )
-//         {
-//             sort = [ [ 'price', sort ] ]
-//         }
-//         else
-//         {
-//             sort = [ [ 'id', 'ASC' ] ]
-//         }
-
-//         let offset = page * limit - limit
-//         let devices;
-//         if ( !brandId && !typeId )
-//         {
-//             devices = await Device.findAndCountAll( { limit, offset, order: sort } )
-//         }
-//         if ( brandId && !typeId )
-//         {
-//             devices = await Device.findAndCountAll( { where: { brandId }, limit, offset, order: sort } )
-//         }
-//         if ( !brandId && typeId )
-//         {
-//             devices = await Device.findAndCountAll( { where: { typeId }, limit, offset, order: sort } )
-//         }
-//         if ( brandId && typeId )
-//         {
-//             devices = await Device.findAndCountAll( { where: { typeId, brandId }, limit, offset, order: sort } )
-//         }
-
-//         return res.json( devices )
-
-//     }
-//     async getOne ( req, res )
-//     {
-//         const { id } = req.params
-//         const device = await Device.findOne(
-//             {
-//                 where: { id },
-//                 include: [ { model: DeviceInfo, as: 'info' } ]
-//             }
-//         )
-//         return res.json( device )
-//     }
-// }
 
 module.exports = new DeviceController();

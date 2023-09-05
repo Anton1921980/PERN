@@ -1,10 +1,6 @@
 const Nightmare = require("nightmare");
 const cheerio = require("cheerio");
-const uuid = require("uuid");
-const path = require("path");
-var axios = require("axios");
-var http = require("https");
-var fs = require("fs");
+
 console.log("start");
 
 async function getResults(data) {
@@ -28,7 +24,6 @@ async function getResults(data) {
   for (let i = 0; pageUrls?.length > i; i++) {
     pageUrl = pageUrls[i];
 
-    console.log("TCL: pageUrl", pageUrl, pageUrl?.length);
     if (pageUrl?.length) {
       // only execute if pageUrl is not empty
       counter++;
@@ -64,7 +59,7 @@ async function getResults(data) {
       links.push(linkItem);
     });
 
-    links = [...new Set(links)]; //убираем повторы в массиве
+    links = [...new Set(links)]; //remove duplicates
 
     console.log("TCL: links", links);
 
@@ -76,9 +71,7 @@ async function getResults(data) {
   }
 
   async function getProducts(links) {
-    //добавляем параметр для результата
-    console.log("links: ", links);
-
+  
     for (
       let i = 0;
       i < 3;
@@ -86,8 +79,7 @@ async function getResults(data) {
       i++
     ) {
       let link = links[i];
-      console.log("i", i);
-      console.log("link: ", link);
+
       await getProduct(link); // add await here
     }
 
@@ -98,7 +90,6 @@ async function getResults(data) {
 
       results.push(resultItem); // no need to await here
     }
-    console.log("results1: ", results);
     return results; // no need to await here
   }
 

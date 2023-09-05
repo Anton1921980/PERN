@@ -87,8 +87,7 @@ var pageUrls = [
 
 for ( let i = 0; pageUrls.length > i; i++ )
 {
-    let pageUrl = pageUrls[ i ];
-    console.log( "TCL: pageUrl", pageUrl );
+    let pageUrl = pageUrls[ i ];  
 
     nightmare
         .goto( pageUrl )
@@ -116,16 +115,9 @@ function getData0 ( html )
     {
         var linkItem = $( val ).attr( "href" );
         links.push( linkItem );
-    } );
-  
+    } );  
 
-    [ ...new Set( links ) ] //убираем повторы в массиве
-
-    console.log( "TCL: links", links );
-
-    //     let link =  $( ".goods-tile__inner>a" ).append( "!" ).attr( "href" ) 
-    //     let links =[]
-    //     links = link.split( "!" );//массив ссылок на товары
+    [ ...new Set( links ) ] 
 
     getProducts( links )
 
@@ -135,7 +127,7 @@ function getData0 ( html )
 
 async function getProducts ( links )
 {
-    // for await ( const link of links )//цикл с асинхронными функциями ES2018
+    // for await ( const link of links )//async loop with functions ES2018
     // {
     ( async () =>
     {
@@ -195,7 +187,7 @@ async function getProducts ( links )
         {
             data = [];
             const $ = cheerio.load( html );
-            //характеристики {} 
+        
             let th1 = $( ".ng-star-inserted>.characteristics-full__label>*" ).append( ":" ).text();//этот меня устраивает
             let th = th1.split( ":" );
 
@@ -213,16 +205,12 @@ async function getProducts ( links )
             }
             let info = JSON.stringify( info1 )
 
-            let devicePrice // убрать пробелы и грн " 10 999₴"
+            let devicePrice 
             $( ".product-carriage__price" ) ?
                 devicePrice = +( $( ".product-carriage__price" ).text() ).replace( /\D+/g, "" )
-                : devicePrice = +( $( ".product-prices__big" ).text() ).replace( /\D+/g, "" )
+                : devicePrice = +( $( ".product-prices__big" ).text() ).replace( /\D+/g, "" );      
 
-            console.log( "TCL: price", devicePrice )
-
-            let deviceName = $( 'h1' ).text();
-            console.log( "TCL: deviceName", deviceName )
-            console.log( "TCL: info", info )
+            let deviceName = $( 'h1' ).text();       
             device = {
                 name: deviceName,
                 price: devicePrice,
@@ -239,8 +227,7 @@ async function getProducts ( links )
         {
             data = [];
             const $ = cheerio.load( html );
-            //фото
-
+            
             let imgMain = $( ".product-photos__picture.ng-lazyloaded" ).attr( 'src' )
             console.log( "TCL: imgMain", imgMain )
 
@@ -265,10 +252,10 @@ async function getProducts ( links )
 
                 res.on( "end", function ()
                 {
-                    let fileName = uuid.v4() + ".jpg" //создаем уникальное имя
+                    let fileName = uuid.v4() + ".jpg" 
                     console.log( "TCL: fileName", fileName )
                     fs.writeFile(
-                        path.resolve( __dirname, '..', 'static', fileName ),//server папки уже нет после deploy
+                        path.resolve( __dirname, '..', 'static', fileName ),
                         imagedata,
                         "binary",
                         function ( err )
@@ -322,42 +309,4 @@ async function getProducts ( links )
 
     // }
 }
-
-
-
-
-    // ; перед функцией!
-
-
-
-        // // let { name, price, brandId, typeId, img, info } = req.body
-        // // info [{"title":"333","description":"44","number":1635838152823},{"title":"555","description":"77","number":1635838158623}]
-        // // number:Date.now()
-
-        // let device = {
-        //     name: '756871133444444',
-        //     price: '777',
-        //     brandId: '2',
-        //     typeId: '2',
-        //     img: 'b7e4ecf9-0ed8-4a00-8544-6f309e1ddb3a.jpg',
-        //     info: '[{"title":"test5","description":"test5","number":1635838152555}]',
-        // }
-
-
-
-
-// //взять массив ссылок на картинки из result.imageUrls
-// // обрезать конец в название и сохранить в папку
-// // добавить адрес папки  и записать в result.imageUrls_2
-
-
-// //массив картинок
-// //   var i = 0;
-// //   while (result.imageUrls2.length > i) {
-// //     let url3 = result.imageUrls2[i];
-// //     // let ur14 = url3.replace(/iamge.*/i, "");
-// //     request(url3);
-// //     i++;
-// //   }
-
 

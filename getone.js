@@ -12,7 +12,7 @@ let type = 'смартфоны';
 let brand = 'samsung';
 
 
-// ; перед функцией!
+
 ( async () =>
 {
     const url = 'https://rozetka.com.ua/planshet-apple-ipad-mini-2021-wi-fi-64gb/g41556667/';
@@ -80,13 +80,9 @@ let brand = 'samsung';
         let devicePrice // убрать пробелы и грн " 10 999₴"
         $( ".product-carriage__price" ) ?
             devicePrice = +( $( ".product-carriage__price" ).text() ).replace( /\D+/g, "" )
-            : devicePrice = +( $( ".product-prices__big" ).text() ).replace( /\D+/g, "" )
+            : devicePrice = +( $( ".product-prices__big" ).text() ).replace( /\D+/g, "" );      
 
-        console.log( "TCL: price", devicePrice )
-
-        let deviceName = $( 'h1' ).text();
-        console.log( "TCL: deviceName", deviceName )
-        console.log( "TCL: info", info )
+        let deviceName = $( 'h1' ).text();    
         device = {
             name: deviceName,
             price: devicePrice,

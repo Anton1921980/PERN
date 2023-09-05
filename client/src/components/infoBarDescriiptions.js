@@ -15,16 +15,10 @@ const InfoBarDescriptions = observer((props) => {
     // infoArr,
   } = props;
   const [currentTitleDescriptions, set$currentTitleDescriptions] = useState([]);
-  currentTitleDescriptions?.descriptions?.length > 0 &&
-    console.log(
-      "currentTitleDescriptions: ",
-      info.title,
-      currentTitleDescriptions
-    );
-
+ 
   const infoArr =
     currentTitleDescriptions?.descriptions?.length > 0 &&
-    currentTitleDescriptions?.title === info?.title // якшо є вже збережені дескріпшени у цьому тайтлі
+    currentTitleDescriptions?.title === info?.title //  if already have descriptionsin this title
       ? currentTitleDescriptions.descriptions
       : info?.descriptions?.length && info?.descriptions;
 

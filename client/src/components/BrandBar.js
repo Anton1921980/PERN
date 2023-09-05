@@ -2,12 +2,12 @@ import { observer } from "mobx-react-lite";
 import React, { useContext, useState } from "react";
 import { Context } from "../index";
 import { Badge, Card, Accordion, useAccordionButton } from "react-bootstrap";
-
 import "../scss/styles.scss";
+import { ChevronRight } from "react-bootstrap-icons";
 
 function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
   const decoratedOnClick = useAccordionButton(eventKey, () =>
-    console.log("totally custom!", isOpen)
+    console.log("custom accordion", isOpen)
   );
   return (
     <div

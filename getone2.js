@@ -13,7 +13,6 @@ console.log("start");
 
 async function getResult(data) {
     const url = data;
-    console.log("url: ", url);
     let device = {};
 
     const nightmare = Nightmare({ show: true });
@@ -63,7 +62,7 @@ async function getResult(data) {
         const removeWordArr = removeWord.split(" ");   
         const typeWordRaw = removeWordArr[1].split(" ").join("").toLowerCase();
 
-        const latinRegex = /^[A-Za-z]*$/; // Тільки латинські букви від 'A' до 'Z' та від 'a' до 'z'
+        const latinRegex = /^[A-Za-z]*$/; // only latin letterz 'A' to 'Z' and 'a' to 'z'
         const isLatin = (str) => latinRegex.test(str);
 
         const brandWord = isLatin(removeWordArr[2])?removeWordArr[2]:removeWordArr[3];
@@ -137,8 +136,7 @@ async function getResult(data) {
         const deviceResponse = await axios.post(`${process.env.API_URL}/api/device`, device, {
           headers: { authorization: `Bearer ${token}` },
         });
-        await deviceResponse.data
-        // console.log("deviceResponse.data",await deviceResponse.data);
+        await deviceResponse.data   
       } catch (err) {
         console.log("TCL: addProduct -> err", err);
       }

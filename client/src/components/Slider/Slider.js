@@ -72,11 +72,11 @@ export const SliderHomepage = props =>
   // }, [] );
   const slides = [
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-      src={ 'ip12promax.jpg' } />,
+      src={ '111.jpg' } />,
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-      src={ 'iphoneairpods.jpg' } />,
+      src={ '222.jpg' } />,
     <Image style={ { objectFit: 'contain', width: '100%', height: '100%' } }
-      src={ 'iphone13.jpg' } />,
+      src={ '333.jpg' } />,
 
   ]
 

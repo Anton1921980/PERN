@@ -32,7 +32,7 @@ const Admin = observer(() => {
     useState(false);
 
   const [result, setResult] = useState("");
-  console.log("result: ", result);
+
   const [id, set$id] = useState(null);
   const { device } = React.useContext(Context);
 
@@ -40,7 +40,6 @@ const Admin = observer(() => {
     device.setLimit(1000);
   }, []);
 
-  //отрабатывает один раз при переходе по url или на /shop
   React.useEffect(() => {
     fetchTypes().then((data) => device.setTypes(data));
 
@@ -52,7 +51,6 @@ const Admin = observer(() => {
         device.setTotalCount(data.count);
       })
       .finally(() => setLoading(false));
-    console.log("device без фильтров:", device);
   }, [result]);
 
   if (loading) {
@@ -61,11 +59,12 @@ const Admin = observer(() => {
 
   return (
     <>
-      <Container className="d-flex justify-content-between p-3"
-      style={{wwidth:"90%"}}
+      <Container
+        className="d-flex justify-content-between p-3"
+        style={{ wwidth: "90%" }}
       >
         <Button
-        style={{width:"19%"}}
+          style={{ width: "19%" }}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setTypeVisible(true)}
@@ -73,7 +72,7 @@ const Admin = observer(() => {
           add type
         </Button>
         <Button
-        style={{width:"19%"}}
+          style={{ width: "19%" }}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setBrandVisible(true)}
@@ -81,7 +80,7 @@ const Admin = observer(() => {
           add brand
         </Button>
         <Button
-        style={{width:"19%"}}
+          style={{ width: "19%" }}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setDeviceVisible(true)}
@@ -89,7 +88,8 @@ const Admin = observer(() => {
           add device
         </Button>
         <Button
-        style={{width:"19%"}}
+          disabled={process.env.REACT_APP_NODE_ENV === "production" ? true : false}
+          style={{ width: "19%" }}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setDeviceByLinkVisible(true)}
@@ -97,7 +97,8 @@ const Admin = observer(() => {
           add one device by link
         </Button>
         <Button
-        style={{width:"19%"}}
+          // disabled={process.env.REACT_APP_NODE_ENV === "production" ? true : false}
+          style={{ width: "19%" }}
           variant={"outline-dark"}
           className="mt-4 pt-2"
           onClick={() => setDevicesPageByLinkVisible(true)}
@@ -118,7 +119,7 @@ const Admin = observer(() => {
           onHide={() => setDeviceByLinkVisible(false)}
           setResult={setResult}
         />
-        <CreatePageDevicesByLink
+        <CreatePageDevicesByLink          
           show={devicesPageByLinkVisible}
           onHide={() => setDevicesPageByLinkVisible(false)}
           setResult={setResult}
@@ -130,9 +131,7 @@ const Admin = observer(() => {
         </>
       )}
       {/* <DeviceList /> */}
-      <ListGroup variant="flush"
-      style={{width:'90%'}}
-      >
+      <ListGroup variant="flush" style={{ width: "90%" }}>
         {device.devices?.map((device, i) => (
           <div
             className="d-flex justify-content-between"
@@ -162,7 +161,7 @@ const Admin = observer(() => {
               </ListGroup.Item>
             </NavLink>
             <Button
-            style={{width:"7%"}}
+              style={{ width: "7%" }}
               variant={"outline-dark"}
               className="mt-4  mb-4"
               onClick={() => {
@@ -173,7 +172,7 @@ const Admin = observer(() => {
               Edit
             </Button>
             <Button
-             style={{width:"7%"}}
+              style={{ width: "7%" }}
               variant={"outline-dark"}
               className="mt-4  mb-4"
               onClick={() =>

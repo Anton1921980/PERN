@@ -31,11 +31,9 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
   const [infoOldDeleted, setInfoOldDeleted] = useState([]);
   const [device2, set$device2] = useState({ info: [] });
   const [previewImage, setPreviewImage] = useState(null);
-  // console.log("id: ", id);
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => {
-      console.log("data: ", data);
       set$device2(data);
       setInfo(data.info);
       setName(data.name);
@@ -44,27 +42,23 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
       setTypeId(data.typeId);
     });
   }, [id]);
-  console.log("device2.info", device2.info);
 
   useEffect(() => {
     fetchTypes().then((data) => device.setTypes(data));
     fetchBrands().then((data) => device.setBrands(data));
   }, [show]); //[show] обновляем бренды и типы при их добавлении перед товаром
 
-  console.log("name: ", device2.name);
-  console.log("brands", device.brands);
   const addInfo = () => {
     setInfo([...info, { title: "", description: "", number: Date.now() }]);
   };
   const removeInfo = (num) => {
-
     let oldInfo = info.find(({ id }) => id == num);
-    if  (oldInfo){
+    if (oldInfo) {
       oldInfo.delete = true;
-      infoOldDeleted.push(oldInfo)
+      infoOldDeleted.push(oldInfo);
       setInfoOldDeleted(infoOldDeleted);
     }
-   
+
     setInfo(info.filter((i) => (i.number || i.id) != num));
   };
   const changeInfo = (key, value, num) => {
@@ -72,15 +66,13 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
       info.map((i) => ((i.number || i.id) == num ? { ...i, [key]: value } : i))
     );
   };
-  console.log("infoOldDeleted: ", infoOldDeleted);
-  console.log("info: ", info);
+
   const selectFile = (e) => {
     setFile(e.target.files[0]);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
   };
 
   const addDevice = () => {
-    console.log("info", info);
     const formData = new FormData();
     try {
       formData.append("name", name);
@@ -95,10 +87,7 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
       alert(error);
     }
   };
-  // console.log(
-  //   "type",
-  //   device.types.filter((type) => type.id === typeId)[0].name
-  // );
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header
@@ -163,7 +152,10 @@ const EditDevicePage = observer(({ show, onHide, id }) => {
           <div style={{ width: "30%", overflow: "hidden" }}>
             <Image
               style={{ objectFit: "contain", width: "70%" }}
-              src={previewImage || `${process.env.REACT_APP_API_URL}${device2?.img}`}
+              src={
+                previewImage ||
+                `${process.env.REACT_APP_API_URL}${device2?.img}`
+              }
             />
           </div>
 

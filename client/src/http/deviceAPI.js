@@ -7,7 +7,7 @@ export const createType = async (type) => {
 };
 
 export const fetchTypes = async (
-  brandId //brandId
+  brandId 
 ) => {
   const { data } = await $host.get("api/type", {
     params: {
@@ -23,7 +23,7 @@ export const createBrand = async (brand) => {
 };
 
 export const fetchBrands = async (
-  typeId //typeId
+  typeId
 ) => {
   const { data } = await $host.get("api/brand", {
     params: {
@@ -34,11 +34,9 @@ export const fetchBrands = async (
 };
 
 export const createDevice = async (device) => {
-  console.log("TCL: createDevice -> device", device);
-
   try {
     const { data } = await $authHost.post("api/device", device);
-    console.log("data", data);
+
     return data;
   } catch (error) {
     console.log(error);
@@ -71,7 +69,7 @@ export const fetchOneDevice = async (id, typeId) => {
   return data;
 };
 
-// додати айдішнік інфо шо видаляється якшо є
+
 export const editOneDevice = async (device, id) => {
   const { data } = await $authHost.put("api/device/edit/" + id, device);
   return data;
@@ -79,13 +77,10 @@ export const editOneDevice = async (device, id) => {
 
 export const deleteOneDevice = async (id) => {
   const { data } = await $authHost.delete("api/device/delete/" + id);
-  //чи видаляється також інфо?
+  //does info also deletes
   return data;
 };
 export const minmaxDevices = async (typeId = null, brandId = null) => {
-  console.log("brandId: ", brandId);
-  console.log("typeId: ", typeId);
-
   const { data } = await $host.get("api/device/minmax", {
     params: {
       typeId: typeId,
@@ -105,9 +100,8 @@ export const getBasket = async () => {
 };
 export const deleteFromBasket = async (id) => {
   try {
-    console.log("id", id);
     const { data } = await $authHost.delete(`api/basket/${id}`);
-    console.log("data", data);
+
     return data;
   } catch (error) {
     console.log(error);
@@ -116,25 +110,18 @@ export const deleteFromBasket = async (id) => {
 
 export const sendData = async (data) => {
   try {
-    const response = await $authHost.post(
-      "api/device/send-data", {data}
-   
-    ); // виконати POST запит за допомогою axios
-    return response.data; // отримати дані з відповіді
+    const response = await $authHost.post("api/device/send-data", { data }); 
+    return response.data; 
   } catch (error) {
-    console.error(error); // обробити помилки
+    console.error(error); 
   }
 };
 
 export const sendAllData = async (data) => {
   try {
-
-    const response = await $authHost.post(
-      "api/device/send-all-data", {data}
-    
-    ); // виконати POST запит за допомогою axios
-    return response.data; // отримати дані з відповіді
+    const response = await $authHost.post("api/device/send-all-data", { data }); 
+    return response.data; 
   } catch (error) {
-    console.error(error); // обробити помилки
+    console.error(error); 
   }
 };

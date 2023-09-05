@@ -29,65 +29,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import InfoFilter from "../components/InfoFilter";
 import { ChevronRight } from "react-bootstrap-icons";
 
-//  function CustomToggle({ eventKey, isOpen, onToggle, expand }) {
-//     const decoratedOnClick = useAccordionButton(eventKey, () =>
-//       console.log("totally custom!", isOpen, expand)
-//     );
-//     return (
-//       <div
-//         style={{
-//           display: "flex",
-//           alignItems: "center",
-//         }}
-//       >
-//         <div
-//           style={{
-//             marginLeft: "15px",
-//             cursor: "pointer",
-//             transform: `rotate(${
-//               expand != false
-//                 ?
-//                 isOpen
-//                   ? "270deg"
-//                   : "90deg"
-//                 : isOpen
-//                 ? "270deg"
-//                 : "90deg"
-//                 // ? "0deg"
-//                 // : "180deg"
-//             })`,
-//             transition: "transform 0.3s ease",
-//           }}
-//           onClick={() => {
-//             onToggle && onToggle(eventKey);
-//             expand !== false && decoratedOnClick();
-//           }}
-//         >
-//           <ChevronRight/>
-//         </div>
-//       </div>
-//     );
-//   }
-// function CustomToggle2({ eventKey, isOpen, onToggle, expand, marginRight }) {
-//   const decoratedOnClick = (eventKey, () => console.log(eventKey));
-//   return (
-//     <div
-//       style={{
-//         cursor: "pointer",
-//         transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
-//         transition: "transform 0.3s ease",
-//         marginRight: marginRight,
-//       }}
-//       onClick={() => {
-//         onToggle && onToggle(eventKey);
-//         expand !== false && decoratedOnClick();
-//       }}
-//     >
-//       <ChevronRight/>
-//     </div>
-//   );
-// }
-
 const Shop = observer(() => {
   const [loading, set$loading] = useState(true);
   const [brandCountPerType, set$brandCountPerType] = useState({});
@@ -102,17 +43,14 @@ const Shop = observer(() => {
   const [minValue, set$minValue] = useState("");
   const [maxValue, set$maxValue] = useState("");
   const [minMax, set$minMax] = useState({ min: null, max: null });
-  const [isOpenMap, set$isOpenMap] = useState({"aaa":true, "ccc": true});
-  console.log("isOpenMap: ", isOpenMap);
+  const [isOpenMap, set$isOpenMap] = useState({ aaa: true, ccc: true });
   const [infoArrayObjects, set$infoArrayObjects] = useState([]);
   const [sortedInfoArrayObjects, set$sortedInfoArrayObjects] = useState([]);
 
-  // console.log("infoArrayObjects: ", infoArrayObjects);
-  const CustomToggle = React.memo(
-    ({ eventKey, isOpen, onToggle, expand }) => {
-      const decoratedOnClick = useAccordionButton(eventKey, () => {
-        console.log("totally custom!", isOpen);
-      });
+  const CustomToggle = React.memo(({ eventKey, isOpen, onToggle, expand }) => {
+    const decoratedOnClick = useAccordionButton(eventKey, () => {
+      console.log("totally custom!", isOpen);
+    });
     return (
       <div
         style={{
@@ -125,15 +63,13 @@ const Shop = observer(() => {
             marginLeft: "15px",
             cursor: "pointer",
             transform: `rotate(${
-              expand != false
+              expand !== false
                 ? isOpen
                   ? "270deg"
                   : "90deg"
                 : isOpen
                 ? "270deg"
-                : "90deg"
-              // ? "0deg"
-              // : "180deg"
+                : "90deg"           
             })`,
             transition: "transform 2s ease",
           }}
@@ -142,33 +78,35 @@ const Shop = observer(() => {
             expand !== false && decoratedOnClick();
           }}
         >
-          <ChevronRight/>
+          <ChevronRight />
         </div>
       </div>
     );
-  })
-  const CustomToggle2=React.memo(({ eventKey, isOpen, onToggle, expand, marginRight })=> {
-    const decoratedOnClick = (eventKey, () => console.log(eventKey));
-    return (
-      <div
-        style={{
-          cursor: "pointer",
-          transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
-          transition: "transform 0.9s ease",
-          marginRight: marginRight,
-        }}
-        onClick={() => {
-          onToggle && onToggle(eventKey);
-          expand !== false && decoratedOnClick();
-        }}
-      >
-        <ChevronRight/>
-      </div>
-    );
-  })
+  });
+  const CustomToggle2 = React.memo(
+    ({ eventKey, isOpen, onToggle, expand, marginRight }) => {
+      const decoratedOnClick = (eventKey, () => console.log(eventKey));
+      return (
+        <div
+          style={{
+            cursor: "pointer",
+            transform: `rotate(${isOpen ? "180deg" : "0deg"})`,
+            transition: "transform 0.9s ease",
+            marginRight: marginRight,
+          }}
+          onClick={() => {
+            onToggle && onToggle(eventKey);
+            expand !== false && decoratedOnClick();
+          }}
+        >
+          <ChevronRight />
+        </div>
+      );
+    }
+  );
   // Function to toggle the isOpen state for a specific category
-  const toggleCategory = (id) => {   
-       set$isOpenMap((prevIsOpenMap) => ({
+  const toggleCategory = (id) => {
+    set$isOpenMap((prevIsOpenMap) => ({
       ...prevIsOpenMap,
       [id]: !prevIsOpenMap[id],
     }));
@@ -197,7 +135,7 @@ const Shop = observer(() => {
   let parsedSort;
   parsed.sort ? (parsedSort = parsed.sort) : (parsedSort = null);
 
-  // перша загрузка
+  //first load
   useEffect(() => {
     fetchTypes().then((data) => {
       device.setTypes(data);
@@ -221,8 +159,7 @@ const Shop = observer(() => {
       .finally(() => set$loading(false));
   }, []);
 
-  //пока аcинхронно грузятся отфильтрованые товары успевает второй useEffect отработать создать пустую строку
-  // useEffect для фильтров
+  // filters
   useEffect(() => {
     fetchBrands(parsedTypes || device?.selectedType.id).then((data) => {
       device.setBrands(data);
@@ -231,13 +168,10 @@ const Shop = observer(() => {
       parsedTypes || device?.selectedType.id,
       parsedBrands || device.selectedBrands
     ).then((data) => {
-      console.log("data1", data);
       set$range(data);
     });
 
     const infosQuery = device?.selectedInfos.result;
-
-    console.log("infosQuery: ", device);
 
     fetchDevices({
       typeId: device.selectedType.id,
@@ -252,8 +186,6 @@ const Shop = observer(() => {
       .then((data) => {
         device.setDevices(data.rows);
         device.setTotalCount(data.count);
-
-        //пеоріввнювати minmax та  range та коректувати щоб за межі не виходило
 
         // Serialize the selectedBrands and selectedInfos array to a comma-separated string
         const brandsQueryString = device?.selectedBrands?.join(",");
@@ -280,9 +212,7 @@ const Shop = observer(() => {
 
         history.push(`/shop/?${query}`);
       })
-      .finally(() => set$loading(false));
-
-    // }
+      .finally(() => set$loading(false));  
   }, [
     device.selectedType,
     device.selectedBrands,
@@ -294,69 +224,58 @@ const Shop = observer(() => {
   ]);
 
   useEffect(() => {
-    console.log("device store ", device);
-
-    if (!loading) {
-      // Створимо пусті об'єкти для збереження кількості брендів у типі, товарів у типі, типів у бренді та товарів у бренді
+    if (!loading) {  
+      //creating objects to save quantity brands in type,devices in type, types in brand, products in brand
       const brandCountPerType = {};
       const productCountPerType = {};
       const typeCountPerBrand = {};
       const productCountPerBrand = {};
       const devicesCountPerTypePerBrand = {};
       const arrayOfDevicesCountPerTypePerBrand = [];
-
-      console.log("device: selectedBrands", device.selectedBrands);
-      // Функція для знаходження унікальних значень в масиві
+      //  unique values in arr 
       function getUniqueValues(arr) {
         return arr?.reduce((uniqueValues, currentValue) => {
-          // console.log("currentValue: ", currentValue);
-          // console.log("uniqueValues: ", uniqueValues);
           if (!uniqueValues?.includes(currentValue)) {
             uniqueValues.push(currentValue);
           }
           return uniqueValues;
-        }, []);
+        }, []);//empty array for start
       }
 
-      // Перебираємо бренди та товари для підрахунку кількості
+     
       device.allbrands.forEach((brand) => {
         const brandId = brand.id;
         // const brandName = brand.name;
 
-        // Знаходимо всі товари, що відповідають цьому бренду
+        //find all devices wwith this brand
         const productsOfBrand = device.alldevices.filter(
           (product) => product.brandId === brandId
         );
         // productCountPerBrand[brandName] = productsOfBrand.length;
-        productCountPerBrand[brandId] = productsOfBrand.length;
-        // Знаходимо всі унікальні типи товарів, що відповідають цьому бренду
+        productCountPerBrand[brandId] = productsOfBrand.length;      
+        // find all unique types for this brand
         const uniqueTypesOfBrand = getUniqueValues(
           productsOfBrand.map((product) => product.typeId)
-        );
-        // typeCountPerBrand[brandName] = uniqueTypesOfBrand.length;
+        );        
         typeCountPerBrand[brandId] = uniqueTypesOfBrand.length;
-        console.log("uniqueTypesOfBrand: ", uniqueTypesOfBrand);
       });
-
-      //беремо усі типи для щоб не зникали в аккордеоні
-      // Перебираємо типи та товари для підрахунку кількості
+      
+      //take all types not to disappear from accordion    
       device.alltypes.forEach((type) => {
         const typeId = type.id;
         // const typeName = type.name;
 
-        // Знаходимо всі товари, що відповідають цьому типу
+
+        //find all devices for this type
         const productsOfType = device.alldevices.filter(
           (product) => product.typeId === typeId
-        );
-        // productCountPerType[typeName] = productsOfType.length;
+        );      
         productCountPerType[typeId] = productsOfType.length;
-        console.log("productCountPerType: ", productCountPerType);
-
-        // Знаходимо всі унікальні бренди, що відповідають цьому типу
+   
+        //find all unique brands for this type
         const uniqueBrandsOfType = getUniqueValues(
           productsOfType.map((product) => product.brandId)
         );
-        console.log("uniqueBrandsOfType: ", uniqueBrandsOfType);
 
         uniqueBrandsOfType?.forEach((brand) => {
           const devicesOfType = productsOfType.filter(
@@ -370,20 +289,11 @@ const Shop = observer(() => {
             })
           );
         });
-        console.log(
-          "arrayOfdevicesCountPerTypePerBrand: ",
-          arrayOfDevicesCountPerTypePerBrand
-        );
-        console.log(
-          "devicesCountPerTypePerBrand: ",
-          devicesCountPerTypePerBrand
-        );
-        // brandCountPerType[typeName] = uniqueBrandsOfType.length;
+       
         brandCountPerType[typeId] = uniqueBrandsOfType;
       });
-
-      // Виводимо результати
-      set$brandCountPerType(brandCountPerType); //айді брендів замість кількості
+     
+      set$brandCountPerType(brandCountPerType); //brand id insteadofquantity?
 
       // !device.selectedType.id > 0 &&
       set$productCountPerType(productCountPerType);
@@ -396,7 +306,7 @@ const Shop = observer(() => {
       );
 
       // console.log("Кількість брендів у кожн типі:", brandCountPerType);
-      console.log("Кількість товарів у кожн типі:", productCountPerType);
+      // console.log("Кількість товарів у кожн типі:", productCountPerType);
       // console.log("Кількість типів у кожн бренді:", typeCountPerBrand);
       // console.log("Кількість товарів у кожн бренді:", productCountPerBrand);
     }
@@ -404,12 +314,10 @@ const Shop = observer(() => {
     // );
   }, [minMax, loading, device.selectedBrands, device.selectedType]);
 
-  //если нет этого бренда в категории, а он был активен удалить из строки или сбросить из селектед
-  //сделать чтобы отображались только категории которые в этом бренде?
-
+  
   useEffect(() => {
-    if (device.selectedType?.id && device.alldevices.length) {
-      //е тільки для першої загрузки фільтрів
+    if (device.selectedType?.id && device.alldevices.length) {      
+      //only for firs tload of filters
       let ids =
         !device.selectedInfos?.result ||
         device.selectedInfos?.result?.length === 0
@@ -422,29 +330,17 @@ const Shop = observer(() => {
               )
               ?.map((obj) => obj.id)
               ?.join(",")
-          : device.selectedInfos.result?.join(","); // у строку для передачі
-
-      //якщо вже є резалт то цей масив замість ids і він перерахує фільтри
-      // працює але повністю перемальовує і пропадають інші опції, а саме в цьому тайтлі треба щоб залишились
-
-      //додати фільтрацію девайсів при зміні бренду чи мінмакс
-      //щоб оновлювати каунт у фільтрах
-
-      // console.log("ids: ", ids);
+          : device.selectedInfos.result?.join(","); // pass to querystring      
 
       fetchInfos(ids).then((data) => {
-        // console.log("111", data.rows);
-
-        const result = []; // Результат буде масив об'єктів з ключами: title , масивами унікальних дескріпшенів,  кількістю повторень, масив deviceId
-
-        // Перевіряємо чи infoArrayObjects не пустий і device.selectedTypeId.id не null
+        const result = []; //result is array of objects with keys: title , unique descriptions arrays,  repeats quantity, array of deviceId
+       
+       
         if (infoArrayObjects?.length > 0 && device.selectedTypeId?.id) {
-          // Фільтруємо data.rows за device.selectedTypeId.id
+          // Фfilter data.rows for device.selectedTypeId.id
           const filteredData = data.rows?.filter(
             (infoItem) => infoItem.deviceId === device.selectedTypeId.id
-          );
-
-          // Проходимо по фільтрованим даним
+          );          
           filteredData.forEach((infoItem) => {
             const { title, description, deviceId } = infoItem;
 
@@ -479,7 +375,7 @@ const Shop = observer(() => {
 
           set$infoArrayObjects(result);
         } else {
-          // Якщо infoArrayObjects пустий або device.selectedTypeId.id null то повертаємо попередній код
+          // if infoArrayObjects ===[] або device.selectedTypeId.id === null return previous code
           data.rows?.forEach((infoItem) => {
             const { title, description, deviceId } = infoItem;
 
@@ -589,7 +485,7 @@ const Shop = observer(() => {
                     device.setPage("1");
                   }}
                 >
-                  <ChevronRight/>
+                  <ChevronRight />
                 </div>
               </div>
             )}

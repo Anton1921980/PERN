@@ -21,7 +21,7 @@ const CreateDevice = observer(({ show, onHide }) => {
   useEffect(() => {
     fetchTypes().then((data) => device.setTypes(data));
     fetchBrands().then((data) => device.setBrands(data));
-  }, [show]); //[show] обновляем бренды и типы при их добавлении перед товаром
+  }, [show]); 
 
   const addInfo = () => {
     setInfo([...info, { title: "", description: "", number: Date.now() }]);
@@ -39,9 +39,8 @@ const CreateDevice = observer(({ show, onHide }) => {
     setFile(e.target.files[0]);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
   };
-  console.log("file: ", file);
+
   const addDevice = () => {
-    console.log("info", info);
     const formData = new FormData();
     try {
       formData.append("name", name);
@@ -51,7 +50,6 @@ const CreateDevice = observer(({ show, onHide }) => {
       formData.append("typeId", device.selectedType.id);
       formData.append("info", JSON.stringify(info));
       createDevice(formData).then((data) => onHide());
-      console.log("formData: ", formData);
     } catch (error) {
       alert(error);
     }
@@ -61,7 +59,7 @@ const CreateDevice = observer(({ show, onHide }) => {
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Добавить устройство
+         Add device
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -100,13 +98,13 @@ const CreateDevice = observer(({ show, onHide }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-3"
-            placeholder="Введите название"
+            placeholder="Input name"
           />
           <Form.Control
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
             className="mt-3"
-            placeholder="Введите цену"
+            placeholder="Input price"
             // type="number"
           />
           <Form.Control className="mt-3" type="file" onChange={selectFile} />
@@ -118,7 +116,7 @@ const CreateDevice = observer(({ show, onHide }) => {
           </div>
           <hr />
           <Button variant={"outline-dark"} onClick={addInfo}>
-            Добавить новое свойство
+           Add new property
           </Button>
           {info.map((i) => (
             <Row className="mt-4" key={i.number}>
@@ -128,7 +126,7 @@ const CreateDevice = observer(({ show, onHide }) => {
                   onChange={(e) =>
                     changeInfo("title", e.target.value, i.number)
                   }
-                  placeholder="название свойства"
+                  placeholder="property name"
                 />
               </Col>
               <Col md={4}>
@@ -137,7 +135,7 @@ const CreateDevice = observer(({ show, onHide }) => {
                   onChange={(e) =>
                     changeInfo("description", e.target.value, i.number)
                   }
-                  placeholder="описание свойства"
+                  placeholder="property description"
                 />
               </Col>
               <Col md={4}>
@@ -145,7 +143,7 @@ const CreateDevice = observer(({ show, onHide }) => {
                   onClick={() => removeInfo(i.number)}
                   variant={"outline-danger"}
                 >
-                  Удалить
+                  remove
                 </Button>
               </Col>
             </Row>
@@ -154,10 +152,10 @@ const CreateDevice = observer(({ show, onHide }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="outline-danger" onClick={onHide}>
-          Закрыть
+          X
         </Button>
         <Button variant="outline-success" onClick={addDevice}>
-          Добавить
+          Add
         </Button>
       </Modal.Footer>
     </Modal>

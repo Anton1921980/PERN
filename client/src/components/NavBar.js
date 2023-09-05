@@ -8,7 +8,6 @@ import {
   BASKET_ROUTE,
   LOGIN_ROUTE,
   MAIN_ROUTE,
-  SHOP_ROUTE,
 } from "../utils/consts";
 
 import { observer } from "mobx-react-lite";
@@ -20,9 +19,7 @@ import {
   PersonGear,
   Cart,
   BoxArrowRight,
-  Basket,
 } from "react-bootstrap-icons";
-import { BaseError } from "sequelize";
 
 const NavBar = observer(() => {
   const { user } = useContext(Context);
@@ -30,7 +27,7 @@ const NavBar = observer(() => {
   const history = useHistory();
   const [font, setFont] = useState([10, "normal"]);
   const [basketLocal, setBasketLocal] = useState("");
-const [basketQuantity, setBasketQuantity] = useState("")
+  const [basketQuantity, setBasketQuantity] = useState("");
   useEffect(() => {
     setFont([15, "bold"]);
     setTimeout(() => {
@@ -39,7 +36,6 @@ const [basketQuantity, setBasketQuantity] = useState("")
     device.localBasket
       ? setBasketLocal(device.localBasket)
       : setBasketLocal("");
-    console.log("TCL: basketLocal 2", basketLocal);
   }, [device.localBasket]);
 
   useEffect(() => {
@@ -47,7 +43,6 @@ const [basketQuantity, setBasketQuantity] = useState("")
       JSON.parse(localStorage.getItem("ids")) &&
       JSON.parse(localStorage.getItem("ids")).length;
     length2 ? setBasketLocal(length2) : setBasketLocal("");
-    console.log("TCL: basketLocal", length2);
     setTimeout(() => {
       setFont([15, "bold"]);
     }, 1500);
@@ -61,7 +56,6 @@ const [basketQuantity, setBasketQuantity] = useState("")
   useEffect(() => {
     setFont([14, "bold"]);
     getBasket().then((data) => {
-
       setBasketQuantity([data?.length?.toString()]);
 
       setTimeout(() => {
@@ -87,7 +81,14 @@ const [basketQuantity, setBasketQuantity] = useState("")
           onClick={() => device.setSelectedType("")}
           to={MAIN_ROUTE}
         >
-          Idevice
+          <span
+          style={{color:"white", fontWeight:"600",fontSize:"50px"}}
+          >
+          i
+          </span>
+          <span
+          style={{ fontWeight:"200",}}
+          >device</span>
         </NavLink>
         <div className="d-flex flex-row flex-no-wrap justify-content-between">
           <div className="mr-3">
@@ -177,9 +178,7 @@ const [basketQuantity, setBasketQuantity] = useState("")
                     color: "white",
                   }}
                 >
-                  {user.isAuth
-                    ? basketQuantity
-                    : basketLocal}
+                  {user.isAuth ? basketQuantity : basketLocal}
                 </span>
               </div>
             </Nav>

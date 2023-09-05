@@ -7,9 +7,7 @@ import { observer } from "mobx-react-lite";
 
 const AppRouter = observer( () =>
 {
-    const { user } = useContext( Context )
-
-    console.log( "TCL: user", user )
+    const { user } = useContext( Context );
     // const isAuth = false;
     return (
 
