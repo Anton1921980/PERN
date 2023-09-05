@@ -1,7 +1,7 @@
 const express = require("express");
 
 const dotenv = require('dotenv');
-dotenv.config({ path: './.env.development' });
+dotenv.config({ path: './.env.production' });
 console.log('env',process.env.NODE_ENV);
 
 const sequelize = require("./db");
