@@ -17,7 +17,10 @@ const { Sequelize } = require( 'sequelize' );
 // const sequelize = new Sequelize('postgres://admin:admin@localhost:5432/mydb', {
 //   dialectModule: require('pg')
 // });
-
+const sequelize = new Sequelize(process.env.DATABASE_URL,
+    {
+  dialectModule: require('pg')
+});
 module.exports = new Sequelize(
     process.env.DATABASE_URL,
     
