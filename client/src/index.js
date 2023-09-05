@@ -5,7 +5,8 @@ import UserStore from './store/UserStore';
 import DeviceStore from './store/DeviceStore';
 
 const dotenv = require("dotenv"); 
-dotenv.config({ path: "./.env.production" }); 
+dotenv.config(); 
+// dotenv.config({ path: "./.env.production" }); 
 console.log('env',process.env.NODE_ENV);
 
 export const Context = createContext( null )

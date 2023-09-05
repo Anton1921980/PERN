@@ -1,8 +1,9 @@
 const express = require("express");
 
 const dotenv = require('dotenv');
-dotenv.config({ path: './.env.production' });
-console.log('env',process.env.NODE_ENV);
+dotenv.config();
+// dotenv.config({ path: './.env.production' });
+console.log('env', process.env.NODE_ENV);
 
 const sequelize = require("./db");
 const models = require("./models/models");
