@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Col, Container } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
@@ -7,13 +7,15 @@ import { SliderHomepage } from "../components/Slider/Slider";
 import TypeBar from "../components/TypeBar";
 import { useHistory } from "react-router-dom";
 import "../scss/styles.scss";
+import ParserVideo from "../components/ParserVideo";
+
 
 const Main = observer(() => {
   const { device } = useContext(Context);
   const history = useHistory();
   const [playing, setPlaying] = useState(false);
-
   //   const fade = playing ? 'fadeOut' : 'fadeIn';
+
 
   useEffect(() => {
     fetchTypes().then((data) => device.setTypes(data));
@@ -29,7 +31,6 @@ const Main = observer(() => {
 
   const handleClick = () => {
     !playing ? setPlaying(true) : setPlaying(false);
-    setTimeout(() => setPlaying(true), 1000);
   };
 
   return (
@@ -53,37 +54,7 @@ const Main = observer(() => {
           </Col>
         </Container>
       )}
-      <Container
-        className={`
-  
-       d-flex flex-column flex-lg-row mt-3`}
-      >
-        <Col className="col-12 ">
-          <div style={{ cursor: "pointer" }} onClick={handleClick}>
-            {playing ? (
-              <video
-                width="100%"
-                height="100%"
-                autoPlay
-                onEnded={() => setPlaying(false)}
-              >
-                <source
-                  src={process.env.REACT_APP_NODE_ENV==="development"?`${process.env.REACT_APP_API_URL}parser.mp4`:"https://youtu.be/9mbjmzAUAbw"}
-                  type="video/mp4"
-                />
-             Sorry, your browser does not support video tags
-              </video>
-            ) : (
-              <img
-                src={`${process.env.REACT_APP_API_URL}parser-thumb.jpg`}
-                alt="placeholder"
-                width="100%"
-                height="100%"
-              />
-            )}
-          </div>
-        </Col>
-      </Container>
+      <ParserVideo playing={playing} handleClick={handleClick} setPlaying={setPlaying}/>   
     </>
   );
 });

@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { Button, Col, Container, Form } from "react-bootstrap";
 import { sendAllData } from "../../http/deviceAPI";
 import { observer } from "mobx-react-lite";
+import ParserVideo from "../ParserVideo";
 
 const CreatePageDevicesByLink = observer(({ show, onHide, setResult }) => {
   const [value, setValue] = useState("");
@@ -48,37 +49,11 @@ const CreatePageDevicesByLink = observer(({ show, onHide, setResult }) => {
           </Modal.Footer>
         </>
       ) : (
-        <Container
-          className={`
-  
-       d-flex flex-column flex-lg-row mt-3`}
-        >
-          <Col className="col-12 ">
-            <div style={{ cursor: "pointer" }} onClick={handleClick}>
-              {playing ? (
-                <video
-                  width="100%"
-                  height="100%"
-                  autoPlay
-                  onEnded={() => setPlaying(false)}
-                >
-                  <source
-                    src={`${process.env.REACT_APP_API_URL}parser.mp4`}
-                    type="video/mp4"
-                  />
-                  Sorry, your browser does not support video tags
-                </video>
-              ) : (
-                <img
-                  src={`${process.env.REACT_APP_API_URL}parser-thumb.jpg`}
-                  alt="placeholder"
-                  width="100%"
-                  height="100%"
-                />
-              )}
-            </div>
-          </Col>
-        </Container>
+        <ParserVideo
+          playing={playing}
+          handleClick={handleClick}
+          setPlaying={setPlaying}
+        />
       )}
     </Modal>
   );
