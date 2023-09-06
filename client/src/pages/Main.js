@@ -68,7 +68,7 @@ const Main = observer(() => {
                 onEnded={() => setPlaying(false)}
               >
                 <source
-                  src={`${process.env.REACT_APP_API_URL}parser.mp4`}
+                  src={process.env.REACT_APP_NODE_ENV==="development"?`${process.env.REACT_APP_API_URL}parser.mp4`:"https://youtu.be/9mbjmzAUAbw"}
                   type="video/mp4"
                 />
              Sorry, your browser does not support video tags

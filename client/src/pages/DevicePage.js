@@ -15,21 +15,16 @@ import {
 const DevicePage = observer(() => {
   const { user, device } = useContext(Context);
 
-  console.log("TCL: user", user);
-  console.log("TCL: device", device);
-
   useEffect(() => {
     fetchTypes().then((data) => device.setTypes(data));
     fetchBrands().then((data) => device.setBrands(data));
-    console.log("device:", device);
   }, []);
 
-  const [device1, set$device1] = useState({ info: [] });
-  console.log("device1: ", device1);
+  const [deviceCurrent, set$deviceCurrent] = useState({ info: [] }); 
   const { id } = useParams();
 
   useEffect(() => {
-    fetchOneDevice(id).then((data) => set$device1(data));
+    fetchOneDevice(id).then((data) => set$deviceCurrent(data));
   }, []);
 
   const add = async () => {
@@ -53,24 +48,24 @@ const DevicePage = observer(() => {
           <div style={{ width: "100%", overflow: "hidden" }}>
             <Image
               style={{ objectFit: "contain", width: "70%" }}
-              src={`${process.env.REACT_APP_API_URL}${device1.img}`}
+              src={`${process.env.REACT_APP_API_URL}${deviceCurrent.img}`}
             />
           </div>
         </Col>
         <Col md={9}>
           <div className="d-flex flex-column">
             <h2>
-              {device1.name}&nbsp;
+              {deviceCurrent.name}&nbsp;
               <div style={{ color: "lightgrey" }}>
                 {device.brands.map((brand, i) => (
                   <span key={i}>
-                    {brand.id === device1.brandId ? brand.name : ""}
+                    {brand.id === deviceCurrent.brandId ? brand.name : ""}
                   </span>
                 ))}
                 &nbsp;
                 {device.types.map((type, i) => (
                   <span key={i}>
-                    {type.id === device1.typeId ? type.name : ""}
+                    {type.id === deviceCurrent.typeId ? type.name : ""}
                   </span>
                 ))}
               </div>
@@ -95,9 +90,9 @@ const DevicePage = observer(() => {
                     fontSize: 24,
                   }}
                 >
-                  {device1.rating}
+                  {deviceCurrent.rating}
                 </div>
-                <h3>{device1.price?.toLocaleString("en-GB").replace(/,/g, " ")} &#x20B4;</h3>
+                <h3>{deviceCurrent.price?.toLocaleString("en-GB").replace(/,/g, " ")} &#x20B4;</h3>
 
                 <Button
                   variant={"outline-dark"}
@@ -112,7 +107,7 @@ const DevicePage = observer(() => {
       </Row>
       <Row className="d-flex flex-column m-3">
         <h1>Properties:</h1>
-        {device1.info.map((info, index) => (
+        {deviceCurrent.info.map((info, index) => (
           <Row
             key={index}
             style={{

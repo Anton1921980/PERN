@@ -7,8 +7,6 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { NavLink } from "react-router-dom";
 
-// import close from '../assets/close.svg'
-
 const Basket = observer(() => {
   const { device } = useContext(Context);
 
@@ -64,7 +62,8 @@ const Basket = observer(() => {
   //Считаем общую сумму, которую юзер набрал в корзину
 
   let prices = 0;
-  device.baskets?.length > 2 &&
+  device.baskets?.length &&
+    typeof device.baskets[0] !== "string" &&
     device.baskets?.map(
       (product) => (prices += Number(product.device?.price * product?.quantity))
     );
@@ -73,7 +72,8 @@ const Basket = observer(() => {
     <Container className="d-flex flex-column justify-content-center align-items-center mt-3">
       <h1 className="p-4">Basket</h1>
 
-      {device.baskets?.length > 2 &&
+      {device.baskets?.length &&
+        typeof device.baskets[0] !== "string" &&
         device.baskets?.map((product, i) => (
           <Card
             className="d-flex w-100 p-2 justify-content-center mb-2"
